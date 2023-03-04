@@ -15,6 +15,7 @@ import io.scalecube.cluster.ClusterMessageHandler;
 public class ClusterTest {
     public static void main(String[] args) {
         Cluster c = new ClusterImpl().transportFactory(null);
+        
         ReactiveServer server = MqttServer.builder()
                 .build()
                 .startAwait();

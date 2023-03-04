@@ -5,8 +5,8 @@ import reactor.core.publisher.Mono;
 import reactor.netty.DisposableServer;
 
 public class MqttTransport implements ReactiveTransport {
-    public MqttTransportType type;
-    private DisposableServer disposableServer;
+    private MqttTransportType type;
+    private DisposableServer server;
 
     @Override
     public Mono<ReactiveTransport> start() {
@@ -15,13 +15,15 @@ public class MqttTransport implements ReactiveTransport {
 
     public Mono<ReactiveTransport> bind() {
         return null;
-        
     }
 
     @Override
     public Mono<Void> dispose() {
         return Mono.fromRunnable(() -> {
-            disposableServer.dispose();
+            server.dispose();
         });
+    }
+    public MqttTransportType type() {
+        return type;
     }
 }

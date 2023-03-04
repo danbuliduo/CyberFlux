@@ -5,10 +5,11 @@ import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 
 public class MqttChannel {
-    private Connection connection;
-    //private String clientIdentifier;
+    private final Connection connection;
+    private final String clientId;
     public MqttChannel(Connection connection) {
         this.connection = connection;
+        clientId = connection.channel().id().asLongText();
     }
     public boolean isActive() {
         return connection != null && !connection.isDisposed();
@@ -23,5 +24,8 @@ public class MqttChannel {
             return connection.outbound().sendObject(message).then();
         }
         return Mono.empty();
+    }
+    public String clientId() {
+        return clientId;
     }
 }
