@@ -1,11 +1,12 @@
 package io.cyberflux.reactor.mqtt.transport;
 
-import io.cyberflux.meta.reactor.core.ReactiveTransport;
+
 import reactor.core.publisher.Mono;
 import reactor.netty.DisposableServer;
+import io.cyberflux.meta.reactor.ReactiveTransport;
+import io.cyberflux.meta.reactor.core.AbstractReactiveTransport;
 
-public class MqttTransport implements ReactiveTransport {
-    private MqttTransportType type;
+public class MqttTransport extends AbstractReactiveTransport {
     private DisposableServer server;
 
     @Override
@@ -22,8 +23,5 @@ public class MqttTransport implements ReactiveTransport {
         return Mono.fromRunnable(() -> {
             server.dispose();
         });
-    }
-    public MqttTransportType type() {
-        return type;
     }
 }

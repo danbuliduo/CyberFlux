@@ -12,7 +12,7 @@ public final class FluxBannerUtils {
     public static Flux<String> doBanner() {
         return Flux.fromStream(
             new BufferedReader(new InputStreamReader(
-                FluxBannerUtils.class.getResourceAsStream("fluxbanner.txt")
+                FluxBannerUtils.class.getResourceAsStream("defaultbanner.txt")
             )).lines()
         ).doOnError(Throwable::printStackTrace);
     }
