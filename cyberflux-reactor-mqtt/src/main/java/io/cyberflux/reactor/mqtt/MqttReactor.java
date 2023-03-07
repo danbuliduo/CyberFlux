@@ -10,10 +10,10 @@ import io.cyberflux.reactor.mqtt.transport.MqttTransport;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public class MqttServer extends AbstractReactiveServer {
+public class MqttReactor extends AbstractReactiveServer {
     private final List<MqttTransport> transports = new ArrayList<>();
 
-    public MqttServer() {
+    public MqttReactor() {
         super(ProtocolType.MQTT);
     }
 
@@ -28,13 +28,13 @@ public class MqttServer extends AbstractReactiveServer {
         transports.forEach(MqttTransport::dispose);
     }
 
-    public static MqttServer.MqttServerBuilder builder() {
-        return new MqttServer.MqttServerBuilder();
+    public static MqttReactor.MqttServerBuilder builder() {
+        return new MqttReactor.MqttServerBuilder();
     }
 
     public static class MqttServerBuilder {
-        public MqttServer build() {
-            return new MqttServer();
+        public MqttReactor build() {
+            return new MqttReactor();
         }
     }
 }

@@ -1,7 +1,7 @@
 package io.cyberflux.flux.mqtt;
 
 import io.cyberflux.meta.reactor.ReactiveServer;
-import io.cyberflux.reactor.mqtt.MqttServer;
+import io.cyberflux.reactor.mqtt.MqttReactor;
 import io.scalecube.cluster.Cluster;
 import io.scalecube.cluster.ClusterImpl;
 import io.scalecube.cluster.transport.api.TransportFactory;
@@ -16,9 +16,9 @@ public class ClusterTest {
     public static void main(String[] args) {
         //Cluster c = new ClusterImpl().transportFactory(null);
         
-        ReactiveServer server = MqttServer.builder()
+        ReactiveServer server = MqttReactor.builder()
                 .build()
                 .startAwait();
-            System.out.println(server.protocolType());
+        System.out.println(server.protocolType());
     }
 }
