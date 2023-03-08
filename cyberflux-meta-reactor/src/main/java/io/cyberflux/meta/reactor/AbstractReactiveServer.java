@@ -1,11 +1,8 @@
-package io.cyberflux.meta.reactor.core;
+package io.cyberflux.meta.reactor;
 
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
-
-import io.cyberflux.meta.reactor.ProtocolType;
-import io.cyberflux.meta.reactor.ReactiveServer;
 
 public abstract class AbstractReactiveServer implements ReactiveServer {
     private String uuid;

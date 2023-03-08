@@ -14,8 +14,8 @@ import reactor.core.publisher.Mono;
 
 public final class CyberFluxHuaxuEngine implements CyberFluxNodeEngine {
     private static final Logger log = LoggerFactory.getLogger(CyberFluxHuaxuEngine.class);
-    private final CyberFluxReactorGroup reactorGroup = CyberFluxReactorGroup.INSTANCE;
-    private final CyberFluxBeanFactory beanFactory = CyberFluxBeanFactory.INSTANCE;
+    private static final CyberFluxReactorGroup reactorGroup = CyberFluxReactorGroup.INSTANCE;
+    private final CyberFluxBeanFactory beanFactory;
 
     static {
         CyberBannerUtils.banner();
@@ -26,7 +26,17 @@ public final class CyberFluxHuaxuEngine implements CyberFluxNodeEngine {
         return new CyberFluxHuaxuEngine();
     }
 
+    public static CyberFluxHuaxuEngine run(Class<?> clasz) {
+        return new CyberFluxHuaxuEngine(clasz);
+    }
+
     public CyberFluxHuaxuEngine() {
+        beanFactory= new CyberFluxBeanFactory();
+        loadReactorFlux().doOnNext(reactorGroup::saveReactor).subscribe(this::startReactor);
+    }
+
+    public CyberFluxHuaxuEngine(Class<?> clasz) {
+        beanFactory = new CyberFluxBeanFactory(clasz.getPackageName());
         loadReactorFlux().doOnNext(reactorGroup::saveReactor).subscribe(this::startReactor);
     }
 

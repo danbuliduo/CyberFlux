@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 
 public class CyberFluxSpringEngine implements CyberFluxNodeEngine {
     private static final Logger log = LoggerFactory.getLogger(CyberFluxSpringEngine.class);
-    private final CyberFluxReactorGroup reactorGroup = CyberFluxReactorGroup.INSTANCE;
+    private static final CyberFluxReactorGroup reactorGroup = CyberFluxReactorGroup.INSTANCE;
 
     static {
         log.info("<= Welcome To Use EngineCore: SPRING - 昭节 - =>");

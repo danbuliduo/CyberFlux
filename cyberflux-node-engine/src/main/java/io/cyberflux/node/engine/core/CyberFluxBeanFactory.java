@@ -1,8 +1,9 @@
 package io.cyberflux.node.engine.core;
 
-import io.cyberflux.node.engine.annotation.CyberBean;
+//import io.cyberflux.node.engine.annotation.CyberBean;
 import io.cyberflux.node.engine.annotation.CyberInject;
 import io.cyberflux.node.engine.annotation.CyberReactor;
+import io.cyberflux.node.engine.container.CyberFluxBeanContainer;
 import io.cyberflux.node.engine.utils.CyberPackageUtils;
 
 import java.util.ArrayList;
@@ -10,12 +11,16 @@ import java.util.List;
 import reactor.core.publisher.Flux;
 
 public class CyberFluxBeanFactory {
-    private final CyberFluxBeanContext context = CyberFluxBeanContext.INSTANCE;
-    public static CyberFluxBeanFactory INSTANCE = new CyberFluxBeanFactory();
+    private final CyberFluxBeanContainer context;
+
     public CyberFluxBeanFactory() {
         this(CyberPackageUtils.getRootPackageName());
     }
     public CyberFluxBeanFactory(String packageName) {
+        this(CyberFluxBeanContainer.INSTANCE, packageName);
+    }
+    public CyberFluxBeanFactory(CyberFluxBeanContainer context, String packageName) {
+        this.context = context;
         injectBeans(loadBeans(packageName));
     }
 
@@ -39,12 +44,12 @@ public class CyberFluxBeanFactory {
                         Object bean = clasz.getDeclaredConstructor().newInstance();
                         context.saveBean(injectName, bean);
                         beans.add(bean);
-                        Flux.fromArray(clasz.getMethods())
+                        /*Flux.fromArray(clasz.getMethods())
                             .filter(method -> method.isAnnotationPresent(CyberBean.class))
                             .subscribe(method -> {
                                 System.out.println(method.getName());
                             }
-                        );
+                        );*/
                     }
                 }
             } catch (ReflectiveOperationException e) {

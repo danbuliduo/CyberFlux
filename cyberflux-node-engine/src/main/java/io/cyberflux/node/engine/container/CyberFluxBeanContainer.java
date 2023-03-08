@@ -1,13 +1,13 @@
-package io.cyberflux.node.engine.core;
+package io.cyberflux.node.engine.container;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import reactor.core.publisher.Flux;
 
-public class CyberFluxBeanContext {
+public class CyberFluxBeanContainer {
     private final Map<String, Object> beans = new ConcurrentHashMap<>();
-    public static final CyberFluxBeanContext INSTANCE = new CyberFluxBeanContext();
+    public static final CyberFluxBeanContainer INSTANCE = new CyberFluxBeanContainer();
 
     public boolean contains(String injectName) {
         return beans.containsKey(injectName);

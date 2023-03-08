@@ -1,8 +1,2 @@
 server:
     port: 30000
-
-cyberflux:
-    engine:
-        core: SPRING
-    cluster: null
-    reactor: null

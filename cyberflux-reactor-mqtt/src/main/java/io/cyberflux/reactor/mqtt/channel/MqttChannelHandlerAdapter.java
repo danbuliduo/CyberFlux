@@ -17,9 +17,9 @@ import io.cyberflux.reactor.mqtt.protocol.MqttMessageHandlerAdapter;
 
 public class MqttChannelHandlerAdapter implements MqttChannelHandler {
     private final static Logger log = LoggerFactory.getLogger(MqttChannelHandlerAdapter.class);
-    private final Scheduler scheduler;
     private final MqttMessageHandler messageHandler;
     private final MqttChannelGroup channelGroup;
+    private final Scheduler scheduler;
 
     public MqttChannelHandlerAdapter(Scheduler scheduler) {
         this.scheduler = Optional.ofNullable(scheduler).orElse(Schedulers.boundedElastic());

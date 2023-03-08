@@ -29,6 +29,7 @@ public class CustomImplServer implements ReactiveServer {
     @Override
     public void shutdown() {
     }
+
     @Override
     public String uuid() {
         return uuid;

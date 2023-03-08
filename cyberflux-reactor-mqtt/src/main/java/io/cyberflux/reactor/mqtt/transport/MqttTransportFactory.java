@@ -1,7 +1,7 @@
 package io.cyberflux.reactor.mqtt.transport;
 
 public final class MqttTransportFactory {
-    public static MqttTransport createTransport() {
+    public static AbstractMqttTransport createTransport() {
         return null;
     }
 }

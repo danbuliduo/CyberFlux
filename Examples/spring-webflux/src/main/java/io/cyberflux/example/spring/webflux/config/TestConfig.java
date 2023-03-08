@@ -4,12 +4,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.cyberflux.meta.reactor.ReactiveServer;
-import io.cyberflux.reactor.mqtt.MqttReactor;
+import io.cyberflux.reactor.mqtt.CyberFluxMqttReactor;
 
 @Configuration
 public class TestConfig {
     @Bean
     ReactiveServer mqttServer() {
-        return MqttReactor.builder().build();
+        return CyberFluxMqttReactor.builder().build();
     }
 }

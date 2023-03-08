@@ -2,9 +2,9 @@ package io.cyberflux.example.spring.webflux.controller;
 
 import org.springframework.stereotype.Component;
 
+import io.cyberflux.meta.reactor.AbstractReactiveServer;
 import io.cyberflux.meta.reactor.ProtocolType;
 import io.cyberflux.meta.reactor.ReactiveServer;
-import io.cyberflux.meta.reactor.core.AbstractReactiveServer;
 import reactor.core.publisher.Mono;
 
 @Component

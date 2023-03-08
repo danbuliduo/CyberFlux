@@ -1,6 +1,5 @@
-package io.cyberflux.meta.reactor.core;
+package io.cyberflux.meta.reactor;
 
-import io.cyberflux.meta.reactor.ReactiveTransport;
 import reactor.core.publisher.Mono;
 
 public abstract class AbstractReactiveTransport implements ReactiveTransport {
