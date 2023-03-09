@@ -9,6 +9,6 @@ public class TestRuner {
     CustomImplServer customImplServer;
     public static void main(String[] args) throws InterruptedException {
        CyberFluxHuaxuEngine.run(TestRuner.class);
-       Thread.sleep(100000);
+       Thread.sleep(1000000);
     }
 }

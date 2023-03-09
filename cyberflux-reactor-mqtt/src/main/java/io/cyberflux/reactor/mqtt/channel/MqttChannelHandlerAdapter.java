@@ -30,11 +30,13 @@ public class MqttChannelHandlerAdapter implements MqttChannelHandler {
     @Override
     public void onRegister(MqttChannel channel) {
         channelGroup.append(channel);
+        channel.receive().filter(msg -> msg.decoderResult().isSuccess())
+            .subscribe(msg -> this.onMessage(channel, msg));
     }
 
     @Override
     public void onInactive(MqttChannel channel) {
-        channelGroup.remove("");
+        channelGroup.remove(channel);
     }
 
     @Override
