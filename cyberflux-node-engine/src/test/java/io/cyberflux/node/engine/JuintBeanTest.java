@@ -17,7 +17,7 @@ public class JuintBeanTest {
     public void test() throws InterruptedException {
         CyberFluxHuaxuEngine.run(JuintBeanTest.class);
         log.info("--------------------------");
-        log.info("{}", CyberPackageUtils.getMainClassName());
+        log.info("{}", CyberPackageUtils.getStartupClassName());
         log.info("{}", JuintBeanTest.class.getCanonicalName());
         log.info("{}", this);
         log.info("{}", customImplServer);

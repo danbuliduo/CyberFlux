@@ -36,7 +36,7 @@ public final class CyberFluxHuaxuEngine implements CyberFluxNodeEngine {
     }
 
     public CyberFluxHuaxuEngine(Class<?> clasz) {
-        beanFactory = new CyberFluxBeanFactory(clasz.getPackageName());
+        beanFactory = new CyberFluxBeanFactory(clasz);
         loadReactorFlux().doOnNext(reactorGroup::saveReactor).subscribe(this::startReactor);
     }
 
