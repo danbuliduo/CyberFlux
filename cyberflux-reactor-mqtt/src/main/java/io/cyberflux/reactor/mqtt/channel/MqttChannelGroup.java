@@ -6,6 +6,7 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 public class MqttChannelGroup {
     private final LoadingCache<String, MqttChannel> cache;
     public static final MqttChannelGroup INTTCASE = new MqttChannelGroup();
+
     public MqttChannelGroup() {
         cache = Caffeine.newBuilder().build(key -> {return null;});
     }

@@ -8,20 +8,20 @@ import reactor.netty.tcp.TcpServer;
 import reactor.util.context.ContextView;
 
 
-import io.cyberflux.meta.reactor.AbstractReactiveTransport;
-import io.cyberflux.meta.reactor.ReactiveTransport;
+import io.cyberflux.meta.reactor.AbstractTransport;
+import io.cyberflux.meta.reactor.Transport;
 import io.cyberflux.reactor.mqtt.channel.MqttChannel;
-import io.cyberflux.reactor.mqtt.channel.MqttChannelHandler;
-import io.cyberflux.reactor.mqtt.channel.MqttChannelHandlerAdapter;
+import io.cyberflux.reactor.mqtt.channel.MqttChannelInboundHandler;
+import io.cyberflux.reactor.mqtt.channel.AutoMqttChannelInboundHandler;
 import io.netty.handler.codec.mqtt.MqttDecoder;
 import io.netty.handler.codec.mqtt.MqttEncoder;
 
-public class MqttTransport extends AbstractReactiveTransport {
+public class MqttTransport extends AbstractTransport {
     private DisposableServer server;
-    private MqttChannelHandler handler = new MqttChannelHandlerAdapter(Schedulers.boundedElastic());
-    
+    private MqttChannelInboundHandler handler = new AutoMqttChannelInboundHandler(Schedulers.boundedElastic());
+
     @Override
-    public Mono<ReactiveTransport> start() {
+    public Mono<Transport> start() {
         return Mono.deferContextual(ctx-> Mono.just(this.overTcp(ctx)))
                 .flatMap(server -> server.bind().cast(DisposableServer.class))
                 .thenReturn(this);
@@ -39,7 +39,7 @@ public class MqttTransport extends AbstractReactiveTransport {
     }
 
     @Override
-    public Mono<ReactiveTransport> bind() {
+    public Mono<Transport> bind() {
         throw new UnsupportedOperationException("Unimplemented method 'bind'");
     }
 
@@ -48,7 +48,7 @@ public class MqttTransport extends AbstractReactiveTransport {
                 .doOnConnection(conn -> {
                     conn.addHandlerFirst(MqttEncoder.INSTANCE)
                         .addHandlerFirst(new MqttDecoder());
-                    handler.onRegister(new MqttChannel(conn));
+                    handler.channelRegister(new MqttChannel(conn));
                 });
     }
 }

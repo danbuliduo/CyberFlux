@@ -4,28 +4,28 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.cyberflux.meta.reactor.ProtocolType;
-import io.cyberflux.meta.reactor.ReactiveServer;
+import io.cyberflux.meta.reactor.Reactor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public class CyberFluxReactorGroup {
-    private final Map<String, ReactiveServer> reactors = new ConcurrentHashMap<>();
+    private final Map<String, Reactor> reactors = new ConcurrentHashMap<>();
     public static CyberFluxReactorGroup INSTANCE = new CyberFluxReactorGroup();
 
-    public void saveReactor(ReactiveServer reactor) {
+    public void saveReactor(Reactor reactor) {
         reactors.put(reactor.uuid(), reactor);
     }
 
-    public Flux<ReactiveServer> findReactor() {
+    public Flux<Reactor> findReactor() {
         return Flux.fromIterable(reactors.values());
     }
-    public Flux<ReactiveServer> findReactor(ProtocolType type) {
+    public Flux<Reactor> findReactor(ProtocolType type) {
         return findReactor().filter(reactor -> type == reactor.protocolType());
     }
-    public Flux<ReactiveServer> findReactor(Iterable<String> uuids) {
+    public Flux<Reactor> findReactor(Iterable<String> uuids) {
         return Flux.fromIterable(uuids).flatMap(uuid -> Flux.just(reactors.get(uuid)));
     }
-    public Mono<ReactiveServer> findReactor(String uuid) {
+    public Mono<Reactor> findReactor(String uuid) {
         return Mono.just(reactors.get(uuid));
     }
 
@@ -55,10 +55,10 @@ public class CyberFluxReactorGroup {
         findReactor(uuid).subscribe(this::shutdownReactor);
     }
 
-    private void startReactor(ReactiveServer reactor) {
+    private void startReactor(Reactor reactor) {
         reactor.startAwait();
     }
-    private void shutdownReactor(ReactiveServer reactor) {
+    private void shutdownReactor(Reactor reactor) {
         reactor.shutdown();
     }
 }

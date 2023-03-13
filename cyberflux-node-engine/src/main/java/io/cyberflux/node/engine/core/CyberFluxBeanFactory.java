@@ -40,7 +40,6 @@ public class CyberFluxBeanFactory {
     private List<Object> loadBeans(String packageName) {
         List<Object> objects = new ArrayList<>();
         Flux.fromIterable(CyberPackageUtils.scanClassName(packageName, true)).subscribe(name -> {
-            //System.out.println(name);
             try {
                 Class<?> clasz = Class.forName(name);
                 if (clasz.isAnnotationPresent(CyberReactor.class)) {

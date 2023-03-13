@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-import io.cyberflux.meta.reactor.ReactiveServer;
+import io.cyberflux.meta.reactor.Reactor;
 import io.cyberflux.node.engine.CyberFluxNodeEngine;
 import io.cyberflux.node.engine.container.CyberFluxReactorGroup;
 import reactor.core.publisher.Flux;
@@ -19,9 +19,9 @@ public class CyberFluxSpringEngine implements CyberFluxNodeEngine {
     }
 
     public CyberFluxSpringEngine(ApplicationContext context) {
-        Flux.fromArray(context.getBeanNamesForType(ReactiveServer.class))
+        Flux.fromArray(context.getBeanNamesForType(Reactor.class))
             .flatMap(name -> Flux.just(context.getBean(name)))
-            .cast(ReactiveServer.class)
+            .cast(Reactor.class)
             .doOnNext(reactorGroup::saveReactor)
             .subscribe(this::startReactor);
     }
@@ -30,11 +30,11 @@ public class CyberFluxSpringEngine implements CyberFluxNodeEngine {
         return new CyberFluxSpringEngine(context);
     }
 
-    public void saveReactor(ReactiveServer reactor) {
+    public void saveReactor(Reactor reactor) {
         reactorGroup.saveReactor(reactor);
     }
 
-    public void startReactor(ReactiveServer reactor) {
+    public void startReactor(Reactor reactor) {
         reactor.startAwait();
         log.info("Reactor ==> {} - type:{}, uuid:{}", reactor.getClass(), reactor.protocolType(), reactor.uuid());
     }

@@ -2,16 +2,16 @@ package io.cyberflux.reactor.mqtt;
 
 import java.util.Optional;
 
-import io.cyberflux.meta.reactor.AbstractReactiveServer;
+import io.cyberflux.meta.reactor.AbstractReactor;
 import io.cyberflux.meta.reactor.ProtocolType;
-import io.cyberflux.meta.reactor.ReactiveServer;
-import io.cyberflux.meta.reactor.ReactiveTransport;
+import io.cyberflux.meta.reactor.Reactor;
+import io.cyberflux.meta.reactor.Transport;
 import io.cyberflux.reactor.mqtt.config.MqttConfiguration;
 import io.cyberflux.reactor.mqtt.transport.MqttTransport;
 import io.cyberflux.reactor.mqtt.transport.MqttTransportFactory;
 import reactor.core.publisher.Mono;
 
-public class CyberFluxMqttReactor extends AbstractReactiveServer {
+public class CyberFluxMqttReactor extends AbstractReactor {
     private MqttTransport transport;
     private MqttConfiguration config;
 
@@ -21,6 +21,7 @@ public class CyberFluxMqttReactor extends AbstractReactiveServer {
     public CyberFluxMqttReactor(MqttConfiguration config) {
         super(ProtocolType.MQTT);
         this.config = Optional.ofNullable(config).orElse(new MqttConfiguration());
+        System.out.println(this.uuid);
     }
 
     public CyberFluxMqttReactor handler() {
@@ -32,11 +33,8 @@ public class CyberFluxMqttReactor extends AbstractReactiveServer {
         return this;
     }
 
-    
-
-
     @Override
-    public Mono<ReactiveServer> start() {
+    public Mono<Reactor> start() {
         return MqttTransportFactory.createTransport()
                 .start()
                 .doOnError(Throwable::printStackTrace)
@@ -49,7 +47,7 @@ public class CyberFluxMqttReactor extends AbstractReactiveServer {
         transport.dispose();
     }
 
-    private void bindTransport(ReactiveTransport transport) {
+    private void bindTransport(Transport transport) {
         this.transport = (MqttTransport) transport;
     }
 

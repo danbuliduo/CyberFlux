@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.cyberflux.meta.reactor.ProtocolType;
-import io.cyberflux.meta.reactor.ReactiveServer;
+import io.cyberflux.meta.reactor.Reactor;
 import io.cyberflux.node.engine.container.CyberFluxReactorGroup;
 import io.cyberflux.node.engine.core.CyberFluxBeanFactory;
 import io.cyberflux.node.engine.utils.CyberBannerUtils;
@@ -40,23 +40,23 @@ public final class CyberFluxHuaxuEngine implements CyberFluxNodeEngine {
         loadReactorFlux().doOnNext(reactorGroup::saveReactor).subscribe(this::startReactor);
     }
 
-    public Mono<ReactiveServer> loadReactorMono(String injectName) {
-        return Mono.just(beanFactory.findBean(injectName)).cast(ReactiveServer.class);
+    public Mono<Reactor> loadReactorMono(String injectName) {
+        return Mono.just(beanFactory.findBean(injectName)).cast(Reactor.class);
     }
 
-    public Flux<ReactiveServer> loadReactorFlux() {
-        return beanFactory.beanFlux(ReactiveServer.class);
+    public Flux<Reactor> loadReactorFlux() {
+        return beanFactory.beanFlux(Reactor.class);
     }
 
-    public Flux<ReactiveServer> loadReactorFlux(ProtocolType type) {
+    public Flux<Reactor> loadReactorFlux(ProtocolType type) {
         return loadReactorFlux().filter(reactor -> type == reactor.protocolType());
     }
 
-    public void saveReactor(ReactiveServer reactor) {
+    public void saveReactor(Reactor reactor) {
         reactorGroup.saveReactor(reactor);
     }
 
-    public void startReactor(ReactiveServer reactor) {
+    public void startReactor(Reactor reactor) {
         reactor.startAwait();
         log.info("Reactor ==> {} - type:{}, uuid:{}", reactor.getClass(), reactor.protocolType(), reactor.uuid());
     }

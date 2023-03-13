@@ -41,4 +41,8 @@ public class MqttChannel {
         }
         return Mono.empty();
     }
+
+    public Mono<Void> write(MqttMessage message) {
+       return write(Mono.just(message));
+    }
 }
