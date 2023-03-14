@@ -3,6 +3,7 @@ package io.cyberflux.node.engine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.cyberflux.meta.reactor.AbstractClusterNode;
 import io.cyberflux.meta.reactor.ProtocolType;
 import io.cyberflux.meta.reactor.Reactor;
 import io.cyberflux.node.engine.container.CyberFluxReactorGroup;
@@ -12,7 +13,7 @@ import io.cyberflux.node.engine.utils.CyberBannerUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public final class CyberFluxHuaxuEngine implements CyberFluxNodeEngine {
+public final class CyberFluxHuaxuEngine extends AbstractClusterNode implements CyberFluxNodeEngine {
     private static final Logger log = LoggerFactory.getLogger(CyberFluxHuaxuEngine.class);
     private static final CyberFluxReactorGroup reactorGroup = CyberFluxReactorGroup.INSTANCE;
     private final CyberFluxBeanFactory beanFactory;
@@ -31,25 +32,32 @@ public final class CyberFluxHuaxuEngine implements CyberFluxNodeEngine {
     }
 
     public CyberFluxHuaxuEngine() {
+        super("");
         beanFactory= new CyberFluxBeanFactory();
-        loadReactorFlux().doOnNext(reactorGroup::saveReactor).subscribe(this::startReactor);
+        loadReactor().doOnNext(reactorGroup::saveReactor).subscribe(this::startReactor);
     }
 
     public CyberFluxHuaxuEngine(Class<?> clasz) {
+        super(clasz.getSimpleName());
         beanFactory = new CyberFluxBeanFactory(clasz);
-        loadReactorFlux().doOnNext(reactorGroup::saveReactor).subscribe(this::startReactor);
+        loadReactor().doOnNext(reactorGroup::saveReactor).subscribe(this::startReactor);
     }
 
-    public Mono<Reactor> loadReactorMono(String injectName) {
-        return Mono.just(beanFactory.findBean(injectName)).cast(Reactor.class);
-    }
-
-    public Flux<Reactor> loadReactorFlux() {
+    public Flux<Reactor> loadReactor() {
         return beanFactory.beanFlux(Reactor.class);
     }
 
-    public Flux<Reactor> loadReactorFlux(ProtocolType type) {
-        return loadReactorFlux().filter(reactor -> type == reactor.protocolType());
+    public Flux<Reactor> loadReactor(ProtocolType type) {
+        return loadReactor().filter(reactor -> type == reactor.protocolType());
+    }
+
+    public Mono<Reactor> loadReactor(String injectName) {
+        return Mono.just(beanFactory.findBean(injectName)).cast(Reactor.class);
+    }
+
+    @Override
+    public Flux<Reactor> findReactor() {
+        return reactorGroup.findReactor();
     }
 
     public void saveReactor(Reactor reactor) {

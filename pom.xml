@@ -31,6 +31,7 @@
     <modules>
         <module>cyberflux-meta-reactor</module>
         <module>cyberflux-node-engine</module>
+        <module>cyberflux-reactor-coap</module>
         <module>cyberflux-reactor-mqtt</module>
         <module>cyberflux-spring-boot-starter</module>
     </modules>
@@ -45,6 +46,11 @@
             <dependency>
                 <groupId>io.cyberflux</groupId>
                 <artifactId>cyberflux-node-engine</artifactId>
+                <version>${io.cyberflux.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-reactor-coap</artifactId>
                 <version>${io.cyberflux.version}</version>
             </dependency>
             <dependency>

@@ -8,7 +8,6 @@ import io.cyberflux.spring.EnableCyberFluxNodeEngine;
 @EnableCyberFluxNodeEngine
 @SpringBootApplication
 public class SpringWebfluxApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(SpringWebfluxApplication.class, args);
 	}

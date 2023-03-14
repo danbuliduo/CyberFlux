@@ -1,6 +1,7 @@
 package io.cyberflux.node.engine.core;
 
 import io.cyberflux.node.engine.annotation.CyberBean;
+import io.cyberflux.node.engine.annotation.CyberClusterNodeEngine;
 import io.cyberflux.node.engine.annotation.CyberInject;
 import io.cyberflux.node.engine.annotation.CyberPackageScan;
 import io.cyberflux.node.engine.annotation.CyberReactor;
@@ -42,6 +43,9 @@ public class CyberFluxBeanFactory {
         Flux.fromIterable(CyberPackageUtils.scanClassName(packageName, true)).subscribe(name -> {
             try {
                 Class<?> clasz = Class.forName(name);
+                if(clasz.isAnnotationPresent(CyberClusterNodeEngine.class)) {
+
+                }
                 if (clasz.isAnnotationPresent(CyberReactor.class)) {
                     CyberReactor reactor = clasz.getAnnotation(CyberReactor.class);
                     String injectName = reactor.value().isBlank() ? name : reactor.value();

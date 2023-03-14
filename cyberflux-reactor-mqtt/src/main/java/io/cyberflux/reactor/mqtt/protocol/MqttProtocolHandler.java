@@ -1,6 +1,6 @@
 package io.cyberflux.reactor.mqtt.protocol;
 
-import java.util.Collections;
+//import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -10,17 +10,18 @@ import io.cyberflux.reactor.mqtt.utils.MqttMessageBuilder;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import io.netty.handler.codec.mqtt.MqttMessage;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
-import io.netty.handler.codec.mqtt.MqttQoS;
+//import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.handler.codec.mqtt.MqttSubscribeMessage;
 import io.netty.handler.codec.mqtt.MqttTopicSubscription;
+import io.netty.handler.codec.mqtt.MqttUnsubscribeMessage;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 
 public class MqttProtocolHandler implements MqttProtocolInterface {
-    private  MqttChannelGroup channelGroup;
+   // private  MqttChannelGroup channelGroup;
 
     public MqttProtocolHandler(MqttChannelGroup channelGroup) {
-        this.channelGroup = channelGroup;
+        //this.channelGroup = channelGroup;
     }
 
     @Override
@@ -43,9 +44,9 @@ public class MqttProtocolHandler implements MqttProtocolInterface {
 
     @Override
     public Mono<Void> publish(MqttChannel channel, MqttMessage message) {
-        MqttPublishMessage pubmsg =  (MqttPublishMessage) message;
+        MqttPublishMessage publishMessage =  (MqttPublishMessage) message;
 
-        return switch (pubmsg.fixedHeader().qosLevel()) {
+        return switch (publishMessage.fixedHeader().qosLevel()) {
             case AT_MOST_ONCE -> Mono.empty();
             case AT_LEAST_ONCE -> Mono.empty();
             case EXACTLY_ONCE -> Mono.empty();
@@ -94,6 +95,13 @@ public class MqttProtocolHandler implements MqttProtocolInterface {
 
     @Override
     public Mono<Void> unsubscribe(MqttChannel channel, MqttMessage message) {
-        return Mono.empty();
+        MqttUnsubscribeMessage unsubscribeMessage = (MqttUnsubscribeMessage) message;
+        return Mono.fromRunnable(() -> {
+
+        }).then(channel.write(
+            MqttMessageBuilder.buildUnsubAckMessage(
+                unsubscribeMessage.variableHeader().messageId()
+            )
+        ));
     }
 }

@@ -19,6 +19,14 @@
     <dependencies>
         <dependency>
             <groupId>io.cyberflux</groupId>
+            <artifactId>cyberflux-meta-reactor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.cyberflux</groupId>
+            <artifactId>cyberflux-reactor-coap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.cyberflux</groupId>
             <artifactId>cyberflux-reactor-mqtt</artifactId>
         </dependency>
         <dependency>

@@ -1,9 +1,7 @@
 # CyberFlux
 
-## 技术架构
+## **Framework**
 
-![1678691356510](image/README/1678691356510.png)
+![framework-2](image/design/framework-2.png)
 
-## **CyberFluxFramework**
-
-![1678691373337](image/README/1678691373337.png)
+![framework-1](image/design/framework-1.png)

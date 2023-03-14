@@ -18,10 +18,10 @@ public class CyberFluxMqttReactor extends AbstractReactor {
     public CyberFluxMqttReactor() {
         this(new MqttConfiguration());
     }
+
     public CyberFluxMqttReactor(MqttConfiguration config) {
         super(ProtocolType.MQTT);
         this.config = Optional.ofNullable(config).orElse(new MqttConfiguration());
-        System.out.println(this.uuid);
     }
 
     public CyberFluxMqttReactor handler() {
@@ -35,8 +35,7 @@ public class CyberFluxMqttReactor extends AbstractReactor {
 
     @Override
     public Mono<Reactor> start() {
-        return MqttTransportFactory.createTransport()
-                .start()
+        return MqttTransportFactory.createTransport().start()
                 .doOnError(Throwable::printStackTrace)
                 .doOnSuccess(this::bindTransport)
                 .thenReturn(this);
@@ -51,11 +50,11 @@ public class CyberFluxMqttReactor extends AbstractReactor {
         this.transport = (MqttTransport) transport;
     }
 
-    public static CyberFluxMqttReactor.MqttServerBuilder builder() {
-        return new CyberFluxMqttReactor.MqttServerBuilder();
+    public static CyberFluxMqttReactor.MqttReactorBuilder builder() {
+        return new CyberFluxMqttReactor.MqttReactorBuilder();
     }
 
-    public static class MqttServerBuilder {
+    public static class MqttReactorBuilder {
         public CyberFluxMqttReactor build() {
             return new CyberFluxMqttReactor();
         }

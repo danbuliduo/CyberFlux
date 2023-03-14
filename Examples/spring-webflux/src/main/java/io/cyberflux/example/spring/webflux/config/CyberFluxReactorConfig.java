@@ -7,9 +7,9 @@ import io.cyberflux.meta.reactor.Reactor;
 import io.cyberflux.reactor.mqtt.CyberFluxMqttReactor;
 
 @Configuration
-public class TestConfig {
+public class CyberFluxReactorConfig {
     @Bean
-    Reactor mqttServer() {
+    Reactor mqttReactor() {
         return CyberFluxMqttReactor.builder().build();
     }
 }
