@@ -23,7 +23,11 @@ public final class CyberPackageUtils {
         return "";
     }
 
-    public static String getStartupClassPackage() {
+    public static String getStartupClassSimpleName() {
+        return  CyberStringUtils.lastSplit(CyberPackageUtils.getStartupClassName(), ".");
+    }
+
+    public static String getStartupClassPackageName() {
         return CyberStringUtils.cosLastSplit(CyberPackageUtils.getStartupClassName(), ".");
     }
 

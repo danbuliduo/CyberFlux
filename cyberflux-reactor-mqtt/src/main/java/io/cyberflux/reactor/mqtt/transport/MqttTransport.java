@@ -54,7 +54,7 @@ public class MqttTransport extends AbstractTransport {
     }
 
     private TcpServer overProtocol(ContextView context) {
-        MqttTransportConfig config = context.get(MqttTransportConfig.class);
+        MqttTransportConfig config = new MqttTransportConfig();//context.get(MqttTransportConfig.class);
         return switch (config.getType()) {
             case TCP       -> this.overTcp(config);
             case WEBSOCKET -> this.overWebSocket(config);

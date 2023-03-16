@@ -1,14 +1,14 @@
 package io.cyberflux.reactor.coap;
 
 import io.cyberflux.meta.reactor.AbstractReactor;
-import io.cyberflux.meta.reactor.ProtocolType;
+import io.cyberflux.meta.reactor.ReactorType;
 import io.cyberflux.meta.reactor.Reactor;
 import reactor.core.publisher.Mono;
 
 public class CyberFluxCoapReactor extends AbstractReactor {
 
     public CyberFluxCoapReactor() {
-        super(ProtocolType.COAP);
+        super(ReactorType.COAP);
     }
 
     @Override

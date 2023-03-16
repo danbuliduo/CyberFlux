@@ -12,7 +12,7 @@ import io.cyberflux.node.engine.utils.CyberPackageUtils;
 public class JuintBeanTest {
     private static Logger log = LoggerFactory.getLogger(JuintBeanTest.class);
     @CyberInject
-    CustomImplServer customImplServer;
+    CustomReactor customImplServer;
     @Test
     public void test() throws InterruptedException {
         CyberFluxHuaxuEngine.run(JuintBeanTest.class);

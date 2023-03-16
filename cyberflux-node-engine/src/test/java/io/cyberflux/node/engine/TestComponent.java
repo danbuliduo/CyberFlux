@@ -7,7 +7,7 @@ import jakarta.annotation.PostConstruct;
 @CyberReactor
 public class TestComponent {
     @CyberInject
-    public CustomImplServer aserver;
+    public CustomReactor aserver;
 
     @PostConstruct
     public void init() {

@@ -2,19 +2,22 @@ package io.cyberflux.node.engine;
 
 import java.util.UUID;
 
-import io.cyberflux.meta.reactor.ProtocolType;
+import io.cyberflux.meta.reactor.ReactorType;
 import io.cyberflux.meta.reactor.Reactor;
+import io.cyberflux.meta.reactor.ReactorStatus;
 import io.cyberflux.node.engine.annotation.CyberReactor;
 import reactor.core.publisher.Mono;
 
 
 @CyberReactor
-public class CustomImplServer implements Reactor {
+public class CustomReactor implements Reactor {
     private String uuid = UUID.randomUUID().toString();
+
     @Override
-    public ProtocolType protocolType() {
-        return ProtocolType.UNKNOWN;
+    public ReactorType type() {
+        return ReactorType.CUSTOM;
     }
+
     @Override
     public Mono<Reactor> start() {
         System.out.println(this.getClass());
@@ -33,5 +36,10 @@ public class CustomImplServer implements Reactor {
     @Override
     public String uuid() {
         return uuid;
+    }
+
+    @Override
+    public ReactorStatus status() {
+       return ReactorStatus.OPERATION;
     }
 }

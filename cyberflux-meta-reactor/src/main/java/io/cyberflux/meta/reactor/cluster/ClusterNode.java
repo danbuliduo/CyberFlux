@@ -1,4 +1,4 @@
-package io.cyberflux.meta.reactor;
+package io.cyberflux.meta.reactor.cluster;
 
 import java.util.Set;
 

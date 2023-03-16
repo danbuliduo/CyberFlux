@@ -1,11 +1,11 @@
 package io.cyberflux.node.engine.core;
 
 import io.cyberflux.node.engine.annotation.CyberBean;
-import io.cyberflux.node.engine.annotation.CyberClusterNodeEngine;
 import io.cyberflux.node.engine.annotation.CyberInject;
 import io.cyberflux.node.engine.annotation.CyberPackageScan;
 import io.cyberflux.node.engine.annotation.CyberReactor;
 import io.cyberflux.node.engine.container.CyberFluxBeanContainer;
+import io.cyberflux.node.engine.exception.CyberFluxBeanException;
 import io.cyberflux.node.engine.utils.CyberPackageUtils;
 
 
@@ -43,9 +43,6 @@ public class CyberFluxBeanFactory {
         Flux.fromIterable(CyberPackageUtils.scanClassName(packageName, true)).subscribe(name -> {
             try {
                 Class<?> clasz = Class.forName(name);
-                if(clasz.isAnnotationPresent(CyberClusterNodeEngine.class)) {
-
-                }
                 if (clasz.isAnnotationPresent(CyberReactor.class)) {
                     CyberReactor reactor = clasz.getAnnotation(CyberReactor.class);
                     String injectName = reactor.value().isBlank() ? name : reactor.value();
@@ -58,15 +55,17 @@ public class CyberFluxBeanFactory {
                             .subscribe(method -> {
                                 CyberBean bean = method.getAnnotation(CyberBean.class);
                                 String beanName =  bean.value().isBlank() ? method.getName() : bean.value();
-                                method.setAccessible(true);
-                                try {
-                                    context.saveBean(beanName, method.invoke(object));
-                                } catch (ReflectiveOperationException e) {
-                                    e.printStackTrace();
-                                }
+                                if(!context.contains(injectName)) {
+                                    method.setAccessible(true);
+                                    try {
+                                        context.saveBean(beanName, method.invoke(object));
+                                    } catch (ReflectiveOperationException e) {
+                                         e.printStackTrace();
+                                    }
+                                } else throw new CyberFluxBeanException("Bean object already exists.");
                             }
                         );
-                    }
+                    } else throw new CyberFluxBeanException("Reactor object already exists.");
                 }
                 if(clasz.isAnnotationPresent(CyberPackageScan.class)) {
                     Flux.fromArray(clasz.getAnnotation(CyberPackageScan.class).value())

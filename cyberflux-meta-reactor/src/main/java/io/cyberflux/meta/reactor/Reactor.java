@@ -4,7 +4,8 @@ import reactor.core.publisher.Mono;
 
 public interface Reactor {
     String uuid();
-    ProtocolType protocolType();
+    ReactorStatus status();
+    ReactorType type();
     Mono<Reactor> start();
     Reactor startAwait();
     void shutdown();

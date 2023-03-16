@@ -3,7 +3,7 @@ package io.cyberflux.reactor.mqtt;
 import java.util.Optional;
 
 import io.cyberflux.meta.reactor.AbstractReactor;
-import io.cyberflux.meta.reactor.ProtocolType;
+import io.cyberflux.meta.reactor.ReactorType;
 import io.cyberflux.meta.reactor.Reactor;
 import io.cyberflux.meta.reactor.Transport;
 import io.cyberflux.reactor.mqtt.config.MqttConfiguration;
@@ -20,7 +20,7 @@ public class CyberFluxMqttReactor extends AbstractReactor {
     }
 
     public CyberFluxMqttReactor(MqttConfiguration config) {
-        super(ProtocolType.MQTT);
+        super(ReactorType.MQTT);
         this.config = Optional.ofNullable(config).orElse(new MqttConfiguration());
     }
 

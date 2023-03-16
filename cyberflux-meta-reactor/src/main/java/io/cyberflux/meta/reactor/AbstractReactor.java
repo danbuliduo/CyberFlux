@@ -6,19 +6,21 @@ import java.util.UUID;
 
 public abstract class AbstractReactor implements Reactor {
     protected String uuid;
-    protected ProtocolType protocolType;
+    protected ReactorStatus status;
+    protected ReactorType type;
 
     public AbstractReactor() {
-        this(ProtocolType.UNKNOWN);
+        this(ReactorType.UNKNOWN);
     }
 
-    public AbstractReactor(ProtocolType protocolType) {
-        this(UUID.randomUUID().toString(), protocolType);
+    public AbstractReactor(ReactorType type) {
+        this(UUID.randomUUID().toString(), type);
     }
 
-    public AbstractReactor(String uuid, ProtocolType protocolType) {
+    public AbstractReactor(String uuid, ReactorType type) {
         this.uuid = uuid;
-        this.protocolType = protocolType;
+        this.type = type;
+        this.status = ReactorStatus.INVALID;
     }
 
     public abstract Mono<Reactor> start();
@@ -29,8 +31,13 @@ public abstract class AbstractReactor implements Reactor {
     }
 
     @Override
-    public ProtocolType protocolType() {
-        return protocolType;
+    public ReactorStatus status() {
+        return status;
+    }
+
+    @Override
+    public ReactorType type() {
+        return type;
     }
 
     @Override
