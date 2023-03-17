@@ -18,7 +18,6 @@
         <io.cyberflux.version>META</io.cyberflux.version>
         <io.projectreactor.version>2022.0.4</io.projectreactor.version>
         <org.springframework.version>3.0.4</org.springframework.version>
-        <!--com.influxdb.version>6.7.0</com.influxdb.version-->
     </properties>
 
     <licenses>
