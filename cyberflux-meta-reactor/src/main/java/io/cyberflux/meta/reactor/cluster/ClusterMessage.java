@@ -2,7 +2,7 @@ package io.cyberflux.meta.reactor.cluster;
 
 import java.time.Instant;
 
-public class ClusterMessage {
+public final class ClusterMessage {
     private Object payload;
     private Instant timeStamp = Instant.now();
 

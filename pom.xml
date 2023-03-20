@@ -18,6 +18,7 @@
         <io.cyberflux.version>META</io.cyberflux.version>
         <io.projectreactor.version>2022.0.4</io.projectreactor.version>
         <org.springframework.version>3.0.4</org.springframework.version>
+        <!--com.influxdb.version>6.7.0</com.influxdb.version-->
     </properties>
 
     <licenses>
@@ -29,7 +30,8 @@
 
     <modules>
         <module>cyberflux-meta-reactor</module>
-        <module>cyberflux-node-engine</module>
+        <module>cyberflux-node-engine-core</module>
+        <module>cyberflux-node-engine-huaxu</module>
         <module>cyberflux-reactor-coap</module>
         <module>cyberflux-reactor-mqtt</module>
         <module>cyberflux-spring-boot-starter</module>
@@ -44,7 +46,12 @@
             </dependency>
             <dependency>
                 <groupId>io.cyberflux</groupId>
-                <artifactId>cyberflux-node-engine</artifactId>
+                <artifactId>cyberflux-node-engine-core</artifactId>
+                <version>${io.cyberflux.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-node-engine-huaxu</artifactId>
                 <version>${io.cyberflux.version}</version>
             </dependency>
             <dependency>

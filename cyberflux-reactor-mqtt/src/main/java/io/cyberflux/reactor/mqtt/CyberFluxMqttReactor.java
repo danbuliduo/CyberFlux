@@ -2,16 +2,16 @@ package io.cyberflux.reactor.mqtt;
 
 import java.util.Optional;
 
-import io.cyberflux.meta.reactor.AbstractReactor;
+import io.cyberflux.meta.reactor.CyberFluxAbstractReactor;
 import io.cyberflux.meta.reactor.ReactorType;
-import io.cyberflux.meta.reactor.Reactor;
-import io.cyberflux.meta.reactor.Transport;
+import io.cyberflux.meta.reactor.CyberFluxReactor;
+import io.cyberflux.meta.reactor.CyberFluxTransport;
 import io.cyberflux.reactor.mqtt.config.MqttConfiguration;
 import io.cyberflux.reactor.mqtt.transport.MqttTransport;
 import io.cyberflux.reactor.mqtt.transport.MqttTransportFactory;
 import reactor.core.publisher.Mono;
 
-public class CyberFluxMqttReactor extends AbstractReactor {
+public class CyberFluxMqttReactor extends CyberFluxAbstractReactor {
     private MqttTransport transport;
     private MqttConfiguration config;
 
@@ -34,7 +34,7 @@ public class CyberFluxMqttReactor extends AbstractReactor {
     }
 
     @Override
-    public Mono<Reactor> start() {
+    public Mono<CyberFluxReactor> start() {
         return MqttTransportFactory.createTransport().start()
                 .doOnError(Throwable::printStackTrace)
                 .doOnSuccess(this::bindTransport)
@@ -46,7 +46,7 @@ public class CyberFluxMqttReactor extends AbstractReactor {
         transport.dispose();
     }
 
-    private void bindTransport(Transport transport) {
+    private void bindTransport(CyberFluxTransport transport) {
         this.transport = (MqttTransport) transport;
     }
 

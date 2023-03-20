@@ -4,13 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import io.cyberflux.meta.reactor.AbstractReactor;
+import io.cyberflux.meta.reactor.CyberFluxAbstractReactor;
 import io.cyberflux.meta.reactor.ReactorType;
-import io.cyberflux.meta.reactor.Reactor;
+import io.cyberflux.meta.reactor.CyberFluxReactor;
 import reactor.core.publisher.Mono;
 
 @Component
-public class CustomReactor extends AbstractReactor {
+public class CustomReactor extends CyberFluxAbstractReactor {
     private static final Logger log = LoggerFactory.getLogger(CustomReactor.class);
 
     public CustomReactor() {
@@ -23,7 +23,7 @@ public class CustomReactor extends AbstractReactor {
     }
 
     @Override
-    public Mono<Reactor> start() {
+    public Mono<CyberFluxReactor> start() {
         log.info("start method is called");
         return Mono.empty().thenReturn(this);
     }

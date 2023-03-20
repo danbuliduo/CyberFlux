@@ -1,11 +1,11 @@
 package io.cyberflux.reactor.coap;
 
-import io.cyberflux.meta.reactor.AbstractReactor;
+import io.cyberflux.meta.reactor.CyberFluxAbstractReactor;
 import io.cyberflux.meta.reactor.ReactorType;
-import io.cyberflux.meta.reactor.Reactor;
+import io.cyberflux.meta.reactor.CyberFluxReactor;
 import reactor.core.publisher.Mono;
 
-public class CyberFluxCoapReactor extends AbstractReactor {
+public class CyberFluxCoapReactor extends CyberFluxAbstractReactor {
 
     public CyberFluxCoapReactor() {
         super(ReactorType.COAP);
@@ -17,7 +17,7 @@ public class CyberFluxCoapReactor extends AbstractReactor {
     }
 
     @Override
-    public Mono<Reactor> start() {
+    public Mono<CyberFluxReactor> start() {
        return Mono.empty().thenReturn(this);
     }
 

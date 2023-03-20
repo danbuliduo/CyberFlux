@@ -9,8 +9,8 @@ import reactor.util.context.ContextView;
 
 import java.util.Optional;
 
-import io.cyberflux.meta.reactor.AbstractTransport;
-import io.cyberflux.meta.reactor.Transport;
+import io.cyberflux.meta.reactor.CyberFluxAbstractTransport;
+import io.cyberflux.meta.reactor.CyberFluxTransport;
 import io.cyberflux.reactor.mqtt.channel.MqttChannel;
 import io.cyberflux.reactor.mqtt.channel.MqttChannelInboundHandler;
 import io.cyberflux.reactor.mqtt.codec.MqttWebSocketCodec;
@@ -25,7 +25,7 @@ import io.netty.handler.codec.mqtt.MqttDecoder;
 import io.netty.handler.codec.mqtt.MqttEncoder;
 
 
-public class MqttTransport extends AbstractTransport {
+public class MqttTransport extends CyberFluxAbstractTransport {
     private DisposableServer server;
     private MqttChannelInboundHandler handler = new AutoMqttChannelInboundHandler(Schedulers.boundedElastic());
 
@@ -36,7 +36,7 @@ public class MqttTransport extends AbstractTransport {
     }
 
     @Override
-    public Mono<Transport> start() {
+    public Mono<CyberFluxTransport> start() {
         return Mono.deferContextual(ctx-> Mono.just(this.overProtocol(ctx)))
                 .flatMap(server -> server.bind().cast(DisposableServer.class))
                 .thenReturn(this);
