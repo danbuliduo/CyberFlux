@@ -81,6 +81,7 @@ public final class CyberFluxBeanFactory {
                     if(!context.contains(injectName)) {
                         objects.add(object);
                         method.setAccessible(true);
+                        //method.getParameterAnnotations()
                         try {
                             context.saveBean(injectName, method.invoke(object));
                         } catch (ReflectiveOperationException e) {

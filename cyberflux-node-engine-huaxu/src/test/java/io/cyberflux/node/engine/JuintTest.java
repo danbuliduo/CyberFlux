@@ -10,16 +10,16 @@ import io.cyberflux.node.engine.huaxu.annotation.CyberMetaObject;
 import io.cyberflux.node.engine.huaxu.utils.CyberPackageUtils;
 
 @CyberMetaObject
-public class JuintBeanTest {
-    private static Logger log = LoggerFactory.getLogger(JuintBeanTest.class);
+public class JuintTest {
+    private static Logger log = LoggerFactory.getLogger(JuintTest.class);
     @CyberInject
     CustomReactor customImplServer;
     @Test
     public void test() throws InterruptedException {
-        CyberFluxHuaxuEngine.run(JuintBeanTest.class);
+        CyberFluxHuaxuEngine.run(JuintTest.class);
         log.info("--------------------------");
         log.info("{}", CyberPackageUtils.getStartupClassName());
-        log.info("{}", JuintBeanTest.class.getCanonicalName());
+        log.info("{}", JuintTest.class.getCanonicalName());
         log.info("{}", this);
         log.info("{}", customImplServer);
         Thread.sleep(10000);

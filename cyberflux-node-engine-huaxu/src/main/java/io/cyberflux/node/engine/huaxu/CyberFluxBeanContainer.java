@@ -22,7 +22,7 @@ public class CyberFluxBeanContainer {
 
     public <T> Flux<T> beanFlux(Class<T> clasz) {
         return Flux.fromIterable(beans.values()).filter(
-            item -> clasz.isAssignableFrom(item.getClass())
+            obj -> clasz.isAssignableFrom(obj.getClass())
         ).cast(clasz);
     }
 }
