@@ -17,10 +17,15 @@ public class CustomReactor implements CyberFluxReactor {
     private static final Logger log = LoggerFactory.getLogger(CustomReactor.class);
 
     private String uuid = UUID.randomUUID().toString();
+    private ReactorType type =  ReactorType.CUSTOM;
+
+    public CustomReactor() {
+        type.setFullName("CP-A");
+    }
 
     @Override
     public ReactorType type() {
-        return ReactorType.CUSTOM;
+        return this.type;
     }
 
     @Override

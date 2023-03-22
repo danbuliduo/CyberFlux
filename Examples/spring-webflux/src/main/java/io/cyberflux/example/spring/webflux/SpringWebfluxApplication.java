@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import io.cyberflux.spring.engine.EnableCyberFluxNodeEngine;
 
-
 @EnableCyberFluxNodeEngine
 @SpringBootApplication
 public class SpringWebfluxApplication {

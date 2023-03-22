@@ -14,7 +14,7 @@ public class CustomReactor extends CyberFluxAbstractReactor {
     private static final Logger log = LoggerFactory.getLogger(CustomReactor.class);
 
     public CustomReactor() {
-        super(ReactorType.UNKNOWN);
+        super(ReactorType.CUSTOM);
     }
 
     @Override

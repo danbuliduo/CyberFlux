@@ -49,37 +49,4 @@ public class CyberFluxReactorGroup {
     public Mono<CyberFluxReactor> findReactor(String uuid) {
         return Mono.just(reactors.get(uuid));
     }
-
-    public void startReactor() {
-        findReactor().subscribe(this::startReactor);
-    }
-    public void startReactor(ReactorType type) {
-        findReactor(type).subscribe(this::startReactor);
-    }
-    public void startReactor(Iterable<String> uuids) {
-        findReactor(uuids).subscribe(this::startReactor);
-    }
-    public void startReactor(String uuid) {
-        findReactor(uuid).subscribe(this::startReactor);
-    }
-
-    public void shutdownReactor() {
-        findReactor().subscribe(this::shutdownReactor);
-    }
-    public void shutdownReactor(ReactorType type) {
-        findReactor(type).subscribe(this::shutdownReactor);
-    }
-    public void shutdownReactor(Iterable<String> uuids) {
-        findReactor(uuids).subscribe(this::shutdownReactor);
-    }
-    public void shutdownReactor(String uuid) {
-        findReactor(uuid).subscribe(this::shutdownReactor);
-    }
-
-    private void startReactor(CyberFluxReactor reactor) {
-        reactor.startAwait();
-    }
-    private void shutdownReactor(CyberFluxReactor reactor) {
-        reactor.shutdown();
-    }
 }

@@ -17,7 +17,7 @@ import reactor.netty.ReactorNetty;
 
 public class AutoMqttChannelMessageHandler implements MqttChannelMessageHandler {
     private final static Logger log = LoggerFactory.getLogger(AutoMqttChannelMessageHandler.class);
-    private MqttChannelGroup channelGroup;
+    protected MqttChannelGroup channelGroup;
     protected MqttProtocolInterface protocol;
     protected Scheduler scheduler;
 

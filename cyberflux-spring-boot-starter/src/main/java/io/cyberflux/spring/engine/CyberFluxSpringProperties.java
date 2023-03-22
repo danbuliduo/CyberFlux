@@ -18,7 +18,6 @@ public class CyberFluxSpringProperties {
         return reactor;
     }
 
-
     public void setCluster(CyberFluxClusterConfig cluster) {
         this.cluster = cluster;
     }

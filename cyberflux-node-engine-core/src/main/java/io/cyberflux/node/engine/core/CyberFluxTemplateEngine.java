@@ -16,6 +16,7 @@ public class CyberFluxTemplateEngine extends CyberFluxAbstractClusterNode implem
 
     public CyberFluxTemplateEngine(String nodeName) {
         super(nodeName);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> this.shutdownReactor()));
     }
 
     @Override
@@ -96,22 +97,22 @@ public class CyberFluxTemplateEngine extends CyberFluxAbstractClusterNode implem
 
     @Override
     public void shutdownReactor() {
-        reactorGroup.shutdownReactor();
+        findReactor().subscribe(this::shutdownReactor);
     }
 
     @Override
     public void shutdownReactor(ReactorType type) {
-        reactorGroup.shutdownReactor(type);
+        findReactor(type).subscribe(this::shutdownReactor);
     }
 
     @Override
     public void shutdownReactor(Iterable<String> uuids) {
-        reactorGroup.shutdownReactor(uuids);
+        findReactor(uuids).subscribe(this::shutdownReactor);
     }
 
     @Override
     public void shutdownReactor(String uuid) {
-        reactorGroup.shutdownReactor(uuid);
+        findReactor(uuid).subscribe(this::shutdownReactor);
     }
 
     @Override

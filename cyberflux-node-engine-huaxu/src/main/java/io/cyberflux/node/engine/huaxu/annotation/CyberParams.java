@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Deprecated
 public @interface CyberParams {
     CyberParam[] params() default {};
 }

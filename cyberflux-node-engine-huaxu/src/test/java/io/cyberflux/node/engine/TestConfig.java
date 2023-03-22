@@ -12,11 +12,13 @@ public class TestConfig {
 
     @CyberBean
     public CyberFluxReactor mqttserver(@CyberParam CustomReactor reactor) {
+        System.out.println(reactor);
         return CyberFluxMqttReactor.builder().build();
     }
 
     @CyberBean
-    public CyberFluxReactor coapServer() {
+    public CyberFluxReactor coapServer(CustomReactor reactor) {
+        System.out.println(reactor);
         return CyberFluxCoapReactor.builder().build();
     }
 }

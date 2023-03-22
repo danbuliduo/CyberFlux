@@ -1,4 +1,4 @@
-package io.cyberflux.node.engine.huaxu.utils;
+package io.cyberflux.node.engine.core.utils;
 
 public final class CyberStringUtils {
     /**

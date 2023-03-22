@@ -10,7 +10,7 @@ public abstract class CyberFluxAbstractReactor implements CyberFluxReactor {
     protected ReactorType type;
 
     public CyberFluxAbstractReactor() {
-        this(ReactorType.UNKNOWN);
+        this(ReactorType.EMPTY);
     }
 
     public CyberFluxAbstractReactor(ReactorType type) {

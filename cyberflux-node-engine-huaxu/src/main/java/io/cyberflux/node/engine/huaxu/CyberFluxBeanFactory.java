@@ -1,13 +1,13 @@
 package io.cyberflux.node.engine.huaxu;
 
+import io.cyberflux.node.engine.core.utils.CyberPackageUtils;
 import io.cyberflux.node.engine.huaxu.annotation.CyberBean;
 import io.cyberflux.node.engine.huaxu.annotation.CyberConfiguration;
 import io.cyberflux.node.engine.huaxu.annotation.CyberInject;
 import io.cyberflux.node.engine.huaxu.annotation.CyberMetaObject;
 import io.cyberflux.node.engine.huaxu.annotation.CyberMetaObjectScan;
+import io.cyberflux.node.engine.huaxu.annotation.CyberParam;
 import io.cyberflux.node.engine.huaxu.exception.CyberFluxBeanException;
-import io.cyberflux.node.engine.huaxu.utils.CyberPackageUtils;
-
 import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
@@ -79,14 +79,24 @@ public final class CyberFluxBeanFactory {
                     CyberBean bean = method.getAnnotation(CyberBean.class);
                     String injectName =  bean.value().isBlank() ? method.getName() : bean.value();
                     if(!context.contains(injectName)) {
-                        objects.add(object);
+                        Class<?>[] classes =  method.getParameterTypes();
+                        Object[] injectArgs = new Object[classes.length];
                         method.setAccessible(true);
-                        //method.getParameterAnnotations()
+                        for(int i = 0; i < classes.length; ++i) {
+                            String paramName = "";
+                            if(classes[i].isAnnotationPresent(CyberParam.class)) {
+                                paramName = classes[i].getAnnotation(CyberParam.class).value();
+                            }
+                            if(paramName.isBlank()) paramName = classes[i].getName();
+                            if(!context.contains(paramName)) throw new CyberFluxBeanException("ParamObject already exists.");
+                            injectArgs[i] = context.findBean(paramName);
+                        }
                         try {
-                            context.saveBean(injectName, method.invoke(object));
+                            context.saveBean(injectName, method.invoke(object, injectArgs));
                         } catch (ReflectiveOperationException e) {
                             e.printStackTrace();
                         }
+                        objects.add(object);
                     } else throw new CyberFluxBeanException("BeanObject already exists.");
                 }
             );
@@ -102,7 +112,7 @@ public final class CyberFluxBeanFactory {
                     CyberInject inject = field.getAnnotation(CyberInject.class);
                     String injectName = inject.value().isBlank() ? field.getType().getName() : inject.value();
                     field.setAccessible(true);
-                    if (!context.contains(injectName)) {
+                    if (context.contains(injectName)) {
                         try {
                             field.set(object, context.findBean(injectName));
                         } catch (IllegalArgumentException | IllegalAccessException e) {
