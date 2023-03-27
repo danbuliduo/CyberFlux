@@ -1,10 +1,9 @@
-package io.cyberflux.reactor.mqtt.protocol;
+package io.cyberflux.reactor.mqtt.channel;
 
-import io.cyberflux.reactor.mqtt.channel.MqttChannel;
 import io.netty.handler.codec.mqtt.MqttMessage;
 import reactor.core.publisher.Mono;
 
-public interface MqttProtocolInterface {
+public interface MqttChannelProtocolInterface {
     Mono<Void> connect(MqttChannel channel, MqttMessage message);
     Mono<Void> publish(MqttChannel channel, MqttMessage message);
     Mono<Void> disconnect(MqttChannel channel, MqttMessage message);

@@ -72,6 +72,11 @@ public final class CyberFluxBeanFactory {
                 e.printStackTrace();
             }
         });
+        loadingCyberBean(objects, configs);
+        return objects;
+    }
+
+    private void loadingCyberBean(List<Object> objects, List<Object> configs) {
         Flux.fromIterable(configs).subscribe(object -> {
             Flux.fromArray(object.getClass().getMethods())
                 .filter(method -> method.isAnnotationPresent(CyberBean.class))
@@ -83,12 +88,16 @@ public final class CyberFluxBeanFactory {
                         Object[] injectArgs = new Object[classes.length];
                         method.setAccessible(true);
                         for(int i = 0; i < classes.length; ++i) {
-                            String paramName = "";
+                            String paramName = null;
                             if(classes[i].isAnnotationPresent(CyberParam.class)) {
                                 paramName = classes[i].getAnnotation(CyberParam.class).value();
                             }
-                            if(paramName.isBlank()) paramName = classes[i].getName();
-                            if(!context.contains(paramName)) throw new CyberFluxBeanException("ParamObject already exists.");
+                            if(paramName == null || paramName.isBlank()) {
+                                paramName = classes[i].getName();
+                            }
+                            if(!context.contains(paramName)) {
+                                throw new CyberFluxBeanException("ParamObject already exists.");
+                            }
                             injectArgs[i] = context.findBean(paramName);
                         }
                         try {
@@ -101,7 +110,6 @@ public final class CyberFluxBeanFactory {
                 }
             );
         });
-        return objects;
     }
 
     private void injectBeans(List<Object> objects) {

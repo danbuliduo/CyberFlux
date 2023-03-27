@@ -34,12 +34,12 @@ public abstract class CyberFluxAbstractClusterNode implements CyberFluxClusterNo
     }
 
     @Override
-    public String nodeName() {
+    public final String nodeName() {
         return this.nodeName;
     }
 
     @Override
-    public CyberFluxClusterNode nodeMember(String nodeName) {
+    public final CyberFluxClusterNode nodeMember(String nodeName) {
         return nodeMembers.get(nodeName);
     }
 

@@ -1,11 +1,9 @@
-package io.cyberflux.reactor.mqtt.protocol;
+package io.cyberflux.reactor.mqtt.channel;
 
 //import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import io.cyberflux.reactor.mqtt.channel.MqttChannel;
-import io.cyberflux.reactor.mqtt.channel.MqttChannelGroup;
 import io.cyberflux.reactor.mqtt.utils.MqttMessageBuilder;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import io.netty.handler.codec.mqtt.MqttMessage;
@@ -17,10 +15,10 @@ import io.netty.handler.codec.mqtt.MqttUnsubscribeMessage;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 
-public class MqttProtocolHandler implements MqttProtocolInterface {
+public class MqttChannelProtocolHandler implements MqttChannelProtocolInterface {
    // private  MqttChannelGroup channelGroup;
 
-    public MqttProtocolHandler(MqttChannelGroup channelGroup) {
+    public MqttChannelProtocolHandler(MqttChannelGroup channelGroup) {
         //this.channelGroup = channelGroup;
     }
 

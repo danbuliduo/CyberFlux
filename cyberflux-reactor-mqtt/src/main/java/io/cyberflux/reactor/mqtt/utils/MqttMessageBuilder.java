@@ -18,7 +18,6 @@ public final class MqttMessageBuilder {
         return new MqttFixedHeader(type, false, MqttQoS.AT_MOST_ONCE, false, remainingLength);
     }
 
-
     public static MqttConnAckMessage buildConnAckMessage(MqttConnectReturnCode returnCode) {
         return new MqttConnAckMessage(FIXED_HEADER(MqttMessageType.CONNACK, 0x02),
             new MqttConnAckVariableHeader(returnCode, false)

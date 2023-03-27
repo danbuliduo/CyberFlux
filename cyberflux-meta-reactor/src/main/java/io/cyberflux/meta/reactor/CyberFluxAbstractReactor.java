@@ -26,17 +26,17 @@ public abstract class CyberFluxAbstractReactor implements CyberFluxReactor {
     public abstract Mono<CyberFluxReactor> start();
 
     @Override
-    public String uuid() {
+    public final String uuid() {
         return uuid;
     }
 
     @Override
-    public ReactorStatus status() {
+    public final ReactorStatus status() {
         return status;
     }
 
     @Override
-    public ReactorType type() {
+    public final ReactorType type() {
         return type;
     }
 
