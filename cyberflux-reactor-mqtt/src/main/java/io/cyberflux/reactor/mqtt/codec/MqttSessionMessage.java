@@ -1,10 +1,15 @@
 package io.cyberflux.reactor.mqtt.codec;
 
 public final class MqttSessionMessage {
+    private String clientId;
     private String topic;
     private byte[] bytes;
     private int level;
 
+
+    public String getClientId() {
+        return clientId;
+    }
     public String getTopic() {
         return topic;
     }

@@ -1,10 +1,10 @@
-package io.cyberflux.reactor.mqtt.cache;
+package io.cyberflux.reactor.mqtt.registry;
 
 import java.util.Set;
 
 import io.cyberflux.reactor.mqtt.codec.MqttTopicStore;
 
-public interface MqttTopicCache {
+public interface MqttTopicRegistry {
     Set<MqttTopicStore> getTopicStore(String topic);
 
     Set<MqttTopicStore> getAllTopicStore();

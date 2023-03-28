@@ -5,18 +5,19 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 
-public class MqttChannel {
+public final class MqttChannel {
     private final String clientId;
     private final Connection connection;
 
     public MqttChannel(Connection connection) {
         this.connection = connection;
-        clientId = connection.channel().id().asLongText();
+        this.clientId = connection.channel().id().asLongText();
     }
 
     public String clientId() {
         return clientId;
     }
+
     public Connection connection() {
         return connection;
     }

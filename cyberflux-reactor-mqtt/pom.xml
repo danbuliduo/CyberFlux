@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>io.cyberflux</groupId>
-        <artifactId>cyberflux</artifactId>
+        <artifactId>cyberflux-framework</artifactId>
         <version>META</version>
     </parent>
 
@@ -24,6 +24,11 @@
         <dependency>
             <groupId>io.cyberflux</groupId>
             <artifactId>cyberflux-meta-reactor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.cyberflux</groupId>
+            <artifactId>cyberflux-common-utils</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>

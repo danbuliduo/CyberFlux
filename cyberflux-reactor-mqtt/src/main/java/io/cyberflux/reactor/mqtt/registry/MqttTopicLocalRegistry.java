@@ -1,4 +1,4 @@
-package io.cyberflux.reactor.mqtt.cache;
+package io.cyberflux.reactor.mqtt.registry;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -9,11 +9,11 @@ import io.cyberflux.reactor.mqtt.utils.MqttTopicTableFilter;
 import io.cyberflux.reactor.mqtt.utils.MqttTopicTreeFilter;
 import reactor.core.publisher.Flux;
 
-public final class MqttTopicHeapCache implements MqttTopicCache {
+public final class MqttTopicLocalRegistry implements MqttTopicRegistry {
     private final MqttTopicFilter tableFilter;
     private final MqttTopicFilter treeFilter;
 
-    public MqttTopicHeapCache() {
+    public MqttTopicLocalRegistry() {
         tableFilter = new MqttTopicTableFilter();
         treeFilter = new MqttTopicTreeFilter();
     }

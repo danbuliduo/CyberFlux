@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.cyberflux.examples</groupId>
-    <artifactId>examples</artifactId>
+    <artifactId>cyberflux-examples</artifactId>
     <version>META</version>
-    <name>examples</name>
+    <name>cyberflux-examples</name>
 
     <packaging>pom</packaging>
 
@@ -24,17 +24,17 @@
 
     <dependencyManagement>
         <dependencies>
-            <!--dependency>
+            <dependency>
                 <groupId>io.cyberflux</groupId>
-                <artifactId>cyberflux</artifactId>
-                <version>${io.cyberflux.version}</version>
+                <artifactId>cyberflux-framework</artifactId>
+                <version>META</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency-->
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>3.0.4</version>
+                <version>3.0.5</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

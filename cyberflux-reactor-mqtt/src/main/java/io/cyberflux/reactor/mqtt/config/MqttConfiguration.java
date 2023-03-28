@@ -1,6 +1,8 @@
 package io.cyberflux.reactor.mqtt.config;
 
 public class MqttConfiguration {
+    public final static MqttConfiguration DEFAULT = new MqttConfiguration();
+
     private MqttTransportConfig transport;
 
     public MqttTransportConfig getTransport() {

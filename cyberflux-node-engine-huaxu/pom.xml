@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>io.cyberflux</groupId>
-        <artifactId>cyberflux</artifactId>
+        <artifactId>cyberflux-framework</artifactId>
         <version>META</version>
     </parent>
 
@@ -30,15 +30,14 @@
             <artifactId>cyberflux-reactor-mqtt</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.cyberflux</groupId>
+            <artifactId>cyberflux-common-utils</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 </project>

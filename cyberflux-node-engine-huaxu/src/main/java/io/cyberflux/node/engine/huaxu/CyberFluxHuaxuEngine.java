@@ -3,10 +3,10 @@ package io.cyberflux.node.engine.huaxu;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.cyberflux.common.utils.CyberBannerUtils;
+import io.cyberflux.common.utils.CyberPackageUtils;
 import io.cyberflux.meta.reactor.CyberFluxReactor;
 import io.cyberflux.node.engine.core.CyberFluxTemplateEngine;
-import io.cyberflux.node.engine.core.utils.CyberBannerUtils;
-import io.cyberflux.node.engine.core.utils.CyberPackageUtils;
 import io.cyberflux.node.engine.core.CyberFluxNodeEngine;
 import reactor.core.publisher.Flux;
 
@@ -15,7 +15,7 @@ public class CyberFluxHuaxuEngine extends CyberFluxTemplateEngine implements Cyb
     private final CyberFluxBeanFactory beanFactory;
 
     static {
-        CyberBannerUtils.banner();
+        CyberBannerUtils.displayBanner("/io.cyberflux.banner.txt");
         log.info("<= Welcome To Use EngineCore: HUAXU - 华胥 - =>");
     }
 

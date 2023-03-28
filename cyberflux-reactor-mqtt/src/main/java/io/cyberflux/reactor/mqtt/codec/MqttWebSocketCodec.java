@@ -7,15 +7,13 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 
-public final class MqttWebSocketCodec extends MessageToMessageCodec<BinaryWebSocketFrame, ByteBuf> {
+public class MqttWebSocketCodec extends MessageToMessageCodec<BinaryWebSocketFrame, ByteBuf> {
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out) throws Exception {
-        out.add(new BinaryWebSocketFrame(msg.retain()));
-    }
+    protected void encode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out)
+            throws Exception {out.add(new BinaryWebSocketFrame(msg.retain()));}
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, BinaryWebSocketFrame msg, List<Object> out) throws Exception {
-        out.add(msg.retain().content());
-    }
+    protected void decode(ChannelHandlerContext ctx, BinaryWebSocketFrame msg, List<Object> out)
+            throws Exception {out.add(msg.retain().content());}
 }

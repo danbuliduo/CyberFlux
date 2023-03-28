@@ -71,6 +71,7 @@ public class CyberFluxTemplateEngine extends CyberFluxAbstractClusterNode implem
 
     @Override
     public void startReactor() {
+        log.info("NodeEngine::StartReactor => [All - count:{}]", reactorGroup.size());
         findReactor().subscribe(this::startReactor);
     }
 
@@ -92,12 +93,12 @@ public class CyberFluxTemplateEngine extends CyberFluxAbstractClusterNode implem
     @Override
     public void startReactor(CyberFluxReactor reactor) {
         reactor.startAwait();
-        log.info("START: {} - type:{}, uuid:{}", reactor.getClass(), reactor.type(), reactor.uuid());
     }
 
     @Override
     public void shutdownReactor() {
         findReactor().subscribe(this::shutdownReactor);
+        log.info("NodeEngine::ShutdownReactor => [All - count:{}]", reactorGroup.size());
     }
 
     @Override
@@ -118,6 +119,5 @@ public class CyberFluxTemplateEngine extends CyberFluxAbstractClusterNode implem
     @Override
     public void shutdownReactor(CyberFluxReactor reactor) {
         reactor.shutdown();
-        log.info("SHUTDOWN: {} - type:{}, uuid:{}", reactor.getClass(), reactor.type(), reactor.uuid());
     }
 }

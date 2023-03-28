@@ -1,6 +1,6 @@
 package io.cyberflux.node.engine.huaxu;
 
-import io.cyberflux.node.engine.core.utils.CyberPackageUtils;
+import io.cyberflux.common.utils.CyberPackageUtils;
 import io.cyberflux.node.engine.huaxu.annotation.CyberBean;
 import io.cyberflux.node.engine.huaxu.annotation.CyberConfiguration;
 import io.cyberflux.node.engine.huaxu.annotation.CyberInject;
@@ -13,7 +13,11 @@ import reactor.core.publisher.Flux;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public final class CyberFluxBeanFactory {
+    private final static Logger log = LoggerFactory.getLogger(CyberFluxBeanFactory.class);
     private final CyberFluxBeanContainer context;
 
     public CyberFluxBeanFactory() {
@@ -69,7 +73,7 @@ public final class CyberFluxBeanFactory {
                     } else throw new CyberFluxBeanException("MetaObject already exists.");
                 }
             } catch (ReflectiveOperationException e) {
-                e.printStackTrace();
+                log.error("{}", e);
             }
         });
         loadingCyberBean(objects, configs);
@@ -103,7 +107,7 @@ public final class CyberFluxBeanFactory {
                         try {
                             context.saveBean(injectName, method.invoke(object, injectArgs));
                         } catch (ReflectiveOperationException e) {
-                            e.printStackTrace();
+                            log.error("{}", e);
                         }
                         objects.add(object);
                     } else throw new CyberFluxBeanException("BeanObject already exists.");
@@ -124,7 +128,7 @@ public final class CyberFluxBeanFactory {
                         try {
                             field.set(object, context.findBean(injectName));
                         } catch (IllegalArgumentException | IllegalAccessException e) {
-                            e.printStackTrace();
+                            log.error("{}", e);
                         }
                     } else throw new CyberFluxBeanException("Injection object not found.");
                 }

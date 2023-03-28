@@ -25,7 +25,7 @@ public class MqttChannelProtocolHandler implements MqttChannelProtocolInterface 
     @Override
     public Mono<Void> connect(MqttChannel channel, MqttMessage message) {
 
-        return channel.write(MqttMessageBuilder.buildConnAckMessage(
+        return channel.write(MqttMessageBuilder.buildConnAck(
             MqttConnectReturnCode.CONNECTION_ACCEPTED
         ));
     }
@@ -74,7 +74,7 @@ public class MqttChannelProtocolHandler implements MqttChannelProtocolInterface 
 
     @Override
     public Mono<Void> pingreq(MqttChannel channel, MqttMessage message) {
-        return channel.write(MqttMessageBuilder.buildPingRespMessage());
+        return channel.write(MqttMessageBuilder.buildPingResp());
     }
 
     @Override
@@ -84,7 +84,7 @@ public class MqttChannelProtocolHandler implements MqttChannelProtocolInterface 
         return Mono.fromRunnable(() -> {
 
         }).then(channel.write(
-            MqttMessageBuilder.buildSubAckMessage(
+            MqttMessageBuilder.buildSubAck(
                 subscribeMessage.variableHeader().messageId(),
                 topicStream.map(sub -> sub.qualityOfService().value()).collect(Collectors.toList())
             )
@@ -97,7 +97,7 @@ public class MqttChannelProtocolHandler implements MqttChannelProtocolInterface 
         return Mono.fromRunnable(() -> {
 
         }).then(channel.write(
-            MqttMessageBuilder.buildUnsubAckMessage(
+            MqttMessageBuilder.buildUnsubAck(
                 unsubscribeMessage.variableHeader().messageId()
             )
         ));

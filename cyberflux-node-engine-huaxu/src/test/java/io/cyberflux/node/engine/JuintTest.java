@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.cyberflux.node.engine.core.utils.CyberPackageUtils;
+import io.cyberflux.common.utils.CyberPackageUtils;
 import io.cyberflux.node.engine.huaxu.CyberFluxHuaxuEngine;
 import io.cyberflux.node.engine.huaxu.annotation.CyberInject;
 import io.cyberflux.node.engine.huaxu.annotation.CyberMetaObject;

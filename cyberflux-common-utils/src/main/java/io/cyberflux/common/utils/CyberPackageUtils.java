@@ -1,4 +1,4 @@
-package io.cyberflux.node.engine.core.utils;
+package io.cyberflux.common.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +10,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public final class CyberPackageUtils {
+    private final static Logger log = LoggerFactory.getLogger(CyberPackageUtils.class);
 
     public static String getStartupClassName() {
         StackTraceElement[] stackTraceElements = new RuntimeException().getStackTrace();
@@ -48,14 +52,14 @@ public final class CyberPackageUtils {
                         String filePath = URLDecoder.decode(url.getPath(), "utf-8");
                         nameSet.addAll(scanClassNameFromDir(filePath, packageName, isRecursion));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        log.error("{}", e);
                     }
                 } else if (url.getProtocol().equals("jar")) {
                     nameSet = scanClassNameFromJar(url);
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("{}", e);
         }
 
         return nameSet;
@@ -89,7 +93,7 @@ public final class CyberPackageUtils {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("{}", e);
         }
         return nameSet;
     }

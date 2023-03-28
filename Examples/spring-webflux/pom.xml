@@ -6,12 +6,12 @@
 
 	<parent>
 		<groupId>io.cyberflux.examples</groupId>
-		<artifactId>examples</artifactId>
+		<artifactId>cyberflux-examples</artifactId>
 		<version>META</version>
 	</parent>
 
 	<groupId>io.cyberflux.examples</groupId>
-	<artifactId>spring-webflux</artifactId>
+	<artifactId>cyberflux-spring-webflux</artifactId>
 	<version>META</version>
 	<name>spring-webflux</name>
 
@@ -19,17 +19,14 @@
 		<dependency>
 			<groupId>io.cyberflux</groupId>
 			<artifactId>cyberflux-spring-boot-starter</artifactId>
-			<version>META</version>
 		</dependency>
 		<dependency>
 			<groupId>io.cyberflux</groupId>
 			<artifactId>cyberflux-reactor-coap</artifactId>
-			<version>META</version>
 		</dependency>
 		<dependency>
 			<groupId>io.cyberflux</groupId>
 			<artifactId>cyberflux-reactor-mqtt</artifactId>
-			<version>META</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -44,11 +41,25 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+
+            	<configuration>
+					<includeSystemScope>true</includeSystemScope>
+					<mainClass>io.cyberflux.example.spring.webflux.SpringWebfluxApplication</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
