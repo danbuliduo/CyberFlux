@@ -57,8 +57,10 @@
 				</executions>
 
             	<configuration>
-					<includeSystemScope>true</includeSystemScope>
-					<mainClass>io.cyberflux.example.spring.webflux.SpringWebfluxApplication</mainClass>
+					<includeSystemScope>
+						true</includeSystemScope>
+					<mainClass>
+						io.cyberflux.example.spring.webflux.SpringWebfluxApplication</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>

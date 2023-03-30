@@ -7,14 +7,11 @@
 	<parent>
 		<groupId>io.cyberflux</groupId>
 		<artifactId>cyberflux-framework</artifactId>
-		<version>META</version>
+		<version>${revision}</version>
 	</parent>
 
-	<groupId>io.cyberflux</groupId>
 	<artifactId>cyberflux-reactor-coap</artifactId>
-	<version>META</version>
-	<name>cyberflux-reactor-coap</name>
-
+	<name>CyberFlux Reactor CoAP</name>
 
 	<dependencies>
 		<dependency>

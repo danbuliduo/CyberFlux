@@ -7,13 +7,11 @@
     <parent>
         <groupId>io.cyberflux</groupId>
         <artifactId>cyberflux-framework</artifactId>
-        <version>META</version>
+        <version>${revision}</version>
     </parent>
 
-    <groupId>io.cyberflux</groupId>
     <artifactId>cyberflux-spring-boot-starter</artifactId>
-    <version>META</version>
-    <name>cyberflux-spring-boot-starter</name>
+    <name>CyberFlux SpringBoot Starter</name>
 
     <dependencies>
         <dependency>

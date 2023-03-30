@@ -7,7 +7,7 @@
     <groupId>io.cyberflux.examples</groupId>
     <artifactId>cyberflux-examples</artifactId>
     <version>META</version>
-    <name>cyberflux-examples</name>
+    <name>Cyberflux Examples</name>
 
     <packaging>pom</packaging>
 

@@ -13,8 +13,8 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
+### IntelliJ ###
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -30,7 +30,17 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode
+.vscode/
 
+### Node.js ###
+node_modules/
+node/
+
+## Flattened POM ###
+.flattened-pom.xml
+
+####### Other ######
+.DS_Store
 ### Design ###
+Design/
 *.drawio

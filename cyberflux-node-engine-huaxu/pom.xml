@@ -7,13 +7,11 @@
     <parent>
         <groupId>io.cyberflux</groupId>
         <artifactId>cyberflux-framework</artifactId>
-        <version>META</version>
+        <version>${revision}</version>
     </parent>
 
-    <groupId>io.cyberflux</groupId>
     <artifactId>cyberflux-node-engine-huaxu</artifactId>
-    <version>META</version>
-    <name>cyberflux-node-engine-huaxu</name>
+    <name>CyberFlux NodeEngine Huaxu</name>
 
 
     <dependencies>

@@ -7,13 +7,11 @@
     <parent>
         <groupId>io.cyberflux</groupId>
         <artifactId>cyberflux-framework</artifactId>
-        <version>META</version>
+        <version>${revision}</version>
     </parent>
 
-    <groupId>io.cyberflux</groupId>
     <artifactId>cyberflux-reactor-mqtt</artifactId>
-    <version>META</version>
-    <name>cyberflux-reactor-mqtt</name>
+    <name>CyberFlux Reactor MQTT</name>
 
 
     <dependencies>

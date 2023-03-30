@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.cyberflux.common.utils.CyberConfigLoaderUtils;
-import io.cyberflux.common.utils.CyberObjectUtils;
 import io.cyberflux.meta.reactor.CyberFluxAbstractReactor;
 import io.cyberflux.meta.reactor.ReactorType;
 import io.cyberflux.meta.reactor.CyberFluxReactor;
@@ -23,30 +22,16 @@ public class CyberFluxMqttReactor extends CyberFluxAbstractReactor {
     private MqttConfiguration config;
 
     public CyberFluxMqttReactor() {
-        super(ReactorType.MQTT);
+        this(MqttConfiguration.DEFAULT);
     }
 
     public CyberFluxMqttReactor(MqttConfiguration config) {
         super(ReactorType.MQTT);
-        this.config = config;
-    }
-
-    private void start0() {
-        CyberObjectUtils.requireNonNull(config, MqttConfiguration.DEFAULT);
+        this.config = Optional.ofNullable(config).orElse(MqttConfiguration.DEFAULT);
     }
 
     private void bindTransport(CyberFluxTransport transport) {
         this.transport = (MqttTransport) transport;
-    }
-
-    public CyberFluxMqttReactor handler() {
-        return this;
-    }
-
-
-    public CyberFluxMqttReactor port(int port) {
-        config.getTransport().setPort(port);
-        return this;
     }
 
     @Override
@@ -72,7 +57,7 @@ public class CyberFluxMqttReactor extends CyberFluxAbstractReactor {
         private MqttConfiguration config;
 
         public CyberFluxMqttReactor.MqttReactorBuilder config(MqttConfiguration config) {
-            this.config = Optional.ofNullable(config).orElse(MqttConfiguration.DEFAULT);
+            this.config = config;
             return this;
         }
 
@@ -82,7 +67,7 @@ public class CyberFluxMqttReactor extends CyberFluxAbstractReactor {
         }
 
         public CyberFluxMqttReactor build() {
-            return new CyberFluxMqttReactor();
+            return new CyberFluxMqttReactor(config);
         }
     }
 }
