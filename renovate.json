@@ -1,0 +1,18 @@
+{
+    "extends": [
+        "config:base"
+    ],
+    "packageRules": [
+        {
+            "description": "automatically merge minor and patch level updates when the check passes.",
+            "matchUpdateTypes": [
+                "minor",
+                "patch",
+                "digest"
+            ],
+            "automerge": true,
+            "automergeType": "pr",
+            "platformAutomerge": true
+        }
+    ]
+}

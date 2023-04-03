@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.cyberflux</groupId>
+        <artifactId>cyberflux-framework</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>cyberflux-node-engine-huaxu</artifactId>
+    <name>CyberFlux NodeEngine Huaxu</name>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>io.cyberflux</groupId>
+            <artifactId>cyberflux-reactor-coap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.cyberflux</groupId>
+            <artifactId>cyberflux-reactor-mqtt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.cyberflux</groupId>
+            <artifactId>cyberflux-node-engine-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.cyberflux</groupId>
+            <artifactId>cyberflux-common-utils</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
