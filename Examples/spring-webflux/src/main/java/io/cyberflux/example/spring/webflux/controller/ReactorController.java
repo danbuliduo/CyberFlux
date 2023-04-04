@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.cyberflux.example.spring.webflux.custom.CustomReactor;
 import io.cyberflux.node.engine.core.CyberFluxNodeEngine;
-import io.cyberflux.reactor.mqtt.CyberFluxMqttReactor;
+import io.cyberflux.reactor.mqtt.MqttReactor;
 import jakarta.annotation.Resource;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -18,7 +18,7 @@ public class ReactorController {
     private CustomReactor server;
 
     @Resource
-    private CyberFluxMqttReactor mqttReactor;
+    private MqttReactor mqttReactor;
 
     @Autowired
     private CyberFluxNodeEngine springEngine;

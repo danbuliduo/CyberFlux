@@ -5,12 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import io.cyberflux.meta.medium.MediumType;
-import io.cyberflux.meta.reactor.CyberFluxAbstractReactor;
-import io.cyberflux.meta.reactor.CyberFluxReactor;
+import io.cyberflux.meta.reactor.AbstractReactor;
+import io.cyberflux.meta.reactor.Reactor;
 import reactor.core.publisher.Mono;
 
 @Component
-public class CustomReactor extends CyberFluxAbstractReactor {
+public class CustomReactor extends AbstractReactor {
     private static final Logger log = LoggerFactory.getLogger(CustomReactor.class);
 
     public CustomReactor() {
@@ -23,7 +23,7 @@ public class CustomReactor extends CyberFluxAbstractReactor {
     }
 
     @Override
-    public Mono<CyberFluxReactor> start() {
+    public Mono<Reactor> start() {
         log.info("start method is called");
         return Mono.empty().thenReturn(this);
     }

@@ -142,13 +142,11 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
                 <configuration>
-                    <updatePomFile>
-                        true</updatePomFile>
+                    <updatePomFile>true</updatePomFile>
                     <flattenMode>oss</flattenMode>
                     <embedBuildProfileDependencies>true</embedBuildProfileDependencies>
                     <pomElements>
-                        <distributionManagement>
-                            remove</distributionManagement>
+                        <distributionManagement>remove</distributionManagement>
                         <repositories>remove</repositories>
                     </pomElements>
                 </configuration>

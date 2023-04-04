@@ -8,6 +8,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import io.cyberflux.reactor.mqtt.codec.MqttRetainMessage;
 import io.cyberflux.reactor.mqtt.codec.MqttSessionMessage;
 
+@SuppressWarnings("all")
 public final class MqttMessageLocalRegistry implements MqttMessageRegistry {
     private final Cache<String, MqttRetainMessage> retainCache;
     private final Cache<String, List<MqttSessionMessage>> sessionCache;
@@ -29,7 +30,7 @@ public final class MqttMessageLocalRegistry implements MqttMessageRegistry {
 
     @Override
     public void saveSessionMessage(MqttSessionMessage sessionMessage) {
-        List<MqttSessionMessage> dd = sessionCache.get(sessionMessage.getClientId(), null);
+        
     }
 
     @Override
