@@ -16,7 +16,7 @@
 
     <modules>
         <module>cyberflux-meta-cluster</module>
-        <module>cyberflux-meta-medium</module>
+        <module>cyberflux-meta-data</module>
         <module>cyberflux-meta-reactor</module>
     </modules>
 
@@ -31,7 +31,7 @@
             </dependency>
             <dependency>
                 <groupId>io.cyberflux</groupId>
-                <artifactId>cyberflux-meta-medium</artifactId>
+                <artifactId>cyberflux-meta-data</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

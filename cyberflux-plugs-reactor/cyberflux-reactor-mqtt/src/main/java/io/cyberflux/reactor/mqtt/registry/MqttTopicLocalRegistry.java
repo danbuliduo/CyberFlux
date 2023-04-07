@@ -18,28 +18,8 @@ public final class MqttTopicLocalRegistry implements MqttTopicRegistry {
         treeFilter = new MqttTopicTreeFilter();
     }
 
-    @Override
-    public boolean appendTopicStore(MqttTopicStore store) {
-        return store.containWildcard() ? treeFilter.appendTopicStore(store)
-                : tableFilter.appendTopicStore(store);
-    }
-
-    @Override
-    public boolean removeTopicStore(MqttTopicStore store) {
-        return store.containWildcard() ? treeFilter.removeTopicStore(store)
-                : tableFilter.removeTopicStore(store);
-    }
-
-    @Override
-    public Set<MqttTopicStore> getTopicStore(String topic) {
-        return Flux.merge(
-            Flux.fromIterable(treeFilter.getTopicStore(topic)),
-            Flux.fromIterable(tableFilter.getTopicStore(topic))
-        ).toStream().collect(Collectors.toSet());
-    }
-
-    @Override
-    public Set<MqttTopicStore> getAllTopicStore() {
+	@Override
+    public Set<MqttTopicStore> findAll() {
         return Flux.merge(
             Flux.fromIterable(treeFilter.getAllTopicStore()),
             Flux.fromIterable(tableFilter.getAllTopicStore())
@@ -47,7 +27,33 @@ public final class MqttTopicLocalRegistry implements MqttTopicRegistry {
     }
 
     @Override
+    public Set<MqttTopicStore> findByTopic(String topic) {
+        return Flux.merge(
+            Flux.fromIterable(treeFilter.getTopicStore(topic)),
+            Flux.fromIterable(tableFilter.getTopicStore(topic))
+        ).toStream().collect(Collectors.toSet());
+    }
+
+	@Override
+	public boolean append(MqttTopicStore store) {
+		return store.containWildcard() ? treeFilter.appendTopicStore(store)
+				: tableFilter.appendTopicStore(store);
+	}
+
+	@Override
+	public boolean remove(MqttTopicStore store) {
+		return store.containWildcard() ? treeFilter.removeTopicStore(store)
+				: tableFilter.removeTopicStore(store);
+	}
+
+	@Override
+	public void appendAll(Set<MqttTopicStore> stores) {
+		stores.forEach(this::append);
+	}
+
+    @Override
     public long count() {
         return treeFilter.count() + tableFilter.count();
     }
+
 }

@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-import io.cyberflux.meta.reactor.Reactor;
+import io.cyberflux.meta.reactor.CyberReactor;
 import io.cyberflux.node.engine.core.CyberFluxNodeEngine;
 import io.cyberflux.node.engine.core.CyberFluxTemplateEngine;
 import reactor.core.publisher.Flux;
@@ -23,9 +23,9 @@ public class CyberFluxSpringEngine extends CyberFluxTemplateEngine implements Cy
 
     public CyberFluxSpringEngine(ApplicationContext context) {
         super(context.getApplicationName());
-        Flux.fromArray(context.getBeanNamesForType(Reactor.class))
+        Flux.fromArray(context.getBeanNamesForType(CyberReactor.class))
             .flatMap(name -> Flux.just(context.getBean(name)))
-            .cast(Reactor.class)
+            .cast(CyberReactor.class)
             .doOnNext(reactorGroup::appendReactor)
             .subscribe(this::startReactor);
     }

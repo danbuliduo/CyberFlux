@@ -1,12 +1,13 @@
 package io.cyberflux.reactor.coap;
 
-import io.cyberflux.meta.medium.MediumType;
-import io.cyberflux.meta.reactor.AbstractReactor;
+import io.cyberflux.common.utils.CyberNanoIdUtils;
+import io.cyberflux.meta.data.CyberType;
+import io.cyberflux.meta.reactor.TemplateReactor;
 
-public class CoapReactor extends AbstractReactor {
+public class CoapReactor extends TemplateReactor {
 
     public CoapReactor() {
-        super(MediumType.COAP);
+        super(CyberType.COAP, CyberNanoIdUtils.randomNanoId());
     }
 
     public static CoapReactor.CoapReactorBuilder builder() {

@@ -10,8 +10,8 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>cyberflux-meta-medium</artifactId>
-    <name>Cyberflux MetaMedium</name>
+    <artifactId>cyberflux-meta-data</artifactId>
+    <name>Cyberflux MetaData</name>
 
     <dependencies>
         <dependency>

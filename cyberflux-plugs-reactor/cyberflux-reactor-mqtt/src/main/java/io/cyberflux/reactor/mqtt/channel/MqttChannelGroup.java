@@ -5,8 +5,8 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 
 public class MqttChannelGroup {
     public static final MqttChannelGroup INTTCASE = new MqttChannelGroup();
-    private final LoadingCache<String, MqttChannel> cache;
 
+    private final LoadingCache<String, MqttChannel> cache;
 
     public MqttChannelGroup() {
         cache = Caffeine.newBuilder().build(key -> {
@@ -19,11 +19,11 @@ public class MqttChannelGroup {
     }
 
     public void append(MqttChannel channel) {
-        cache.put(channel.clientId(), channel);
+        cache.put(channel.channelId(), channel);
     }
 
     public void remove(MqttChannel channel) {
-        remove(channel.clientId());
+        remove(channel.channelId());
     }
 
     public void remove(String channelId) {

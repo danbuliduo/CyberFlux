@@ -5,13 +5,12 @@ import java.util.Set;
 import io.cyberflux.reactor.mqtt.codec.MqttTopicStore;
 
 public interface MqttTopicRegistry {
-    Set<MqttTopicStore> getTopicStore(String topic);
+	Set<MqttTopicStore> findAll();
+    Set<MqttTopicStore> findByTopic(String topic);
 
-    Set<MqttTopicStore> getAllTopicStore();
-
-    boolean appendTopicStore(MqttTopicStore store);
-
-    boolean removeTopicStore(MqttTopicStore store);
+	void appendAll(Set<MqttTopicStore> stores);
+    boolean append(MqttTopicStore store);
+    boolean remove(MqttTopicStore store);
 
     long count();
 }

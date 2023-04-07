@@ -8,29 +8,32 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.cyberflux.meta.medium.MediumType;
+import io.cyberflux.meta.data.CyberObject;
+import io.cyberflux.meta.data.CyberType;
+//import io.scalecube.cluster.ClusterImpl;
+//import io.scalecube.cluster.transport.api.Message;
 
-
-public abstract class CyberFluxAbstractClusterNode implements CyberFluxClusterNode {
+public abstract class CyberFluxAbstractClusterNode extends CyberObject implements CyberFluxClusterNode {
     protected final Map<String, CyberFluxClusterNode> nodeMembers;
-    protected final EnumSet<MediumType> mediumTypes;
+    protected final EnumSet<CyberType> types;
     protected final String nodeName;
 
     public CyberFluxAbstractClusterNode(String nodeName) {
-        this(nodeName, EnumSet.allOf(MediumType.class));
+        this(nodeName, EnumSet.allOf(CyberType.class));
     }
 
-    public CyberFluxAbstractClusterNode(String nodeName, MediumType... types) {
+    public CyberFluxAbstractClusterNode(String nodeName, CyberType... types) {
         this(nodeName, Arrays.stream(types).toList());
     }
 
-    public CyberFluxAbstractClusterNode(String nodeName, Collection<MediumType> types) {
+    public CyberFluxAbstractClusterNode(String nodeName, Collection<CyberType> types) {
         this(nodeName, EnumSet.copyOf(types));
     }
 
-    public CyberFluxAbstractClusterNode(String nodeName, EnumSet<MediumType> types) {
+    public CyberFluxAbstractClusterNode(String nodeName, EnumSet<CyberType> types) {
+		super(CyberType.GOSSIP);
         this.nodeMembers = new ConcurrentHashMap<>();
-        this.mediumTypes = EnumSet.copyOf(types);
+        this.types = EnumSet.copyOf(types);
         this.nodeName = nodeName;
     }
 
@@ -49,39 +52,39 @@ public abstract class CyberFluxAbstractClusterNode implements CyberFluxClusterNo
         return new HashSet<>(nodeMembers.values());
     }
 
-    public boolean appendMediumType(MediumType type) {
-        return mediumTypes.add(type);
+    public boolean appendMediumType(CyberType type) {
+        return types.add(type);
     }
 
-    public boolean appendMediumType(MediumType... types) {
-        return appendMediumType(Arrays.stream(types).toList());
+    public boolean appendType(CyberType... types) {
+        return appendType(Arrays.stream(types).toList());
     }
 
-    public boolean appendMediumType(Collection<MediumType> types) {
-        return mediumTypes.addAll(types);
+    public boolean appendType(Collection<CyberType> types) {
+        return types.addAll(types);
     }
 
-    public boolean removeMediumType(MediumType type) {
-        return mediumTypes.remove(type);
+    public boolean cancelType(CyberType type) {
+        return types.remove(type);
     }
 
-    public boolean removeMediumType(MediumType... types) {
-        return removeMediumType(Arrays.stream(types).toList());
+    public boolean cancelType(CyberType... types) {
+        return cancelType(Arrays.stream(types).toList());
     }
 
-    public boolean removeMediumType(Collection<MediumType> types) {
-        return mediumTypes.removeAll(types);
+    public boolean cancelType(Collection<CyberType> types) {
+        return types.removeAll(types);
     }
 
-    public boolean containsMediumType(MediumType type) {
-        return mediumTypes.contains(type);
+    public boolean containsType(CyberType type) {
+        return types.contains(type);
     }
 
-    public boolean containsMediumType(MediumType... types) {
-        return containsMediumType(Arrays.stream(types).toList());
+    public boolean containsType(CyberType... types) {
+        return containsType(Arrays.stream(types).toList());
     }
 
-    public boolean containsMediumType(Collection<MediumType> types) {
-        return mediumTypes.containsAll(types);
+    public boolean containsType(Collection<CyberType> types) {
+        return types.containsAll(types);
     }
 }

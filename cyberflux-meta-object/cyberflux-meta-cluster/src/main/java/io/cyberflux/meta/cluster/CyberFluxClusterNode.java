@@ -2,17 +2,24 @@ package io.cyberflux.meta.cluster;
 
 import java.util.Set;
 
+import io.cyberflux.meta.data.CyberMessage;
+
 public interface CyberFluxClusterNode {
     /**
      * @return 节点名称
      */
-    public String nodeName();
+    String nodeName();
     /**
      * @return 获取集群中的某个成员
      */
-    public CyberFluxClusterNode nodeMember(String nodeName);
+    CyberFluxClusterNode nodeMember(String nodeName);
     /**
      * @return 获取集群中所有的成员
      */
-    public Set<CyberFluxClusterNode> nodeMembers();
+    Set<CyberFluxClusterNode> nodeMembers();
+
+	<M> void spreadMessage(CyberMessage message);
+
+	<M> void spreadMessage(CyberMessage message, String modeName);
+
 }

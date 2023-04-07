@@ -4,12 +4,27 @@ import io.cyberflux.reactor.mqtt.registry.MqttMessageRegistry;
 import io.cyberflux.reactor.mqtt.registry.MqttTopicRegistry;
 
 public class MqttChannelHandlerContext {
-	private MqttChannelGroup channelGroup;
-	private MqttTopicRegistry topicRegistry;
-	private MqttMessageRegistry messageRegistry;
-	private MqttChannelInboundHandler channelHandler;
+
+	protected MqttChannelGroup channelGroup;
+	protected MqttTopicRegistry topicRegistry;
+	protected MqttMessageRegistry messageRegistry;
+	protected MqttChannelInboundHandler inboundHandler;
 
 	public MqttChannelHandlerContext() {
+		inboundHandler = new DefaultMqttChannelInboundHandler(null);
+	}
 
+	public void applyChannel(MqttChannel channel) {
+		inboundHandler.channelActivate(this, channel);
+	}
+
+	public MqttChannelGroup getChannelGroup() {
+		return channelGroup;
+	}
+	public MqttTopicRegistry getTopicRegistry() {
+		return topicRegistry;
+	}
+	public MqttChannelInboundHandler  getChannelInboundHandler() {
+		return inboundHandler;
 	}
 }

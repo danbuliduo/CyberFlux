@@ -20,6 +20,11 @@
             <artifactId>caffeine</artifactId>
         </dependency>
         <dependency>
+            <groupId>net.sf.trove4j</groupId>
+            <artifactId>trove4j</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+        <dependency>
             <groupId>io.cyberflux</groupId>
             <artifactId>cyberflux-meta-reactor</artifactId>
         </dependency>

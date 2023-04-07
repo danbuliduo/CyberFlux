@@ -1,6 +1,6 @@
-package io.cyberflux.meta.medium;
+package io.cyberflux.meta.data;
 
-public enum MediumStatus {
+public enum CyberStatus {
     /**
      * @brief Reactor Opening
      * @status Reactor::start() Under execution

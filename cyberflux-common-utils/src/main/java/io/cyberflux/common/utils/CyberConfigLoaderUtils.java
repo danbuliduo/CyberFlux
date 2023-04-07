@@ -52,7 +52,7 @@ public final class CyberConfigLoaderUtils {
         return null;
     }
 
-    public static <T> T auto(String path, Class<T> clasz) {
+    public static <T> T autoLoad(String path, Class<T> clasz) {
         if(path.charAt(0) == '/') {
             return CyberConfigLoaderUtils.fromResource(path, clasz);
         }

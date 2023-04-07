@@ -2,7 +2,7 @@ package io.cyberflux.reactor.mqtt.transport;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.cyberflux.meta.medium.MediumType;
+import io.cyberflux.meta.data.CyberType;
 
 public class WebSocketTransportConfig extends MqttTransportConfig {
 
@@ -10,7 +10,7 @@ public class WebSocketTransportConfig extends MqttTransportConfig {
 	protected String path = "/mqtt";
 
 	public WebSocketTransportConfig() {
-		super(8883, MediumType.WEBSOCKET);
+		super(CyberType.WEBSOCKET, 8883);
 	}
 
 	public String getPath() {
@@ -21,5 +21,4 @@ public class WebSocketTransportConfig extends MqttTransportConfig {
 		this.path = path;
 		return this;
 	}
-
 }

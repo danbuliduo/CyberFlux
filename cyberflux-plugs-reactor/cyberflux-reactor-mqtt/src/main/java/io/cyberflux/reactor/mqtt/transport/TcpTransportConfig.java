@@ -1,9 +1,10 @@
 package io.cyberflux.reactor.mqtt.transport;
 
-import io.cyberflux.meta.medium.MediumType;
+import io.cyberflux.meta.data.CyberType;
 
 public class TcpTransportConfig extends MqttTransportConfig {
+
 	public TcpTransportConfig() {
-		super(1883, MediumType.TCP);
+		super(CyberType.TCP, 1883);
 	}
 }

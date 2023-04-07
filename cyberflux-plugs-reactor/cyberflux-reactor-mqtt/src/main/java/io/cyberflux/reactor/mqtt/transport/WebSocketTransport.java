@@ -1,5 +1,6 @@
 package io.cyberflux.reactor.mqtt.transport;
 
+import io.cyberflux.reactor.mqtt.channel.MqttChannel;
 import io.cyberflux.reactor.mqtt.codec.MqttWebSocketCodec;
 import io.netty.handler.codec.http.HttpContentCompressor;
 import io.netty.handler.codec.http.HttpObjectAggregator;
@@ -15,6 +16,10 @@ import reactor.util.context.ContextView;
 
 public final class WebSocketTransport extends MqttTransport<DisposableServer, WebSocketTransportConfig> {
 
+	public WebSocketTransport() {
+		this(new WebSocketTransportConfig());
+	}
+
 	public WebSocketTransport(WebSocketTransportConfig config) {
 		super(config);
 	}
@@ -22,7 +27,7 @@ public final class WebSocketTransport extends MqttTransport<DisposableServer, We
 	@Override
 	public Mono<? extends DisposableServer> overTransport(ContextView context) {
 		return TcpServer.create()
-				.port(config.port())
+				.port(config.getPort())
 				.doOnConnection(conn -> {
 					conn.addHandlerLast(new HttpServerCodec())
 						.addHandlerLast(new HttpObjectAggregator(65536))
@@ -31,6 +36,7 @@ public final class WebSocketTransport extends MqttTransport<DisposableServer, We
 						.addHandlerLast(new MqttWebSocketCodec())
 						.addHandlerLast(MqttEncoder.INSTANCE)
 						.addHandlerLast(new MqttDecoder());
+					this.context.applyChannel(new MqttChannel(conn));
 				}).bind();
 	}
 }

@@ -16,11 +16,21 @@
     <dependencies>
         <dependency>
             <groupId>io.cyberflux</groupId>
-            <artifactId>cyberflux-meta-medium</artifactId>
+            <artifactId>cyberflux-meta-data</artifactId>
         </dependency>
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.scalecube</groupId>
+            <artifactId>scalecube-cluster</artifactId>
+            <version>2.6.14</version>
+        </dependency>
+        <dependency>
+            <groupId>io.scalecube</groupId>
+            <artifactId>scalecube-transport-netty</artifactId>
+            <version>2.6.14</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -30,5 +40,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
+
     </dependencies>
 </project>

@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>io.cyberflux</groupId>
-            <artifactId>cyberflux-meta-medium</artifactId>
+            <artifactId>cyberflux-meta-data</artifactId>
         </dependency>
         <dependency>
             <groupId>io.projectreactor</groupId>

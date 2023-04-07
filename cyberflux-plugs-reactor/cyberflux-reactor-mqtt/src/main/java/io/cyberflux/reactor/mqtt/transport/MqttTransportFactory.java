@@ -1,6 +1,6 @@
 package io.cyberflux.reactor.mqtt.transport;
 
-import io.cyberflux.reactor.mqtt.exception.TransportInstanceofException;
+import io.cyberflux.reactor.mqtt.exception.TransportSupportException;
 import reactor.core.Disposable;
 
 
@@ -8,7 +8,7 @@ public final class MqttTransportFactory {
 
 	public static MqttTransport<? extends Disposable, ? extends MqttTransportConfig>
 			defaultTransport() {
-		return new TcpTransport(new TcpTransportConfig());
+		return new TcpTransport();
 	}
 
 	public static MqttTransport<? extends Disposable, ? extends MqttTransportConfig>
@@ -18,6 +18,6 @@ public final class MqttTransportFactory {
 		} else if(config instanceof WebSocketTransportConfig) {
 			return new WebSocketTransport((WebSocketTransportConfig) config);
 		}
-		throw new TransportInstanceofException("This type is not supported.");
+		throw new TransportSupportException("This type is not supported.");
 	}
 }
