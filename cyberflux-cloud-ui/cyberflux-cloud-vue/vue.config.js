@@ -4,5 +4,8 @@ module.exports = defineConfig({
   devServer: {
     host: 'localhost',
     port: 18080,
+  },
+  chainWebpack: config => {
+    config.resolve.extensions.add('ts').add('tsx');
   }
 })
