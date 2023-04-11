@@ -33,7 +33,7 @@
             17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
-        <io.projectreactor.version>2022.0.5</io.projectreactor.version>
+        <io.projectreactor.version>2022.0.6</io.projectreactor.version>
         <org.springframework.version>
             3.0.5</org.springframework.version>
         <flatten.maven.plugin.version>1.4.1</flatten.maven.plugin.version>
