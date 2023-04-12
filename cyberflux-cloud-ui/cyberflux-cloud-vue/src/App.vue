@@ -15,7 +15,9 @@
   text-align: center;
   color: #2c3e50;
 }
-
+#nprogress .bar {
+  background: #42d3a5 !important;
+}
 nav {
   padding: 30px;
 

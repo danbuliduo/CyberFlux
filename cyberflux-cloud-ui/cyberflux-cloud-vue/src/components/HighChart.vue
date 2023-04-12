@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     chartCallback() {
-      console.log("this is callback function");
+  
     }
   }
 };

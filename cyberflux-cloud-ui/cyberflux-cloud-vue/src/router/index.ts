@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { openProgressBar, closeProgressBar } from '@/utils/nprogress'
 import HomeView from '@/views/HomeView.vue'
 const routes = [
   {
@@ -21,6 +22,14 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+
+router.beforeEach(() => {
+  openProgressBar()
+})
+
+router.afterEach(() => {
+  closeProgressBar()
 })
 
 export default router

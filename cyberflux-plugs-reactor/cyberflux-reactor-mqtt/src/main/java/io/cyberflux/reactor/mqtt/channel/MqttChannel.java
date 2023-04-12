@@ -21,8 +21,9 @@ public final class MqttChannel extends TemplateChannel {
 	private final Connection connection;
 	private final AtomicInteger atomicCounter;
 
-	private final TIntObjectHashMap<MqttPublishMessage> messageCache;
 	private MqttWillMessage willMessage;
+	private TIntObjectHashMap<MqttPublishMessage> messageCache;
+
 
 	private Disposable closeDisposable;
 
