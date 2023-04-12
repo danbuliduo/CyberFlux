@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.cyberflux</groupId>
+        <artifactId>cyberflux-framework</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <groupId>io.cyberflux</groupId>
+    <artifactId>cyberflux-meta-object</artifactId>
+    <name>Cyberflux Meta Object</name>
+
+    <modules>
+        <module>cyberflux-meta-cluster</module>
+        <module>cyberflux-meta-data</module>
+        <module>cyberflux-meta-reactor</module>
+    </modules>
+
+    <packaging>pom</packaging>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-meta-cluster</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-meta-data</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-meta-reactor</artifactId>
+                <version>${revision}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "esnext",
+    "baseUrl": "./",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
+  }
+}
