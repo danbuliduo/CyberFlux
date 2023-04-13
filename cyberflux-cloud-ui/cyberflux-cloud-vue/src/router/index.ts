@@ -1,6 +1,13 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import { openProgressBar, closeProgressBar } from '@/utils/nprogress'
+import {
+  createRouter,
+  createWebHashHistory
+} from 'vue-router'
+import {
+  openProgressBar,
+  closeProgressBar
+} from '@/utils/nprogress'
 import HomeView from '@/views/HomeView.vue'
+
 const routes = [
   {
     path: '/',

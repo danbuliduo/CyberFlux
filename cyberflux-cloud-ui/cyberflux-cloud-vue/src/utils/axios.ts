@@ -1,14 +1,17 @@
 import axios, { AxiosResponse } from 'axios'
-
+import { Method } from '@/enums/http.enum'
 
 axios.defaults.timeout = 5000
 axios.defaults.withCredentials = true
 
-export enum Method {
-  GET = 'get',
-  POST = 'post',
-}
-
+/**
+ * HTTP异步请求
+ * @param url URL
+ * @param mthod Method.(GET | POST)
+ * @param params Any
+ * @param config Any
+ * @returns {Promise<AxiosResponse<any>>}
+ */
 async function request(url: string, mthod: Method, params: any, config: any)
   : Promise<AxiosResponse<any>> {
   switch(mthod) {

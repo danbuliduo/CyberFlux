@@ -1,16 +1,12 @@
 <template>
-  <naive-container/>
+  <naive-container>
+    <router-view />
+  </naive-container>
 </template>
 
-<script lang="ts">
-import NaiveContainer from "@/layout/NaiveContainer.vue"
+<script lang="ts" setup>
+import NaiveContainer from "@/components/NaiveContainer.vue"
 
-export default {
-  name: "App",
-  components: {
-    NaiveContainer
-  }
-};
 </script>
 
 

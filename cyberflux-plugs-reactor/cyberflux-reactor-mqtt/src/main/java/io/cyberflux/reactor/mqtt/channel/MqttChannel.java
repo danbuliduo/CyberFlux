@@ -149,14 +149,4 @@ public final class MqttChannel extends TemplateChannel {
 	public Mono<Void> write(Stream<MqttMessage> messages) {
 		return this.write(Flux.fromStream(messages));
 	}
-
-	/*private static class MessageSink {
-
-		public static MessageSink SINK = new MessageSink();
-
-		public Mono<Void> sendMessage(MqttMessage message, MqttChannel channel, boolean isRetry) {
-			return channel.write(Mono.just(message));
-		}
-	}*/
-
 }

@@ -1,12 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "esnext",
     "module": "esnext",
     "baseUrl": "./",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ],
+      "/#/*": [
+        "type/*"
+      ]
     },
     "lib": [
       "esnext",

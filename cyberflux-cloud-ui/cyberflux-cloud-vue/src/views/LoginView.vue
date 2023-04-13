@@ -19,8 +19,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
 import {
+  computed,
+  defineComponent,
+  ref
+} from 'vue'
+import {
+  NButton,
   createDiscreteApi,
   ConfigProviderProps,
   darkTheme,
@@ -41,25 +46,25 @@ const { message } = createDiscreteApi(
     configProviderProps: configProviderPropsRef
   }
 )
+import { Field } from '@/enums/lang.enum'
+import { I18N_LANG_KEY } from '@/enums/storage.enum'
 
-import { LangKey } from '@/lang'
+
 export default defineComponent({
   name: 'LoginView',
+  components: {
+    NButton
+  },
   setup() {
     return {
+      message,
       selectLang(value: string): void {
         this.$i18n.locale = value
-        localStorage.setItem(LangKey, value)
-        message.success(this.$t('action'))
+        localStorage.setItem(I18N_LANG_KEY, value)
+        message.success(this.$t(Field.ACTION))
       }
     }
-  },
-  methods: {
-
-  },
-  mounted() {
-
-  },
+  }
 })
 
 </script>

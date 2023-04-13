@@ -1,6 +1,5 @@
 # EditorConfig is awesome: https://EditorConfig.org
 
-# top-most EditorConfig file
 root = true
 
 [*]
@@ -30,6 +29,10 @@ ij_java_names_count_to_use_import_on_demand = 100
 ij_java_imports_layout = |, java.**, |, jakarta.**, *, |, io.cyberflux.**, |, $*
 ij_java_layout_static_imports_separately = true
 
+[*.yml,yaml,json]
+indent_style = space
+indent_size = 2
+
 [*.xml]
 indent_style = space
 indent_size = 4
@@ -37,3 +40,6 @@ indent_size = 4
 [*.{js,ts,vue}]
 indent_style = space
 indent_size = 2
+
+[Makefile]
+indent_style = tab

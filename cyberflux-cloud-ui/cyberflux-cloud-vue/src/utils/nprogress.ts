@@ -16,7 +16,6 @@ NProgress.configure({
   minimum: 0.2
 })
 
-
 /**
  * @brief 开启进度条
  */
