@@ -1,4 +1,6 @@
 <template>
+
+  <n-button>naive-ui</n-button>
   <button>
     {{ $t('common.home') }}
   </button>
@@ -17,26 +19,47 @@
 </template>
 
 <script lang="ts">
-import { LangKey } from '@/lang'
+import { computed, defineComponent, ref } from 'vue'
+import {
+  createDiscreteApi,
+  ConfigProviderProps,
+  darkTheme,
+  lightTheme
+} from 'naive-ui'
 
-export default {
+const themeRef = ref<'light' | 'dark'>('dark')
+
+const configProviderPropsRef = computed<ConfigProviderProps>(() => ({
+  theme: themeRef.value === 'light' ? lightTheme : darkTheme
+}))
+
+const { message } = createDiscreteApi(
+  [
+    'message'
+  ],
+  {
+    configProviderProps: configProviderPropsRef
+  }
+)
+
+import { LangKey } from '@/lang'
+export default defineComponent({
   name: 'LoginView',
   setup() {
-
     return {
-
+      selectLang(value: string): void {
+        this.$i18n.locale = value
+        localStorage.setItem(LangKey, value)
+        message.success(this.$t('action'))
+      }
     }
   },
   methods: {
-    selectLang(value : string) : void {
-      this.$i18n.locale = value
-      localStorage.setItem(LangKey, value)
-      alert(this.$t('action'))
-    }
+
   },
   mounted() {
 
   },
-}
+})
 
 </script>

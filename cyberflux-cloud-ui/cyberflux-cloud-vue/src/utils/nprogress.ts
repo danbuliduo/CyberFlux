@@ -2,7 +2,6 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
 /**
- * @brief
  * easing: 动画方式
  * speed: 递增进度条的速度
  * showSpinner: 是否显示加载ico
@@ -21,7 +20,7 @@ NProgress.configure({
 /**
  * @brief 开启进度条
  */
-export const openProgressBar = () => {
+function openProgressBar(): void {
   if(!NProgress.isStarted()) {
     NProgress.start()
   }
@@ -30,6 +29,11 @@ export const openProgressBar = () => {
 /**
  * @brief 关闭进度条
  */
-export const closeProgressBar = () => {
+function closeProgressBar(): void {
   NProgress.done()
+}
+
+export {
+  openProgressBar,
+  closeProgressBar,
 }

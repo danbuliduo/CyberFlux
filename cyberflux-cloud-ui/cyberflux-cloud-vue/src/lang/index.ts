@@ -14,7 +14,7 @@ export enum Lang {
   ZH_TC = 'zh-TC',
 }
 
-export const LangKey = 'locale'
+const LangKey = 'locale'
 
 const i18n = createI18n({
   legacy: false,
@@ -30,5 +30,9 @@ const i18n = createI18n({
     [Lang.ZH_TC]: zh_TC,
   }
 })
+
+export {
+  LangKey
+}
 
 export default i18n

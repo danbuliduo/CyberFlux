@@ -1,8 +1,8 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
+    <img alt="Vue logo" src="../assets/image/vue.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
-      <div>
+    <div>
       {{ $t('action') }}
     </div>
   </div>
