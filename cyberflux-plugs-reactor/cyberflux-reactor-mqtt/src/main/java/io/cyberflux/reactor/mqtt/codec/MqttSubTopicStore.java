@@ -72,6 +72,7 @@ public final class MqttSubTopicStore {
 			return false;
 		}
 		MqttSubTopicStore that = (MqttSubTopicStore) obj;
-		return Objects.equals(this.topic, that.topic);
+		return Objects.equals(this.topic, that.topic)
+			&& Objects.equals(this.channel, that.channel);
 	}
 }

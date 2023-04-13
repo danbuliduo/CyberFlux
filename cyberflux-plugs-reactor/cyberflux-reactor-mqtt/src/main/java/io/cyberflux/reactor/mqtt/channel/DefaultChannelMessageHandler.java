@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import io.cyberflux.reactor.mqtt.exception.MqttMessageTypeException;
 import io.netty.handler.codec.mqtt.MqttMessage;
+import io.netty.handler.codec.mqtt.MqttMessageType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,15 +28,23 @@ public class DefaultChannelMessageHandler implements MqttChannelMessageHandler {
 	public void channelRead(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
 		log.info("ThreadName: {} , {}", Thread.currentThread().getName(), message.fixedHeader().messageType());
 		onChannelRead(context, channel, message)
-			.subscribeOn(Schedulers.newParallel("Th-R1"))
+			//.subscribeOn(Schedulers.newParallel("Th-R1"))
 			.subscribe($ -> {
 					// do something.
 				},
 				error -> {
 					log.error(error.getMessage());
-					ReactorNetty.safeRelease(message.payload());
+					if (message.fixedHeader().messageType() != MqttMessageType.PUBLISH
+						&& message.fixedHeader().messageType() != MqttMessageType.PUBREL) {
+						ReactorNetty.safeRelease(message.payload());
+					}
 				},
-				() -> ReactorNetty.safeRelease(message.payload())
+				() -> {
+					if(message.fixedHeader().messageType() != MqttMessageType.PUBLISH
+						&& message.fixedHeader().messageType() != MqttMessageType.PUBREL) {
+						ReactorNetty.safeRelease(message.payload());
+					}
+				}
 			);
 	}
 

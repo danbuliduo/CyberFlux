@@ -8,6 +8,8 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import io.cyberflux.meta.data.CyberType;
 import io.cyberflux.meta.reactor.TemplateChannel;
 import io.cyberflux.reactor.mqtt.codec.MqttWillMessage;
+import io.cyberflux.reactor.mqtt.registry.DefaultPublishMessageRegistry;
+import io.cyberflux.reactor.mqtt.registry.MqttPublishMessageRegistry;
 import io.netty.handler.codec.mqtt.MqttMessage;
 import io.netty.handler.codec.mqtt.MqttMessageType;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
@@ -22,8 +24,7 @@ public final class MqttChannel extends TemplateChannel {
 	private final AtomicInteger atomicCounter;
 
 	private MqttWillMessage willMessage;
-	private TIntObjectHashMap<MqttPublishMessage> messageCache;
-
+	private MqttPublishMessageRegistry qos2MessageCache;
 
 	private Disposable closeDisposable;
 
@@ -31,7 +32,7 @@ public final class MqttChannel extends TemplateChannel {
 		super(CyberType.MQTT, connection.channel().id().asLongText());
 		this.connection = connection;
 		atomicCounter = new AtomicInteger(0);
-		messageCache = new TIntObjectHashMap<>(0);
+		qos2MessageCache = new DefaultPublishMessageRegistry();
     }
 
 	public Connection connection() {
@@ -61,7 +62,7 @@ public final class MqttChannel extends TemplateChannel {
 
 	public int generateMessageId() {
 		int messageId;
-		while(messageCache.contains(messageId = atomicCounter.incrementAndGet())) {
+		while(containsQos2Message(messageId = atomicCounter.incrementAndGet())) {
 			if(messageId >= 65535) {
 				synchronized (this) {
 					messageId = atomicCounter.incrementAndGet();
@@ -74,12 +75,16 @@ public final class MqttChannel extends TemplateChannel {
 		return messageId;
 	}
 
-	public boolean appendMessage(int messageId, MqttPublishMessage message) {
-		if(!containsMessage(messageId)) {
-			messageCache.put(messageId, message);
-			return true;
-		}
-		return false;
+	public boolean saveQoS2Message(int messageId, MqttPublishMessage message) {
+		return qos2MessageCache.save(messageId, message);
+	}
+
+	public MqttPublishMessage removeQoS2Message(int messageId) {
+		return qos2MessageCache.removeById(messageId);
+	}
+
+	public boolean containsQos2Message(int messageId) {
+		return qos2MessageCache.contains(messageId);
 	}
 
 	public void cancelDelayCloseEvent() {
@@ -100,18 +105,11 @@ public final class MqttChannel extends TemplateChannel {
 
 	public Mono<Void> close() {
 		return Mono.fromRunnable(() -> {
-			messageCache.clear();
+			qos2MessageCache.clear();
 			if (!connection.isDisposed()) {
 				connection.dispose();
 			}
 		});
-	}
-
-	public boolean removeMessage(int messageId) {
-		return messageCache.remove(messageId) != null;
-	}
-	public boolean containsMessage(int messageId) {
-		return messageCache.contains(messageId);
 	}
 
     public Flux<MqttMessage> receiveMessage() {
@@ -135,6 +133,7 @@ public final class MqttChannel extends TemplateChannel {
 	}
 
     public Mono<Void> write(MqttMessage message) {
+		System.out.println("R-WRITW");
 		return this.write(Mono.just(message));
     }
 

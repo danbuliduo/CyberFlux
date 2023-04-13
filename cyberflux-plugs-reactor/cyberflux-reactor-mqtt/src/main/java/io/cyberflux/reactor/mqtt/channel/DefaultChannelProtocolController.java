@@ -1,6 +1,6 @@
 package io.cyberflux.reactor.mqtt.channel;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.cyberflux.reactor.mqtt.codec.MqttRetainMessage;
@@ -17,6 +17,7 @@ import io.netty.handler.codec.mqtt.MqttConnectPayload;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import io.netty.handler.codec.mqtt.MqttConnectVariableHeader;
 import io.netty.handler.codec.mqtt.MqttMessage;
+import io.netty.handler.codec.mqtt.MqttMessageIdVariableHeader;
 import io.netty.handler.codec.mqtt.MqttProperties;
 import io.netty.handler.codec.mqtt.MqttProperties.MqttPropertyType;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
@@ -25,29 +26,39 @@ import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.handler.codec.mqtt.MqttSubscribeMessage;
 import io.netty.handler.codec.mqtt.MqttUnsubscribeMessage;
 import io.netty.handler.codec.mqtt.MqttVersion;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 
 
 public class DefaultChannelProtocolController implements MqttChannelProtocolController {
 
-	private List<Mono<Void>> pushMessage(MqttSubTopicRegistry topicRegistry,
-	 									MqttSessionMessageRegistry sessionRegistry,
-										MqttPublishMessage message) {
-		return topicRegistry.findByTopic(message.variableHeader().topicName())
-			.stream().filter(store -> {
-				if(!store.channel().isOnline()) {
-					sessionRegistry.append(
-						MqttSessionMessage.fromPublishMessage(store.channel().channelId(), message)
-					);
-					return false;
-				}
-				return true;
-			}).map(store -> {
-				return store.channel().write(MqttMessageBuilder.wrappedPublishMessage(
-					message, MqttQoS.valueOf(store.level()), store.channel().generateMessageId()
-				));
-			}).collect(Collectors.toList());
+	private Flux<Void> pushMessage(
+			MqttSubTopicRegistry topicRegistry,
+			MqttSessionMessageRegistry sessionRegistry,
+			MqttPublishMessage message) {
+		final int qosLevel = message.fixedHeader().qosLevel().value();
+		return Flux.fromIterable(
+			topicRegistry.findByTopic(message.variableHeader().topicName())
+		).filter(store -> {
+			return filterSessionMessage(store.channel(), sessionRegistry, message);
+		}).flatMap(store -> {
+			System.out.println("P-WRITW");
+			return store.channel().write(MqttMessageBuilder.wrappedPublishMessage(
+				message,
+				MqttQoS.valueOf(Math.min(qosLevel, store.level())),
+				store.channel().generateMessageId()
+			));
+		});
+	}
+
+	private boolean filterSessionMessage(
+			MqttChannel channel, MqttSessionMessageRegistry sessionRegistry, MqttPublishMessage message) {
+		if (!channel.isOnline()) {
+			sessionRegistry.append(MqttSessionMessage.fromPublishMessage(channel.channelId(), message));
+			return false;
+		}
+		return true;
 	}
 
 	private Mono<Void> filterRetainMessage(MqttRetainMessageRegistry retainRegistry, MqttPublishMessage message) {
@@ -126,7 +137,7 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 						.then(channel.write(MqttMessageBuilder.buildPubAckMessage(variableHeader.packetId())))
 						.then(filterRetainMessage(context.retainRegistry, publishMessage));
 				case EXACTLY_ONCE ->
-					Mono.fromRunnable(() -> channel.appendMessage(variableHeader.packetId(), publishMessage))
+					Mono.fromRunnable(() -> channel.saveQoS2Message(variableHeader.packetId(), publishMessage))
 						.then(channel.write(MqttMessageBuilder.buildPubRecMessage(variableHeader.packetId())));
 				case FAILURE -> {
 					throw new MqttQosLevelTypeException("Unimplemented case: QosLevel Failure.");
@@ -145,17 +156,40 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 
     @Override
     public Mono<Void> pubrec(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
-        return Mono.empty();
+		final int messageId = ((MqttMessageIdVariableHeader) message.variableHeader()).messageId();
+        return Mono.fromRunnable(() -> {
+
+		}).then(channel.write(MqttMessageBuilder.buildPubRelMessage(messageId)));
     }
 
     @Override
     public Mono<Void> pubrel(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
-        return Mono.empty();
+		final int messageId = ((MqttMessageIdVariableHeader) message.variableHeader()).messageId();
+		return Optional.ofNullable(channel.removeQoS2Message(messageId)).map(pubmsg -> {
+			int qosLevel = pubmsg.fixedHeader().qosLevel().value();
+			System.out.println("OK1");
+			System.out.println(pubmsg.payload());
+			return Mono.when(
+				context.topicRegistry.findByTopic(pubmsg.variableHeader().topicName()).stream().map(store -> {
+						System.out.println("OK2");
+					return store.channel().write(MqttMessageBuilder.wrappedPublishMessage(
+						pubmsg,
+						MqttQoS.valueOf(Math.min(qosLevel, store.level())),
+						store.channel().generateMessageId())
+					);
+				}).collect(Collectors.toList())
+			).then(
+
+			).then(channel.write(MqttMessageBuilder.buildPubCompMessage(messageId)));
+		}).orElseGet(() -> channel.write(MqttMessageBuilder.buildPubCompMessage(messageId)));
     }
 
     @Override
     public Mono<Void> pubcomp(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
-        return Mono.empty();
+		final int messageId = ((MqttMessageIdVariableHeader) message.variableHeader()).messageId();
+        return Mono.fromRunnable(() -> {
+
+		});
     }
 
     @Override
