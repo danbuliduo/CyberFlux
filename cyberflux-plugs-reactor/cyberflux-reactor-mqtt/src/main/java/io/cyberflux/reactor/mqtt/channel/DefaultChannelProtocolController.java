@@ -1,5 +1,6 @@
 package io.cyberflux.reactor.mqtt.channel;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,30 +27,30 @@ import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.handler.codec.mqtt.MqttSubscribeMessage;
 import io.netty.handler.codec.mqtt.MqttUnsubscribeMessage;
 import io.netty.handler.codec.mqtt.MqttVersion;
-import reactor.core.publisher.Flux;
+
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 
 
 public class DefaultChannelProtocolController implements MqttChannelProtocolController {
 
-	private Flux<Void> pushMessage(
+	private List<Mono<Void>> pushMessage(
 			MqttSubTopicRegistry topicRegistry,
 			MqttSessionMessageRegistry sessionRegistry,
 			MqttPublishMessage message) {
 		final int qosLevel = message.fixedHeader().qosLevel().value();
-		return Flux.fromIterable(
-			topicRegistry.findByTopic(message.variableHeader().topicName())
-		).filter(store -> {
+		return topicRegistry.findByTopic(
+			message.variableHeader().topicName()
+		).stream().filter(store -> {
 			return filterSessionMessage(store.channel(), sessionRegistry, message);
-		}).flatMap(store -> {
+		}).map(store -> {
 			System.out.println("P-WRITW");
 			return store.channel().write(MqttMessageBuilder.wrappedPublishMessage(
 				message,
 				MqttQoS.valueOf(Math.min(qosLevel, store.level())),
 				store.channel().generateMessageId()
 			));
-		});
+		}).collect(Collectors.toList());
 	}
 
 	private boolean filterSessionMessage(

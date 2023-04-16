@@ -1,42 +1,37 @@
+import { RouteModuleType } from './types';
+import { IndexRoute} from './base';
 import {
   createRouter,
-  createWebHashHistory
-} from 'vue-router'
-import {
-  openProgressBar,
-  closeProgressBar
-} from '@/utils/nprogress'
-import HomeView from '@/views/HomeView.vue'
+  createWebHashHistory,
+  RouteRecordRaw
+} from 'vue-router';
 
-const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    component: () => import('@/views/AboutView.vue')
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import('@/views/LoginView.vue')
-  },
+const moudels = import.meta.glob<RouteModuleType>(
+  './modules/**/*.ts', { eager: true }
+)
+
+const routeRecordList: RouteRecordRaw[] = []
+
+Object.keys(moudels).forEach( key => {
+  const moudel = moudels[key].default || {}
+  const moudelArray = Array.isArray(moudel) ? [...moudel] : [moudel]
+  routeRecordList.push(...moudelArray)
+})
+
+routeRecordList.sort((a : any, b: any): number => {
+  return (a.meta?.sort || 0) - (b.meta?.sort || 0)
+})
+
+export const asyncRoutes = [...routeRecordList]
+
+export const constantRoutes = [
+  IndexRoute, ...routeRecordList
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
-})
-
-router.beforeEach(() => {
-  openProgressBar()
-})
-
-router.afterEach(() => {
-  closeProgressBar()
+  routes: constantRoutes,
+  strict: true
 })
 
 export default router

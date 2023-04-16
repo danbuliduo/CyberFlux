@@ -1,19 +1,10 @@
-import { createStore } from 'vuex'
+import { createPinia } from 'pinia'
 
-export default createStore({
-  state: {
+const moudels = import.meta.glob(
+  './modules/**/*.ts', { eager: true }
+)
 
-  },
-  getters: {
 
-  },
-  mutations: {
+const store = createPinia()
 
-  },
-  actions: {
-
-  },
-  modules: {
-
-  }
-})
+export default store

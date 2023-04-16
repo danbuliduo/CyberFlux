@@ -16,13 +16,13 @@ export enum Screen {
   XXL = 1600,
 }
 
-const ScreenMap = new Map<Size, number>();
+const screenMap = new Map<Size, number>();
 
-ScreenMap.set(Size.XS, Screen.XS);
-ScreenMap.set(Size.SM, Screen.SM);
-ScreenMap.set(Size.MD, Screen.MD);
-ScreenMap.set(Size.LG, Screen.LG);
-ScreenMap.set(Size.XL, Screen.XL);
-ScreenMap.set(Size.XXL, Screen.XXL);
+screenMap.set(Size.XS, Screen.XS);
+screenMap.set(Size.SM, Screen.SM);
+screenMap.set(Size.MD, Screen.MD);
+screenMap.set(Size.LG, Screen.LG);
+screenMap.set(Size.XL, Screen.XL);
+screenMap.set(Size.XXL, Screen.XXL);
 
-export { ScreenMap };
+export { screenMap };
