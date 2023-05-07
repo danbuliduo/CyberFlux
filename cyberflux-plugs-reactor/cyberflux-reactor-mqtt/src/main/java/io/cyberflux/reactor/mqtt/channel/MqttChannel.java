@@ -4,15 +4,22 @@ import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.cyberflux.meta.data.CyberType;
 import io.cyberflux.meta.reactor.TemplateChannel;
 import io.cyberflux.reactor.mqtt.codec.MqttWillMessage;
 import io.cyberflux.reactor.mqtt.registry.DefaultPublishMessageRegistry;
 import io.cyberflux.reactor.mqtt.registry.MqttPublishMessageRegistry;
+import io.cyberflux.reactor.mqtt.retry.MqttAcknowledgementManager;
+import io.cyberflux.reactor.mqtt.retry.DefaultMqttAcknowledgement;
+import io.cyberflux.reactor.mqtt.retry.MqttAcknowledgement;
+import io.cyberflux.reactor.mqtt.utils.MqttByteBufUtils;
 import io.netty.handler.codec.mqtt.MqttMessage;
+import io.netty.handler.codec.mqtt.MqttMessageIdVariableHeader;
 import io.netty.handler.codec.mqtt.MqttMessageType;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
+import io.netty.handler.codec.mqtt.MqttPublishVariableHeader;
 import io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue.Consumer;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
@@ -26,11 +33,16 @@ public final class MqttChannel extends TemplateChannel {
 	private MqttWillMessage willMessage;
 	private MqttPublishMessageRegistry qos2MessageCache;
 
+	@JsonIgnore
 	private Disposable closeDisposable;
+	@JsonIgnore
+	private MqttAcknowledgementManager ackManager;
 
-    public MqttChannel(Connection connection) {
+
+    public MqttChannel(Connection connection, MqttAcknowledgementManager ackManager) {
 		super(CyberType.MQTT, connection.channel().id().asLongText());
 		this.connection = connection;
+		this.ackManager = ackManager;
 		atomicCounter = new AtomicInteger(0);
 		qos2MessageCache = new DefaultPublishMessageRegistry();
     }
@@ -133,7 +145,6 @@ public final class MqttChannel extends TemplateChannel {
 	}
 
     public Mono<Void> write(MqttMessage message) {
-		System.out.println("R-WRITW");
 		return this.write(Mono.just(message));
     }
 
@@ -147,5 +158,36 @@ public final class MqttChannel extends TemplateChannel {
 
 	public Mono<Void> write(Stream<MqttMessage> messages) {
 		return this.write(Flux.fromStream(messages));
+	}
+
+	public Mono<Void> writeAndReply(MqttMessage message) {
+		MqttMessage msg = getReplyMessage(message);
+		Runnable runnable = () -> write(Mono.just(msg)).subscribe();
+		Runnable cleaner = () -> MqttByteBufUtils.safeRelease(msg);
+		MqttAcknowledgement acknowledgement = new DefaultMqttAcknowledgement(
+			generateId(message.fixedHeader().messageType(), getReplyMessageId(msg)),
+			5, 5, runnable, cleaner, null
+		);
+		acknowledgement.start();
+		return this.write(message).then();
+	}
+
+	private MqttMessage getReplyMessage(MqttMessage message) {
+		if (message instanceof MqttPublishMessage) {
+			return ((MqttPublishMessage) message).copy().retain(Integer.MAX_VALUE >> 2);
+		} else {
+			return message;
+		}
+	}
+
+	private int getReplyMessageId(MqttMessage message) {
+		Object object = message.variableHeader();
+		if (object instanceof MqttPublishVariableHeader) {
+			return ((MqttPublishVariableHeader) object).packetId();
+		} else if (object instanceof MqttMessageIdVariableHeader) {
+			return ((MqttMessageIdVariableHeader) object).messageId();
+		} else {
+			return -1; // client send connect key
+		}
 	}
 }

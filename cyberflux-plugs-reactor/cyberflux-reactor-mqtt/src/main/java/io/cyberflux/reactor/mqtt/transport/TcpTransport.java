@@ -1,6 +1,7 @@
 package io.cyberflux.reactor.mqtt.transport;
 
 import io.cyberflux.reactor.mqtt.channel.MqttChannel;
+import io.cyberflux.reactor.mqtt.channel.MqttChannelContext;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.codec.mqtt.MqttDecoder;
@@ -22,6 +23,7 @@ public final class TcpTransport extends MqttTransport<DisposableServer, TcpTrans
 
 	@Override
 	public Mono<DisposableServer> overTransport(ContextView context) {
+		MqttChannelContext channelContext = context.get(MqttChannelContext.class);
 		return TcpServer.create()
 			.port(config.getPort())
 			.childOption(ChannelOption.TCP_NODELAY, true)
@@ -33,7 +35,9 @@ public final class TcpTransport extends MqttTransport<DisposableServer, TcpTrans
 			.doOnConnection(conn -> {
 				conn.addHandlerFirst(MqttEncoder.INSTANCE)
                     .addHandlerFirst(new MqttDecoder());
-				this.context.applyChannel(new MqttChannel(conn));
+				this.context.applyChannel(
+					new MqttChannel(conn, channelContext.getAcknowledgementManager())
+				);
 			}).bind().cast(DisposableServer.class);
 	}
 }

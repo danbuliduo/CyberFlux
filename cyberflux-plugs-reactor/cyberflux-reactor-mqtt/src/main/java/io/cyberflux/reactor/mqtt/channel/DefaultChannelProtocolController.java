@@ -12,6 +12,7 @@ import io.cyberflux.reactor.mqtt.exception.MqttQosLevelTypeException;
 import io.cyberflux.reactor.mqtt.registry.MqttRetainMessageRegistry;
 import io.cyberflux.reactor.mqtt.registry.MqttSessionMessageRegistry;
 import io.cyberflux.reactor.mqtt.registry.MqttSubTopicRegistry;
+import io.cyberflux.reactor.mqtt.retry.MqttAcknowledgement;
 import io.cyberflux.reactor.mqtt.utils.MqttMessageBuilder;
 import io.netty.handler.codec.mqtt.MqttConnectMessage;
 import io.netty.handler.codec.mqtt.MqttConnectPayload;
@@ -19,7 +20,9 @@ import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import io.netty.handler.codec.mqtt.MqttConnectVariableHeader;
 import io.netty.handler.codec.mqtt.MqttMessage;
 import io.netty.handler.codec.mqtt.MqttMessageIdVariableHeader;
+import io.netty.handler.codec.mqtt.MqttMessageType;
 import io.netty.handler.codec.mqtt.MqttProperties;
+import io.netty.handler.codec.mqtt.MqttPubAckMessage;
 import io.netty.handler.codec.mqtt.MqttProperties.MqttPropertyType;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import io.netty.handler.codec.mqtt.MqttPublishVariableHeader;
@@ -139,7 +142,7 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 						.then(filterRetainMessage(context.retainRegistry, publishMessage));
 				case EXACTLY_ONCE ->
 					Mono.fromRunnable(() -> channel.saveQoS2Message(variableHeader.packetId(), publishMessage))
-						.then(channel.write(MqttMessageBuilder.buildPubRecMessage(variableHeader.packetId())));
+						.then(channel.writeAndReply(MqttMessageBuilder.buildPubRecMessage(variableHeader.packetId())));
 				case FAILURE -> {
 					throw new MqttQosLevelTypeException("Unimplemented case: QosLevel Failure.");
 				}
@@ -152,19 +155,30 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 
     @Override
     public Mono<Void> puback(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
-        return Mono.empty();
+		System.out.println("PUBACK");
+        return Mono.fromRunnable(() -> {
+			final MqttPubAckMessage pubAckMessage = (MqttPubAckMessage) message;
+			final int messageId = pubAckMessage.variableHeader().messageId();
+			Optional.ofNullable(context.acknowledgementManager.getAck(
+				channel.generateId(MqttMessageType.PUBLISH, messageId)
+			)).ifPresent(MqttAcknowledgement::stop);
+		});
     }
 
     @Override
     public Mono<Void> pubrec(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
+		System.out.println("PUBREC");
 		final int messageId = ((MqttMessageIdVariableHeader) message.variableHeader()).messageId();
         return Mono.fromRunnable(() -> {
-
-		}).then(channel.write(MqttMessageBuilder.buildPubRelMessage(messageId)));
+			Optional.ofNullable(context.acknowledgementManager.getAck(
+				channel.generateId(MqttMessageType.PUBLISH, messageId))
+			).ifPresent(MqttAcknowledgement::stop);
+		}).then(channel.writeAndReply(MqttMessageBuilder.buildPubRelMessage(messageId)));
     }
 
     @Override
     public Mono<Void> pubrel(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
+		System.out.println("PUBREL");
 		final int messageId = ((MqttMessageIdVariableHeader) message.variableHeader()).messageId();
 		return Optional.ofNullable(channel.removeQoS2Message(messageId)).map(pubmsg -> {
 			int qosLevel = pubmsg.fixedHeader().qosLevel().value();
@@ -179,9 +193,11 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 						store.channel().generateMessageId())
 					);
 				}).collect(Collectors.toList())
-			).then(
-
-			).then(channel.write(MqttMessageBuilder.buildPubCompMessage(messageId)));
+			).then(Mono.fromRunnable(() -> {
+				Optional.ofNullable(context.acknowledgementManager.getAck(
+					channel.generateId(MqttMessageType.PUBREC, messageId))
+				).ifPresent(MqttAcknowledgement::stop);
+			})).then(channel.write(MqttMessageBuilder.buildPubCompMessage(messageId)));
 		}).orElseGet(() -> channel.write(MqttMessageBuilder.buildPubCompMessage(messageId)));
     }
 
@@ -189,7 +205,9 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
     public Mono<Void> pubcomp(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
 		final int messageId = ((MqttMessageIdVariableHeader) message.variableHeader()).messageId();
         return Mono.fromRunnable(() -> {
-
+			Optional.ofNullable(context.acknowledgementManager.getAck(
+				channel.generateId(MqttMessageType.PUBREL, messageId))
+			).ifPresent(MqttAcknowledgement::stop);
 		});
     }
 

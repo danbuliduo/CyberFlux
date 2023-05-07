@@ -1,0 +1,5 @@
+server:
+    port: 18087
+spring:
+    application:
+        name: cyberflux-cloud

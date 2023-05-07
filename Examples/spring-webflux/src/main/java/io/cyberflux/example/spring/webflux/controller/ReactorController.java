@@ -27,7 +27,7 @@ public class ReactorController {
     public Flux<String> info_all() {
         return springEngine.findReactor().map(r -> r.uuid());
     }
-    
+
     @GetMapping("/nodename")
     public Mono<String> nodename() {
         return Mono.just(springEngine.nodeName());
