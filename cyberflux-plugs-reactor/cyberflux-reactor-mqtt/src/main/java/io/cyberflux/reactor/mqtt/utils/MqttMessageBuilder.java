@@ -1,6 +1,6 @@
 package io.cyberflux.reactor.mqtt.utils;
 
-import io.netty.buffer.Unpooled;
+import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.mqtt.MqttConnAckMessage;
 import io.netty.handler.codec.mqtt.MqttConnAckVariableHeader;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
@@ -29,6 +29,11 @@ public final class MqttMessageBuilder {
 		return new MqttFixedHeader(type, false, mqttQoS, false, remaining);
 	}
 
+	private static MqttFixedHeader fixedHeader(
+			MqttMessageType type, boolean isDup,MqttQoS mqttQoS, boolean isRetain, int remaining) {
+		return new MqttFixedHeader(type, isDup, mqttQoS, isRetain, remaining);
+	}
+
 	public static MqttPublishMessage wrappedPublishMessage(
 			MqttPublishMessage message, MqttQoS mqttQoS, int messageId) {
 		return new MqttPublishMessage(
@@ -50,8 +55,29 @@ public final class MqttMessageBuilder {
 		);
 	}
 
-	public static MqttPublishMessage buildPublishMessage() {
-		return null;
+	public static MqttPublishMessage buildPublishMessage(
+			boolean isDup,
+			MqttQoS qos,
+			int messageId,
+			String topic,
+			ByteBuf byteBuf,
+			MqttProperties properties) {
+		return new MqttPublishMessage(
+			fixedHeader(MqttMessageType.PUBLISH, isDup, qos, false, 0x00),
+			new MqttPublishVariableHeader(topic, messageId, properties), byteBuf
+		);
+	}
+
+	public static MqttPublishMessage buildPublishMessage(
+			boolean isDup,
+			MqttQoS qos,
+			int messageId,
+			String topic,
+			ByteBuf byteBuf) {
+		return new MqttPublishMessage(
+			fixedHeader(MqttMessageType.PUBLISH, isDup, qos, false, 0x00),
+			new MqttPublishVariableHeader(topic, messageId), byteBuf
+		);
 	}
 
 	public static MqttPubAckMessage buildPubAckMessage(int messageId) {

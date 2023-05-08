@@ -26,7 +26,7 @@ public class DefaultChannelMessageHandler implements MqttChannelMessageHandler {
 
 	@Override
 	public void channelRead(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
-		log.info("ThreadName: {} , {}", Thread.currentThread().getName(), message.fixedHeader().messageType());
+		//log.info("ThreadName: {} , {}", Thread.currentThread().getName(), message.fixedHeader().messageType());
 		onChannelRead(context, channel, message)
 			//.subscribeOn(Schedulers.newParallel("Th-R1"))
 			.subscribe($ -> {

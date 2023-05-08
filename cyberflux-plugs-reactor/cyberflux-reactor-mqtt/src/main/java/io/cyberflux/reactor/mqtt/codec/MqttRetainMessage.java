@@ -7,9 +7,15 @@ import java.util.Optional;
 import io.cyberflux.common.utils.CyberJsonUtils;
 import io.cyberflux.reactor.mqtt.channel.MqttChannel;
 import io.cyberflux.reactor.mqtt.utils.MqttByteBufUtils;
+import io.cyberflux.reactor.mqtt.utils.MqttMessageBuilder;
 import io.netty.handler.codec.mqtt.MqttProperties.MqttPropertyType;
 import io.netty.handler.codec.mqtt.MqttProperties.StringPair;
+import io.netty.handler.codec.mqtt.MqttProperties.UserProperties;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.handler.codec.mqtt.MqttProperties;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
+import io.netty.handler.codec.mqtt.MqttQoS;
 
 
 public final class MqttRetainMessage {
@@ -84,7 +90,22 @@ public final class MqttRetainMessage {
 				.setLevel(message.fixedHeader().qosLevel().value());
 	}
 
-	public static MqttPublishMessage toPublishMessage(MqttChannel channel) {
-		return null;
+	public MqttPublishMessage toPublishMessage(MqttChannel channel) {
+		int messageId = level > 0 ? channel.generateMessageId() : 0;
+		MqttQoS mqttQoS = MqttQoS.valueOf(level);
+		ByteBuf byteBuf = PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(bytes);
+		MqttProperties mqttProperties = null;
+		if(properties != null) {
+			Map<String, String> map = CyberJsonUtils.toMap(properties, String.class, String.class);
+			if(map != null) {
+				mqttProperties = new MqttProperties();
+				UserProperties userProperties = new UserProperties();
+				map.forEach(userProperties::add);
+				mqttProperties.add(userProperties);
+			}
+		}
+		return MqttMessageBuilder.buildPublishMessage(
+			false, mqttQoS, messageId, topic, byteBuf, mqttProperties
+		);
 	}
 }

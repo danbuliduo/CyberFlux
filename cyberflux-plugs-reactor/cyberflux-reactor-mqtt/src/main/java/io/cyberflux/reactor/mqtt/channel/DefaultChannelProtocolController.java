@@ -41,18 +41,16 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 			MqttSubTopicRegistry topicRegistry,
 			MqttSessionMessageRegistry sessionRegistry,
 			MqttPublishMessage message) {
-		final int qosLevel = message.fixedHeader().qosLevel().value();
 		return topicRegistry.findByTopic(
 			message.variableHeader().topicName()
 		).stream().filter(store -> {
 			return filterSessionMessage(store.channel(), sessionRegistry, message);
 		}).map(store -> {
-			System.out.println("P-WRITW");
-			return store.channel().write(MqttMessageBuilder.wrappedPublishMessage(
-				message,
-				MqttQoS.valueOf(Math.min(qosLevel, store.level())),
-				store.channel().generateMessageId()
-			));
+			final int level = Math.min(message.fixedHeader().qosLevel().value(), store.level());
+			final MqttPublishMessage pubMessage = MqttMessageBuilder.wrappedPublishMessage(
+				message, MqttQoS.valueOf(level), store.channel().generateMessageId()
+			);
+			return level == 0 ? store.channel().write(pubMessage) : store.channel().writeAndReply(pubMessage);
 		}).collect(Collectors.toList());
 	}
 
@@ -71,6 +69,7 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 		}) : Mono.empty();
 	}
 
+
 	@Override
 	public Mono<Void> auth(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
 		return Mono.empty();
@@ -83,17 +82,22 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 		final MqttConnectVariableHeader connVariableHeader = connMessage.variableHeader();
 		final String clientIdentifier = connPayload.clientIdentifier();
 		final byte version = (byte) connVariableHeader.version();
-
+		// { MQTT 3.1.1 Version | MQTT 3.1 Version } & { MQTT 5.0 } 连接处理
 		if(MqttVersion.MQTT_3_1_1.protocolLevel() == version || MqttVersion.MQTT_3_1.protocolLevel() == version) {
-
+			// Client 身份认证
 			if (context.authenticator.auth(connPayload.userName(), connPayload.passwordInBytes(), clientIdentifier)) {
+
 				channel.cancelDelayCloseEvent();
 				channel.setChannelStatus(true);
 				channel.bindIdentifier(clientIdentifier);
+
 				if (connVariableHeader.isWillFlag()) {
 					channel.saveWillMessage(MqttWillMessage.fromConnectMessage(connMessage));
 				}
-				context.channelGroup.append(channel);
+
+				context.inboundHandler.channelRegister(context, channel);
+				channel.registryDisposeEvent(that -> context.inboundHandler.channelInactive(context, channel));
+
 				return channel.write(MqttMessageBuilder.buildConnAckMessage(
 					MqttConnectReturnCode.CONNECTION_ACCEPTED
 				));
@@ -106,14 +110,16 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 			final MqttProperties properties = new MqttProperties();
 			properties.add(new MqttProperties.IntegerProperty(MqttPropertyType.RETAIN_AVAILABLE.value(), 1));
 			properties.add(new MqttProperties.IntegerProperty(MqttPropertyType.SHARED_SUBSCRIPTION_AVAILABLE.value(), 0));
-
+			// Client 身份认证
 			if (context.authenticator.auth(connPayload.userName(), connPayload.passwordInBytes(), clientIdentifier)) {
+				channel.cancelDelayCloseEvent();
+				channel.setChannelStatus(true);
 				channel.bindIdentifier(clientIdentifier);
 				if (connVariableHeader.isWillFlag()) {
-
+					channel.saveWillMessage(MqttWillMessage.fromConnectMessage(connMessage));
 				}
-				channel.setChannelStatus(true);
-				context.channelGroup.append(channel);
+				context.inboundHandler.channelRegister(context, channel);
+				channel.registryDisposeEvent(that -> context.inboundHandler.channelInactive(context, channel));
 				return channel.write(MqttMessageBuilder.buildConnAckMessage(
 					MqttConnectReturnCode.CONNECTION_ACCEPTED, properties
 				));
@@ -122,6 +128,7 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 				MqttConnectReturnCode.CONNECTION_REFUSED_BAD_USERNAME_OR_PASSWORD, properties
 			)).then(channel.close());
 		}
+		// MQTT 不被支持的版本 拒绝连接
 		return channel.write(MqttMessageBuilder.buildConnAckMessage(
 			MqttConnectReturnCode.CONNECTION_REFUSED_UNSUPPORTED_PROTOCOL_VERSION
 		)).then(channel.close());
@@ -141,8 +148,11 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 						.then(channel.write(MqttMessageBuilder.buildPubAckMessage(variableHeader.packetId())))
 						.then(filterRetainMessage(context.retainRegistry, publishMessage));
 				case EXACTLY_ONCE ->
-					Mono.fromRunnable(() -> channel.saveQoS2Message(variableHeader.packetId(), publishMessage))
-						.then(channel.writeAndReply(MqttMessageBuilder.buildPubRecMessage(variableHeader.packetId())));
+					Mono.fromRunnable(() -> channel.saveQoS2Message(
+						variableHeader.packetId(), MqttMessageBuilder.wrappedPublishMessage(
+							publishMessage, MqttQoS.EXACTLY_ONCE, 0
+						)
+					)).then(channel.writeAndReply(MqttMessageBuilder.buildPubRecMessage(variableHeader.packetId())));
 				case FAILURE -> {
 					throw new MqttQosLevelTypeException("Unimplemented case: QosLevel Failure.");
 				}
@@ -155,7 +165,6 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 
     @Override
     public Mono<Void> puback(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
-		System.out.println("PUBACK");
         return Mono.fromRunnable(() -> {
 			final MqttPubAckMessage pubAckMessage = (MqttPubAckMessage) message;
 			final int messageId = pubAckMessage.variableHeader().messageId();
@@ -167,7 +176,6 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 
     @Override
     public Mono<Void> pubrec(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
-		System.out.println("PUBREC");
 		final int messageId = ((MqttMessageIdVariableHeader) message.variableHeader()).messageId();
         return Mono.fromRunnable(() -> {
 			Optional.ofNullable(context.acknowledgementManager.getAck(
@@ -178,20 +186,17 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 
     @Override
     public Mono<Void> pubrel(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
-		System.out.println("PUBREL");
 		final int messageId = ((MqttMessageIdVariableHeader) message.variableHeader()).messageId();
 		return Optional.ofNullable(channel.removeQoS2Message(messageId)).map(pubmsg -> {
-			int qosLevel = pubmsg.fixedHeader().qosLevel().value();
-			System.out.println("OK1");
-			System.out.println(pubmsg.payload());
 			return Mono.when(
-				context.topicRegistry.findByTopic(pubmsg.variableHeader().topicName()).stream().map(store -> {
-						System.out.println("OK2");
-					return store.channel().write(MqttMessageBuilder.wrappedPublishMessage(
-						pubmsg,
-						MqttQoS.valueOf(Math.min(qosLevel, store.level())),
-						store.channel().generateMessageId())
+				context.topicRegistry.findByTopic(pubmsg.variableHeader().topicName()).stream().filter(store -> {
+					return filterSessionMessage(channel, context.sessionRegistry, pubmsg);
+				}).map(store -> {
+					final int level = Math.min(pubmsg.fixedHeader().qosLevel().value(), store.level());
+					final MqttPublishMessage pubMessage = MqttMessageBuilder.wrappedPublishMessage(
+						pubmsg, MqttQoS.valueOf(level), store.channel().generateMessageId()
 					);
+					return level == 0 ? store.channel().write(pubMessage) : store.channel().writeAndReply(pubMessage);
 				}).collect(Collectors.toList())
 			).then(Mono.fromRunnable(() -> {
 				Optional.ofNullable(context.acknowledgementManager.getAck(
@@ -215,7 +220,15 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
     public Mono<Void> subscribe(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
         final MqttSubscribeMessage subscribeMessage = (MqttSubscribeMessage) message;
         return Mono.fromRunnable(() -> {
-			subscribeMessage.payload().topicSubscriptions().stream().map(subscription -> {
+			subscribeMessage.payload().topicSubscriptions().stream().peek(subscription -> {
+				context.retainRegistry.findByTopic(subscription.topicName()).forEach(retain -> {
+					if(retain.getLevel() == 0) {
+						channel.write(retain.toPublishMessage(channel)).subscribe();
+					} else {
+						channel.writeAndReply(retain.toPublishMessage(channel)).subscribe();
+					}
+				});
+			}).map(subscription -> {
 				return new MqttSubTopicStore(
 					channel, subscription.topicName(), subscription.qualityOfService()
 				);
@@ -250,6 +263,7 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 	@Override
 	public Mono<Void> disconnect(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
 		return Mono.fromRunnable(() -> {
+			//channel.clearWillMessage();
 			final Connection connection;
 			if (!(connection = channel.connection()).isDisposed()) {
 				connection.dispose();

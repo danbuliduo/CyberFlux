@@ -34,7 +34,7 @@ public class MqttChannelContext {
 	}
 
 	public void applyChannel(MqttChannel channel) {
-		channel.setDelayCloseEvent();
+		channel.registryDelayCloseEvent();
 		inboundHandler.channelActivate(this, channel);
 	}
 

@@ -1,18 +1,19 @@
 package io.cyberflux.reactor.mqtt.registry;
 
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
 
 public final class DefaultPublishMessageRegistry implements MqttPublishMessageRegistry {
-	private TIntObjectMap<MqttPublishMessage> messageMap;
+
+	private final Map<Integer ,MqttPublishMessage> messageMap;
 
 	public DefaultPublishMessageRegistry() {
 		this(0);
 	}
 
 	public DefaultPublishMessageRegistry(int initialCapacity) {
-		messageMap = new TIntObjectHashMap<>(initialCapacity);
+		messageMap = new ConcurrentHashMap<>(initialCapacity);
 	}
 
 	@Override

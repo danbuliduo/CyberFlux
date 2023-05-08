@@ -1,6 +1,10 @@
 package io.cyberflux.reactor.mqtt.codec;
 
+import io.cyberflux.reactor.mqtt.utils.MqttMessageBuilder;
+import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.mqtt.MqttConnectMessage;
+import io.netty.handler.codec.mqtt.MqttPublishMessage;
+import io.netty.handler.codec.mqtt.MqttQoS;
 
 public final class MqttWillMessage {
 
@@ -60,5 +64,11 @@ public final class MqttWillMessage {
 				.setBytes(message.payload().willMessageInBytes())
 				.setLevel(message.variableHeader().willQos())
 				.setRetain(message.variableHeader().isWillRetain());
+	}
+
+	public MqttPublishMessage toPublishMessage(int level, int messageId) {
+		return MqttMessageBuilder.buildPublishMessage(
+			false, MqttQoS.valueOf(level), messageId, topic, Unpooled.wrappedBuffer(bytes)
+		);
 	}
 }

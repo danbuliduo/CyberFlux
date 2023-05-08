@@ -27,12 +27,14 @@ import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 
 public final class MqttChannel extends TemplateChannel {
+	@JsonIgnore
 	private final Connection connection;
+	@JsonIgnore
 	private final AtomicInteger atomicCounter;
-
+	@JsonIgnore
 	private MqttWillMessage willMessage;
+	@JsonIgnore
 	private MqttPublishMessageRegistry qos2MessageCache;
-
 	@JsonIgnore
 	private Disposable closeDisposable;
 	@JsonIgnore
@@ -54,6 +56,15 @@ public final class MqttChannel extends TemplateChannel {
 	public void saveWillMessage(MqttWillMessage willMessage) {
 		this.willMessage = willMessage;
 	}
+
+	public void clearWillMessage() {
+		this.willMessage = null;
+	}
+
+	public MqttWillMessage getWillMessage() {
+		return willMessage;
+	}
+
 
 	public boolean bindIdentifier(String identifier) {
 		if(!identifier.isBlank()) {
@@ -105,7 +116,7 @@ public final class MqttChannel extends TemplateChannel {
 		}
 	}
 
-	public void setDelayCloseEvent() {
+	public void registryDelayCloseEvent() {
 		final Connection conn = this.connection;
 		closeDisposable = Mono.fromRunnable(() -> {
 			if (!conn.isDisposed()) {
@@ -113,6 +124,10 @@ public final class MqttChannel extends TemplateChannel {
 			}
 		}).delaySubscription(
 				Duration.ofSeconds(10)).subscribe();
+	}
+
+	public void registryDisposeEvent(Consumer<MqttChannel> consumer) {
+		this.connection.onDispose(() -> consumer.accept(this));
 	}
 
 	public Mono<Void> close() {
@@ -144,6 +159,7 @@ public final class MqttChannel extends TemplateChannel {
 		return Mono.empty();
 	}
 
+
     public Mono<Void> write(MqttMessage message) {
 		return this.write(Mono.just(message));
     }
@@ -161,12 +177,12 @@ public final class MqttChannel extends TemplateChannel {
 	}
 
 	public Mono<Void> writeAndReply(MqttMessage message) {
-		MqttMessage msg = getReplyMessage(message);
-		Runnable runnable = () -> write(Mono.just(msg)).subscribe();
-		Runnable cleaner = () -> MqttByteBufUtils.safeRelease(msg);
+		MqttMessage mqttMessage = getReplyMessage(message);
+		Runnable runnable = () -> write(mqttMessage).subscribe();
+		Runnable cleaner = () -> MqttByteBufUtils.safeRelease(mqttMessage);
 		MqttAcknowledgement acknowledgement = new DefaultMqttAcknowledgement(
-			generateId(message.fixedHeader().messageType(), getReplyMessageId(msg)),
-			5, 5, runnable, cleaner, null
+			generateId(message.fixedHeader().messageType(), getReplyMessageId(mqttMessage)),
+			5, 5, runnable, cleaner, ackManager
 		);
 		acknowledgement.start();
 		return this.write(message).then();
