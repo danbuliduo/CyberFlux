@@ -55,6 +55,13 @@ public final class MqttSubTopicStore {
 		return level;
 	}
 
+	public void linkChannel() {
+		channel.getTopicStores().add(this);
+	}
+	public void unlinkChannel() {
+		channel.getTopicStores().remove(this);
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(topic, channel);

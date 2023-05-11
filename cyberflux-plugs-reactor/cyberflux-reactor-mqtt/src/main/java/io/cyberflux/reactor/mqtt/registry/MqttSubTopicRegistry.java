@@ -10,10 +10,10 @@ public interface MqttSubTopicRegistry {
 
     Set<MqttSubTopicStore> findByTopic(String topic);
 
-	void appendAll(Set<MqttSubTopicStore> storeSet);
+	void appendAll(Set<MqttSubTopicStore> stores);
+	void removeAll(Set<MqttSubTopicStore> stores);
 
     boolean append(MqttSubTopicStore store);
-
     boolean remove(MqttSubTopicStore store);
 
     long count();

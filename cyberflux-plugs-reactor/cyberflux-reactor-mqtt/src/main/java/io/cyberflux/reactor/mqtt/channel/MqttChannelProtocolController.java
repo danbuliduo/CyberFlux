@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
  */
 public interface MqttChannelProtocolController {
 	/**
-	 * @brief CONNECT – 连接服务端
+	 * @brief AUTH – 客户端认证
 	 * @param context {@link MqttChannelContext}
 	 * @param channel {@link MqttChannel}
 	 * @param message {@link MqttMessage}
@@ -97,7 +97,7 @@ public interface MqttChannelProtocolController {
 	Mono<Void> pingreq(MqttChannelContext context, MqttChannel channel, MqttMessage message);
 
 	/**
-	 * @brief CONNECT – 连接服务端
+	 * @brief DISCONNECT – 断开连接服务端
 	 * @param context {@link MqttChannelContext}
 	 * @param channel {@link MqttChannel}
 	 * @param message {@link MqttMessage}

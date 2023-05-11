@@ -1,7 +1,7 @@
 package io.cyberflux.node.engine.core;
 
-import io.cyberflux.meta.cluster.CyberFluxClusterNode;
+import io.cyberflux.meta.cluster.CyberClusterNode;
 
-public interface CyberFluxNodeEngine extends CyberFluxMetaEngine, CyberFluxClusterNode {
+public interface CyberFluxNodeEngine extends CyberFluxMetaEngine, CyberClusterNode {
 
 }

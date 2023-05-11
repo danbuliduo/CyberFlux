@@ -6,7 +6,7 @@ import io.cyberflux.meta.data.CyberType;
 public abstract class TemplateChannel extends CyberObject implements CyberChannel {
 
 	protected String channelId;
-	protected boolean channelStatus;
+	protected boolean online;
 
 	public TemplateChannel(String channelId) {
         this(CyberType.EMPTY, channelId);
@@ -17,16 +17,17 @@ public abstract class TemplateChannel extends CyberObject implements CyberChanne
 		this.channelId = channelId;
 	}
 
+	@Override
 	public String channelId() {
 		return this.channelId;
 	}
 
-	public TemplateChannel setChannelStatus(boolean status) {
-		channelStatus = status;
-		return this;
+	public void setOnlineFlag(boolean value) {
+		this.online = value;
 	}
 
+	@Override
 	public boolean isOnline() {
-		return channelStatus;
+		return online;
 	}
 }

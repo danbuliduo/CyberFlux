@@ -1,25 +1,25 @@
 package io.cyberflux.meta.data;
 
 public abstract class CyberMessage {
-	protected int typeFlag;
-	protected long timeFlag;
-
-	public CyberMessage(int typeFlag) {
-		this.typeFlag = typeFlag;
-		this.timeFlag = System.currentTimeMillis();
-	}
+	protected long timestamp;
+	protected CyberType type;
+	protected Object payload;
 
 	public CyberMessage(CyberType type) {
-		this.typeFlag =  type.getTypeFlag();
-		this.timeFlag =  System.currentTimeMillis();
+		this.type = type;
+		this.timestamp = System.currentTimeMillis();
 	}
 
-	public int typeFlag() {
-		return typeFlag;
+	public long grtTimeStamp() {
+		return timestamp;
 	}
 
-	public long timeFlag() {
-		return timeFlag;
+	public CyberType getType() {
+		return type;
+	}
+
+	public Object payload() {
+		return payload;
 	}
 
 }

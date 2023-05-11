@@ -1,6 +1,8 @@
 package io.cyberflux.reactor.mqtt.channel;
 
 import java.time.Duration;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -8,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.cyberflux.meta.data.CyberType;
 import io.cyberflux.meta.reactor.TemplateChannel;
+import io.cyberflux.reactor.mqtt.codec.MqttSubTopicStore;
 import io.cyberflux.reactor.mqtt.codec.MqttWillMessage;
 import io.cyberflux.reactor.mqtt.registry.DefaultPublishMessageRegistry;
 import io.cyberflux.reactor.mqtt.registry.MqttPublishMessageRegistry;
@@ -21,36 +24,60 @@ import io.netty.handler.codec.mqtt.MqttMessageType;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import io.netty.handler.codec.mqtt.MqttPublishVariableHeader;
 import io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue.Consumer;
+
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 
 public final class MqttChannel extends TemplateChannel {
-	@JsonIgnore
-	private final Connection connection;
+
 	@JsonIgnore
 	private final AtomicInteger atomicCounter;
 	@JsonIgnore
-	private MqttWillMessage willMessage;
+	private final Connection connection;
 	@JsonIgnore
-	private MqttPublishMessageRegistry qos2MessageCache;
+	private final Set<MqttSubTopicStore> topicStores;
+	@JsonIgnore
+	private final MqttPublishMessageRegistry messageCache;
+	@JsonIgnore
+	private final MqttAcknowledgementManager ackManager;
 	@JsonIgnore
 	private Disposable closeDisposable;
 	@JsonIgnore
-	private MqttAcknowledgementManager ackManager;
+	private MqttWillMessage willMessage;
+
+
+	private boolean cleanSession;
 
 
     public MqttChannel(Connection connection, MqttAcknowledgementManager ackManager) {
 		super(CyberType.MQTT, connection.channel().id().asLongText());
 		this.connection = connection;
 		this.ackManager = ackManager;
+		topicStores = new CopyOnWriteArraySet<>();
 		atomicCounter = new AtomicInteger(0);
-		qos2MessageCache = new DefaultPublishMessageRegistry();
+		messageCache = new DefaultPublishMessageRegistry();
     }
+
+	public Set<MqttSubTopicStore> getTopicStores() {
+		return this.topicStores;
+	}
+
+	public boolean isCleanSession() {
+		return cleanSession;
+	}
+	public void setCleanSession(boolean value) {
+		this.cleanSession = value;
+	}
+
 
 	public Connection connection() {
 		return connection;
+	}
+
+	public String address() {
+		return connection.address().toString();
 	}
 
 	public void saveWillMessage(MqttWillMessage willMessage) {
@@ -99,15 +126,15 @@ public final class MqttChannel extends TemplateChannel {
 	}
 
 	public boolean saveQoS2Message(int messageId, MqttPublishMessage message) {
-		return qos2MessageCache.save(messageId, message);
+		return messageCache.save(messageId, message);
 	}
 
 	public MqttPublishMessage removeQoS2Message(int messageId) {
-		return qos2MessageCache.removeById(messageId);
+		return messageCache.removeById(messageId);
 	}
 
 	public boolean containsQos2Message(int messageId) {
-		return qos2MessageCache.contains(messageId);
+		return messageCache.contains(messageId);
 	}
 
 	public void cancelDelayCloseEvent() {
@@ -122,17 +149,17 @@ public final class MqttChannel extends TemplateChannel {
 			if (!conn.isDisposed()) {
 				conn.dispose();
 			}
-		}).delaySubscription(
-				Duration.ofSeconds(10)).subscribe();
+		}).delaySubscription(Duration.ofSeconds(10)).subscribe();
 	}
 
 	public void registryDisposeEvent(Consumer<MqttChannel> consumer) {
 		this.connection.onDispose(() -> consumer.accept(this));
 	}
 
+	@Override
 	public Mono<Void> close() {
 		return Mono.fromRunnable(() -> {
-			qos2MessageCache.clear();
+			messageCache.clear();
 			if (!connection.isDisposed()) {
 				connection.dispose();
 			}

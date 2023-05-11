@@ -34,6 +34,7 @@ public final class MqttTopicTreeFilter implements MqttTopicFilter {
     @Override
     public boolean appendTopicStore(MqttSubTopicStore store) {
         if (rootNode.appendTopicStore(store)) {
+			store.linkChannel();
             topicNumber.add(+1);
             return true;
         }
@@ -43,6 +44,7 @@ public final class MqttTopicTreeFilter implements MqttTopicFilter {
     @Override
     public boolean removeTopicStore(MqttSubTopicStore store) {
         if(rootNode.removeTopicStore(store)) {
+			store.unlinkChannel();
             topicNumber.add(-1);
             return true;
         }

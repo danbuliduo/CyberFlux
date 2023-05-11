@@ -58,6 +58,11 @@ public final class DefaultTopicRegistry implements MqttSubTopicRegistry {
 		stores.forEach(this::append);
 	}
 
+	@Override
+	public void removeAll(Set<MqttSubTopicStore> stores) {
+		stores.forEach(this::remove);
+	}
+
     @Override
     public long count() {
         return treeFilter.count() + tableFilter.count();

@@ -32,11 +32,18 @@ import io.netty.handler.codec.mqtt.MqttUnsubscribeMessage;
 import io.netty.handler.codec.mqtt.MqttVersion;
 
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import reactor.netty.Connection;
 
 
 public class DefaultChannelProtocolController implements MqttChannelProtocolController {
-
+	/**
+	 * @brief 发布消息
+	 * @param topicRegistry   {@link MqttSubTopicRegistry}
+	 * @param sessionRegistry {@link MqttSessionMessageRegistry}
+	 * @param message         {@link MqttMessage}
+	 * @return {@link Mono}
+	 */
 	private List<Mono<Void>> pushMessage(
 			MqttSubTopicRegistry topicRegistry,
 			MqttSessionMessageRegistry sessionRegistry,
@@ -54,27 +61,52 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 		}).collect(Collectors.toList());
 	}
 
-	private boolean filterSessionMessage(
-			MqttChannel channel, MqttSessionMessageRegistry sessionRegistry, MqttPublishMessage message) {
-		if (!channel.isOnline()) {
-			sessionRegistry.append(MqttSessionMessage.fromPublishMessage(channel.channelId(), message));
-			return false;
-		}
-		return true;
-	}
-
+	/**
+	 * @brief 过滤保留消息
+	 * @param retainRegistry {@link MqttRetainMessageRegistry}
+	 * @param message        {@link MqttMessage}
+	 * @return {@link Mono}
+	 */
 	private Mono<Void> filterRetainMessage(MqttRetainMessageRegistry retainRegistry, MqttPublishMessage message) {
 		return message.fixedHeader().isRetain() ? Mono.fromRunnable(() -> {
 			retainRegistry.save(MqttRetainMessage.fromPublishMessage(message));
 		}) : Mono.empty();
 	}
 
+	/**
+	 * @brief  过滤会话消息
+	 * @param channel         {@link MqttChannel}
+	 * @param sessionRegistry {@link MqttSessionMessageRegistry}
+	 * @param message         {@link MqttMessage}
+	 * @return {@link Boolean}
+	 */
+	private boolean filterSessionMessage(
+			MqttChannel channel, MqttSessionMessageRegistry sessionRegistry, MqttPublishMessage message) {
+		if (channel.isOnline()) {
+			return true;
+		}
+		sessionRegistry.append(MqttSessionMessage.fromPublishMessage(channel.channelId(), message));
+		return false;
+	}
 
+	/**
+	 * @brief AUTH – 客户端增强认证
+	 * @param context {@link MqttChannelContext}
+	 * @param channel {@link MqttChannel}
+	 * @param message {@link MqttMessage}
+	 * @return {@link Mono}
+	 */
 	@Override
 	public Mono<Void> auth(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
 		return Mono.empty();
 	}
-
+	/**
+	 * @brief CONNECT – 连接服务端
+	 * @param context {@link MqttChannelContext}
+	 * @param channel {@link MqttChannel}
+	 * @param message {@link MqttMessage}
+	 * @return {@link Mono}
+	 */
     @Override
     public Mono<Void> connect(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
 		final MqttConnectMessage connMessage = (MqttConnectMessage) message;
@@ -86,21 +118,30 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 		if(MqttVersion.MQTT_3_1_1.protocolLevel() == version || MqttVersion.MQTT_3_1.protocolLevel() == version) {
 			// Client 身份认证
 			if (context.authenticator.auth(connPayload.userName(), connPayload.passwordInBytes(), clientIdentifier)) {
-
-				channel.cancelDelayCloseEvent();
-				channel.setChannelStatus(true);
 				channel.bindIdentifier(clientIdentifier);
-
+				context.inboundHandler.channelRegister(context, channel);
+				channel.setCleanSession(connVariableHeader.isCleanSession());
 				if (connVariableHeader.isWillFlag()) {
 					channel.saveWillMessage(MqttWillMessage.fromConnectMessage(connMessage));
 				}
 
-				context.inboundHandler.channelRegister(context, channel);
 				channel.registryDisposeEvent(that -> context.inboundHandler.channelInactive(context, channel));
-
+				// Client 认证通过
 				return channel.write(MqttMessageBuilder.buildConnAckMessage(
 					MqttConnectReturnCode.CONNECTION_ACCEPTED
-				));
+				)).then(Mono.fromRunnable(() -> {
+					// 发布会话消息
+					Optional.ofNullable(context.sessionRegistry.extract(clientIdentifier)).ifPresent(sessions -> {
+						sessions.forEach(session -> {
+							MqttPublishMessage pubMessage = session.toPublishMessage(channel);
+							if(session.getLevel() == 0) {
+								channel.write(pubMessage).subscribeOn(Schedulers.single()).subscribe();
+							} else {
+								channel.writeAndReply(pubMessage).subscribeOn(Schedulers.single()).subscribe();
+							}
+						});
+					});
+				}));
 			}
 			return channel.write(MqttMessageBuilder.buildConnAckMessage(
 				MqttConnectReturnCode.CONNECTION_REFUSED_BAD_USER_NAME_OR_PASSWORD
@@ -112,17 +153,31 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 			properties.add(new MqttProperties.IntegerProperty(MqttPropertyType.SHARED_SUBSCRIPTION_AVAILABLE.value(), 0));
 			// Client 身份认证
 			if (context.authenticator.auth(connPayload.userName(), connPayload.passwordInBytes(), clientIdentifier)) {
-				channel.cancelDelayCloseEvent();
-				channel.setChannelStatus(true);
 				channel.bindIdentifier(clientIdentifier);
+				context.inboundHandler.channelRegister(context, channel);
+				channel.setCleanSession(connVariableHeader.isCleanSession());
+
 				if (connVariableHeader.isWillFlag()) {
 					channel.saveWillMessage(MqttWillMessage.fromConnectMessage(connMessage));
 				}
-				context.inboundHandler.channelRegister(context, channel);
+
 				channel.registryDisposeEvent(that -> context.inboundHandler.channelInactive(context, channel));
+
 				return channel.write(MqttMessageBuilder.buildConnAckMessage(
 					MqttConnectReturnCode.CONNECTION_ACCEPTED, properties
-				));
+				)).then(Mono.fromRunnable(() -> {
+					// 发布会话消息
+					Optional.ofNullable(context.sessionRegistry.extract(clientIdentifier)).ifPresent(sessions -> {
+						sessions.forEach(session -> {
+							MqttPublishMessage pubMessage = session.toPublishMessage(channel);
+							if (session.getLevel() == 0) {
+								channel.write(pubMessage).subscribeOn(Schedulers.single()).subscribe();
+							} else {
+								channel.writeAndReply(pubMessage).subscribeOn(Schedulers.single()).subscribe();
+							}
+						});
+					});
+				}));
 			}
 			return channel.write(MqttMessageBuilder.buildConnAckMessage(
 				MqttConnectReturnCode.CONNECTION_REFUSED_BAD_USERNAME_OR_PASSWORD, properties
@@ -134,6 +189,13 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 		)).then(channel.close());
     }
 
+	/**
+	 * @brief PUBLISH – 发布消息
+	 * @param context {@link MqttChannelContext}
+	 * @param channel {@link MqttChannel}
+	 * @param message {@link MqttMessage}
+	 * @return {@link Mono}
+	 */
     @Override
     public Mono<Void> publish(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
         final MqttPublishMessage publishMessage = (MqttPublishMessage) message;
@@ -163,6 +225,13 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 		return Mono.empty();
     }
 
+	/**
+	 * @brief PUBACK – 发布确认
+	 * @param context {@link MqttChannelContext}
+	 * @param channel {@link MqttChannel}
+	 * @param message {@link MqttMessage}
+	 * @return {@link Mono}
+	 */
     @Override
     public Mono<Void> puback(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
         return Mono.fromRunnable(() -> {
@@ -174,6 +243,13 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 		});
     }
 
+	/**
+	 * @brief PUBREC – 发布收到 (QoS 2, 第一步)
+	 * @param context {@link MqttChannelContext}
+	 * @param channel {@link MqttChannel}
+	 * @param message {@link MqttMessage}
+	 * @return {@link Mono}
+	 */
     @Override
     public Mono<Void> pubrec(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
 		final int messageId = ((MqttMessageIdVariableHeader) message.variableHeader()).messageId();
@@ -184,6 +260,13 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 		}).then(channel.writeAndReply(MqttMessageBuilder.buildPubRelMessage(messageId)));
     }
 
+	/**
+	 * @brief PUBREL – 发布释放 (QoS 2, 第二步)
+	 * @param context {@link MqttChannelContext}
+	 * @param channel {@link MqttChannel}
+	 * @param message {@link MqttMessage}
+	 * @return {@link Mono}
+	 */
     @Override
     public Mono<Void> pubrel(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
 		final int messageId = ((MqttMessageIdVariableHeader) message.variableHeader()).messageId();
@@ -206,6 +289,13 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 		}).orElseGet(() -> channel.write(MqttMessageBuilder.buildPubCompMessage(messageId)));
     }
 
+	/**
+	 * @brief PUBCOMP – 发布完成 (QoS 2, 第三步)
+	 * @param context {@link MqttChannelContext}
+	 * @param channel {@link MqttChannel}
+	 * @param message {@link MqttMessage}
+	 * @return {@link Mono}
+	 */
     @Override
     public Mono<Void> pubcomp(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
 		final int messageId = ((MqttMessageIdVariableHeader) message.variableHeader()).messageId();
@@ -216,6 +306,13 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 		});
     }
 
+	/**
+	 * @brief SUBSCRIBE –订阅主题
+	 * @param context {@link MqttChannelContext}
+	 * @param channel {@link MqttChannel}
+	 * @param message {@link MqttMessage}
+	 * @return {@link Mono}
+	 */
     @Override
     public Mono<Void> subscribe(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
         final MqttSubscribeMessage subscribeMessage = (MqttSubscribeMessage) message;
@@ -243,6 +340,13 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 		));
     }
 
+	/**
+	 * @brief UNSUBSCRIBE – 取消订阅
+	 * @param context {@link MqttChannelContext}
+	 * @param channel {@link MqttChannel}
+	 * @param message {@link MqttMessage}
+	 * @return {@link Mono}
+	 */
     @Override
     public Mono<Void> unsubscribe(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
         final MqttUnsubscribeMessage unsubscribeMessage = (MqttUnsubscribeMessage) message;
@@ -255,15 +359,29 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 		));
     }
 
+	/**
+	 * @brief PINGRESP – 心跳响应
+	 * @param context {@link MqttChannelContext}
+	 * @param channel {@link MqttChannel}
+	 * @param message {@link MqttMessage}
+	 * @return {@link Mono}
+	 */
 	@Override
 	public Mono<Void> pingreq(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
 		return channel.write(MqttMessageBuilder.buildPingRespMessage());
 	}
 
+	/**
+	 * @brief DISCONNECT – 断开连接服务端
+	 * @param context {@link MqttChannelContext}
+	 * @param channel {@link MqttChannel}
+	 * @param message {@link MqttMessage}
+	 * @return {@link Mono}
+	 */
 	@Override
 	public Mono<Void> disconnect(MqttChannelContext context, MqttChannel channel, MqttMessage message) {
 		return Mono.fromRunnable(() -> {
-			//channel.clearWillMessage();
+			channel.clearWillMessage();
 			final Connection connection;
 			if (!(connection = channel.connection()).isDisposed()) {
 				connection.dispose();

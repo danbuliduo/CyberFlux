@@ -91,7 +91,7 @@ public final class MqttRetainMessage {
 	}
 
 	public MqttPublishMessage toPublishMessage(MqttChannel channel) {
-		int messageId = level > 0 ? channel.generateMessageId() : 0;
+		final int messageId = level > 0 ? channel.generateMessageId() : 0;
 		MqttQoS mqttQoS = MqttQoS.valueOf(level);
 		ByteBuf byteBuf = PooledByteBufAllocator.DEFAULT.directBuffer().writeBytes(bytes);
 		MqttProperties mqttProperties = null;

@@ -3,15 +3,14 @@ package io.cyberflux.node.engine.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.cyberflux.meta.cluster.CyberFluxAbstractClusterNode;
-import io.cyberflux.meta.data.CyberMessage;
+import io.cyberflux.meta.cluster.ScaleCubeClusterNode;
 import io.cyberflux.meta.data.CyberType;
 import io.cyberflux.meta.reactor.CyberReactor;
 import io.cyberflux.node.engine.core.container.CyberFluxReactorGroup;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public class CyberFluxTemplateEngine extends CyberFluxAbstractClusterNode implements CyberFluxMetaEngine {
+public class CyberFluxTemplateEngine extends ScaleCubeClusterNode implements CyberFluxMetaEngine {
     private static final Logger log = LoggerFactory.getLogger(CyberFluxTemplateEngine.class);
     protected final CyberFluxReactorGroup reactorGroup = new CyberFluxReactorGroup();
 
@@ -122,13 +121,4 @@ public class CyberFluxTemplateEngine extends CyberFluxAbstractClusterNode implem
         reactor.shutdown();
     }
 
-	@Override
-	public <M> void spreadMessage(CyberMessage message) {
-		throw new UnsupportedOperationException("Unimplemented method 'spreadMessage'");
-	}
-
-	@Override
-	public <M> void spreadMessage(CyberMessage message, String modeName) {
-		throw new UnsupportedOperationException("Unimplemented method 'spreadMessage'");
-	}
 }

@@ -1,5 +1,7 @@
 package io.cyberflux.reactor.mqtt.codec;
 
+import java.util.Arrays;
+
 import io.cyberflux.reactor.mqtt.utils.MqttMessageBuilder;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.mqtt.MqttConnectMessage;
@@ -70,5 +72,11 @@ public final class MqttWillMessage {
 		return MqttMessageBuilder.buildPublishMessage(
 			false, MqttQoS.valueOf(level), messageId, topic, Unpooled.wrappedBuffer(bytes)
 		);
+	}
+
+	@Override
+	public String toString() {
+		return "MqttWillMessage [topic=" + topic + ", bytes=" + Arrays.toString(bytes)
+				+ ", level=" + level + ", retain=" + retain + "]";
 	}
 }
