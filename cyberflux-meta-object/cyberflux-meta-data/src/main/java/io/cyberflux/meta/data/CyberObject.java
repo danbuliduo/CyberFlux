@@ -1,17 +1,17 @@
 package io.cyberflux.meta.data;
 
 public class CyberObject implements CyberInterface {
-	protected static CyberType TYPE;
+	protected CyberType type;
 
 	public CyberObject() {
-		TYPE = CyberType.EMPTY;
+		type = CyberType.EMPTY;
 	}
 
 	public CyberObject(CyberType type) {
-		TYPE = type;
+		this.type = type;
 	}
 
-	public final CyberType type() {
-		return TYPE;
+	public CyberType type() {
+		return type;
 	}
 }

@@ -29,6 +29,7 @@ public final class MqttReactor extends TemplateReactor {
 		MqttChannelContext context,
 		MqttTransport<? extends Disposable, ? extends MqttTransportConfig> transport) {
 		super(CyberType.MQTT, CyberNanoIdUtils.randomNanoId());
+		this.context = context;
 		this.transport = transport;
 	}
 
@@ -62,6 +63,7 @@ public final class MqttReactor extends TemplateReactor {
 		}
 
 		public MqttReactor.Builder context(MqttChannelContext context) {
+			transport.setContext(context);
 			this.context = context;
 			return this;
 		}

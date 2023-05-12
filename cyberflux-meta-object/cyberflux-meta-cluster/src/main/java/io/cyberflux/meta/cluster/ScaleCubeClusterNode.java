@@ -87,6 +87,7 @@ public abstract class ScaleCubeClusterNode extends CyberObject implements CyberC
 	public Flux<CyberClusterMessage> receiveMessage() {
 		return messageSinks.asFlux();
 	}
+
 	@Override
 	public Flux<CyberClusterEvent> receiveEvent() {
 		return eventSinks.asFlux();
@@ -169,8 +170,8 @@ public abstract class ScaleCubeClusterNode extends CyberObject implements CyberC
 
 		@Override
 		public void onMembershipEvent(MembershipEvent event) {
-			Member member = event.member();
-			log.info("cluster onMembershipEvent {}  {}", member, event);
+			//Member member = event.member();
+			log.info("cluster onMembershipEvent {} ", event);
 			switch (event.type()) {
 				case ADDED   -> eventSinks.tryEmitNext(CyberClusterEvent.ADDED);
 				case LEAVING -> eventSinks.tryEmitNext(CyberClusterEvent.LEAVING);

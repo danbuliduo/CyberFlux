@@ -32,6 +32,7 @@ public abstract class CyberFluxTemplateEngine extends ScaleCubeClusterNode imple
 			.doOnError(throwable -> log.error("{}", throwable))
 			.onErrorResume(throwable -> Mono.empty())
 			.subscribe(message -> {
+				log.info("{}", message.payload());
 				this.findReactor().subscribe(reactor -> {
 					reactor.clusterHandler().messageConsumer(message);
 				});
@@ -102,12 +103,7 @@ public abstract class CyberFluxTemplateEngine extends ScaleCubeClusterNode imple
     @Override
     public void startReactor() {
         log.info("NodeEngine::StartAll => [count:{}]", reactorGroup.size());
-        findReactor().subscribe(reactor -> {
-			reactor.startAwait();
-			reactor.clusterHandler()
-				.messageProducer()
-				.subscribe(this::spreadMessage);
-		});
+        findReactor().subscribe(this::startReactor);
     }
 
     @Override
@@ -128,6 +124,12 @@ public abstract class CyberFluxTemplateEngine extends ScaleCubeClusterNode imple
     @Override
     public void startReactor(CyberReactor reactor) {
         reactor.startAwait();
+		reactor.clusterHandler().messageProducer()
+			.doOnError(throwable -> log.error("{}", throwable))
+			.onErrorResume(throwable -> Mono.empty())
+			.subscribe(message -> {
+				this.spreadMessage(message).subscribe();
+			});
     }
 
     @Override

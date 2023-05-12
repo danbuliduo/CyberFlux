@@ -1,11 +1,12 @@
 package io.cyberflux.reactor.mqtt.cluster;
 
 import io.cyberflux.meta.data.CyberClusterMessage;
-import io.cyberflux.meta.reactor.ScaleCubeClusterAdapter;
+import io.cyberflux.meta.reactor.TemplateClusterAdapter;
 import io.cyberflux.reactor.mqtt.channel.MqttChannelContext;
+import io.netty.handler.codec.mqtt.MqttPublishMessage;
 
 
-public class MqttClusterHandler extends ScaleCubeClusterAdapter {
+public class MqttClusterHandler extends TemplateClusterAdapter {
 	private final MqttChannelContext context;
 
 	public MqttClusterHandler(MqttChannelContext context) {
@@ -14,7 +15,8 @@ public class MqttClusterHandler extends ScaleCubeClusterAdapter {
 
 	@Override
 	public void messageConsumer(CyberClusterMessage message) {
-		System.out.println("OK");
+		MqttPublishMessage pubMessage;
+		context.getTopicRegistry().findByTopic(null);
 	}
 
 }

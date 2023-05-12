@@ -22,7 +22,6 @@ public class CyberFluxSpringEngine extends CyberFluxTemplateEngine implements Cy
     }
 
     public CyberFluxSpringEngine(ApplicationContext context, CyberFluxSpringProperties properties) {
-        //super(context.getApplicationName());
 		super(properties);
         Flux.fromArray(context.getBeanNamesForType(CyberReactor.class))
             .flatMap(name -> Flux.just(context.getBean(name)))
