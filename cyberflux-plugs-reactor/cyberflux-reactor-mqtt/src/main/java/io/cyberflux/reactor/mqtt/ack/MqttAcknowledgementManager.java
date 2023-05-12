@@ -1,4 +1,4 @@
-package io.cyberflux.reactor.mqtt.retry;
+package io.cyberflux.reactor.mqtt.ack;
 
 public interface MqttAcknowledgementManager {
 	MqttAcknowledgement getAck(long id);

@@ -6,26 +6,48 @@ import org.slf4j.LoggerFactory;
 import io.cyberflux.meta.cluster.ScaleCubeClusterNode;
 import io.cyberflux.meta.data.CyberType;
 import io.cyberflux.meta.reactor.CyberReactor;
-//import io.cyberflux.node.engine.core.config.CyberFluxClusterConfig;
 import io.cyberflux.node.engine.core.config.CyberFluxNodeConfig;
-//import io.cyberflux.node.engine.core.config.CyberFluxReactorConfig;
 import io.cyberflux.node.engine.core.container.CyberFluxReactorGroup;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public abstract class CyberFluxTemplateEngine extends ScaleCubeClusterNode implements CyberFluxMetaEngine {
     private static final Logger log = LoggerFactory.getLogger(CyberFluxTemplateEngine.class);
-    protected final CyberFluxReactorGroup reactorGroup = new CyberFluxReactorGroup();
+    protected final CyberFluxReactorGroup reactorGroup;
 	protected final CyberFluxNodeConfig config;
 
 	public CyberFluxTemplateEngine(CyberFluxNodeConfig config) {
 		super(config.getCluster());
 		this.config = config;
-		//CyberFluxClusterConfig clusterConfig = config.getCluster();
-		//CyberFluxReactorConfig reactorConfig = config.getReactor();
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> this.shutdownReactor()));
+		this.reactorGroup = new CyberFluxReactorGroup();
+		Runtime.getRuntime().addShutdownHook(
+			new Thread(() -> this.shutdownReactor())
+		);
 	}
 
+
+	@Override
+	public void registryMessageHandler() {
+		this.receiveMessage()
+			.doOnError(throwable -> log.error("{}", throwable))
+			.onErrorResume(throwable -> Mono.empty())
+			.subscribe(message -> {
+				this.findReactor().subscribe(reactor -> {
+					reactor.clusterHandler().messageConsumer(message);
+				});
+			});
+	}
+
+
+	@Override
+	public void registryEventHandler() {
+		this.receiveEvent()
+			.doOnError(throwable -> log.error("{}", throwable))
+			.onErrorResume(throwable -> Mono.empty())
+			.subscribe(event -> {
+				log.info("{}", event);
+			});
+	}
 
     @Override
     public Flux<CyberReactor> findReactor() {
@@ -80,7 +102,12 @@ public abstract class CyberFluxTemplateEngine extends ScaleCubeClusterNode imple
     @Override
     public void startReactor() {
         log.info("NodeEngine::StartAll => [count:{}]", reactorGroup.size());
-        findReactor().subscribe(this::startReactor);
+        findReactor().subscribe(reactor -> {
+			reactor.startAwait();
+			reactor.clusterHandler()
+				.messageProducer()
+				.subscribe(this::spreadMessage);
+		});
     }
 
     @Override

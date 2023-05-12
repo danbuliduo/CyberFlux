@@ -7,6 +7,9 @@ import reactor.util.context.Context;
 import reactor.util.context.ContextView;
 
 import io.cyberflux.meta.reactor.TemplateTransport;
+
+import java.util.Optional;
+
 import io.cyberflux.meta.reactor.CyberTransport;
 import io.cyberflux.reactor.mqtt.channel.MqttChannelContext;
 
@@ -26,7 +29,7 @@ public abstract class MqttTransport<D extends Disposable, T extends MqttTranspor
 	}
 
 	private Context bindContext(Context ctx) {
-		context = new MqttChannelContext();
+		context = Optional.ofNullable(context).orElse(MqttChannelContext.INSTANCE);
 		return ctx.put(MqttChannelContext.class, context);
 	}
 

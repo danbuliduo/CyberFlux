@@ -1,4 +1,4 @@
-package io.cyberflux.reactor.mqtt.retry;
+package io.cyberflux.reactor.mqtt.ack;
 
 import java.util.concurrent.TimeUnit;
 

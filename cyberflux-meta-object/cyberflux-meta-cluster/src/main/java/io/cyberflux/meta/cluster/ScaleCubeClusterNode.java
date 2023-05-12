@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.cyberflux.meta.data.CyberClusterEvent;
+import io.cyberflux.meta.data.CyberClusterMessage;
 import io.cyberflux.meta.data.CyberObject;
 import io.cyberflux.meta.data.CyberType;
 
@@ -52,7 +54,7 @@ public abstract class ScaleCubeClusterNode extends CyberObject implements CyberC
         this.types = EnumSet.copyOf(types);
 		this.eventSinks = Sinks.many().multicast().onBackpressureBuffer();
 		this.messageSinks = Sinks.many().multicast().onBackpressureBuffer();
-		registryClusterNode(config);
+		this.registryClusterNode(config);
     }
 
 	public ScaleCubeClusterNode registryClusterNode(CyberClusterConfig config) {
@@ -67,8 +69,18 @@ public abstract class ScaleCubeClusterNode extends CyberObject implements CyberC
 				).namespace(config.getNamespace()))
 				.handler(cluster -> new ClusterHandler())
 				.startAwait();
+			this.registryMessageHandler();
+			this.registryEventHandler();
 		}
 		return this;
+	}
+
+	public void registryMessageHandler() {
+		// do
+	}
+
+	public void registryEventHandler() {
+		// do
 	}
 
 	@Override

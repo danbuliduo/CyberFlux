@@ -1,6 +1,7 @@
 package io.cyberflux.node.engine.core.config;
 
 public class CyberFluxNodeConfig {
+
 	protected CyberFluxClusterConfig cluster;
 	protected CyberFluxReactorConfig reactor;
 
