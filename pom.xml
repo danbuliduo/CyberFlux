@@ -52,10 +52,33 @@
         <module>cyberflux-node-engine-huaxu</module>
         <module>cyberflux-plugs-reactor</module>
         <module>cyberflux-spring-boot-starter</module>
+
+        <module>cyberflux-examples</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>io.cyberflux.examples</groupId>
+                <artifactId>cyberflux-examples</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux.examples</groupId>
+                <artifactId>cyberflux-examples-node1</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux.examples</groupId>
+                <artifactId>cyberflux-examples-node2</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux.examples</groupId>
+                <artifactId>cyberflux-examples-node3</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
             <dependency>
                 <groupId>io.cyberflux.cloud</groupId>
                 <artifactId>cyberflux-cloud-ui</artifactId>

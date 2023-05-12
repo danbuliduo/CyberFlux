@@ -6,6 +6,7 @@ import reactor.core.publisher.Mono;
 
 public interface CyberReactor extends CyberInterface {
     String uuid();
+	CyberTransport transport();
     CyberStatus status();
     Mono<CyberReactor> start();
 	Mono<Void> close();

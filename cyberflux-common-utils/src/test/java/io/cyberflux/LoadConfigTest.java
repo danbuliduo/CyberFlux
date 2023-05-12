@@ -12,7 +12,7 @@ public class LoadConfigTest {
 
     @Test
     public void yaml(){
-        Config c = CyberConfigLoaderUtils.fromResource("/application.yaml", Config.class);
+        Config c = CyberConfigLoaderUtils.fromResource("/test/application.yaml", Config.class);
         System.out.println(CyberJsonUtils.toJsonString(c));
         System.out.println(CyberYamlUtils.toYamlString(c));
         System.out.println(CyberPropsUtils.toPropsString(c));
@@ -21,25 +21,25 @@ public class LoadConfigTest {
 
     @Test
     public void yml() {
-        Config c = CyberConfigLoaderUtils.fromResource("/application.yml", Config.class);
+        Config c = CyberConfigLoaderUtils.fromResource("/test/application.yml", Config.class);
         System.out.println(c.getData());
     }
 
     @Test
     public void json() {
-        Config c = CyberConfigLoaderUtils.fromResource("/application.json", Config.class);
+        Config c = CyberConfigLoaderUtils.fromResource("/test/application.json", Config.class);
         System.out.println(c.getData());
     }
 
     @Test
     public void properties() {
-        Config c = CyberConfigLoaderUtils.fromResource("/application.properties", Config.class);
+        Config c = CyberConfigLoaderUtils.fromResource("/test/application.properties", Config.class);
         System.out.println(c.getData());
     }
 
     @Test
     public void xml() {
-        Config c = CyberConfigLoaderUtils.fromResource("/application.xml", Config.class);
+        Config c = CyberConfigLoaderUtils.fromResource("/test/application.xml", Config.class);
         System.out.println(c.getData());
     }
 

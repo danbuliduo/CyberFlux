@@ -15,6 +15,7 @@ import reactor.core.scheduler.Schedulers;
 import reactor.netty.ReactorNetty;
 
 public class DefaultChannelMessageHandler implements MqttChannelMessageHandler {
+
 	private final static Logger log = LoggerFactory.getLogger(DefaultChannelMessageHandler.class);
     protected MqttChannelProtocolController controller;
 	protected Scheduler scheduler;

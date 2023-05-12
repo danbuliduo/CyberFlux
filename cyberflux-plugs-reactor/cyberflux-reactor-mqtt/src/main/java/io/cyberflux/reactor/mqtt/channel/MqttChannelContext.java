@@ -14,7 +14,7 @@ import io.cyberflux.reactor.mqtt.security.MqttAuthenticator;
 import io.cyberflux.reactor.mqtt.security.MqttAuthenticatorFactory;
 
 public class MqttChannelContext {
-
+	public final static MqttChannelContext INSTANCE = new MqttChannelContext();
 	protected MqttAcknowledgementManager acknowledgementManager;
 	protected MqttAuthenticator authenticator;
 	protected MqttChannelGroup channelGroup;

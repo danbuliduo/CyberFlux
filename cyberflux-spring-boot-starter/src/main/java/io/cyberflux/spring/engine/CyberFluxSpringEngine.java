@@ -17,12 +17,13 @@ public class CyberFluxSpringEngine extends CyberFluxTemplateEngine implements Cy
         log.info("<= Welcome To Use EngineCore: SPRING - 昭节 - =>");
     }
 
-    public static CyberFluxSpringEngine run(ApplicationContext context) {
-        return new CyberFluxSpringEngine(context);
+    public static CyberFluxSpringEngine run(ApplicationContext context, CyberFluxSpringProperties properties) {
+        return new CyberFluxSpringEngine(context, properties);
     }
 
-    public CyberFluxSpringEngine(ApplicationContext context) {
-        super(context.getApplicationName());
+    public CyberFluxSpringEngine(ApplicationContext context, CyberFluxSpringProperties properties) {
+        //super(context.getApplicationName());
+		super(properties);
         Flux.fromArray(context.getBeanNamesForType(CyberReactor.class))
             .flatMap(name -> Flux.just(context.getBean(name)))
             .cast(CyberReactor.class)

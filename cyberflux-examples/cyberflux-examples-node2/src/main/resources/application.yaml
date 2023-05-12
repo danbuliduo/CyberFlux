@@ -1,0 +1,10 @@
+server:
+  port: 20002
+cyberflux:
+  node-engine:
+    cluster:
+      enable: true
+      port: 10002
+      name: node-2
+      namespace: default
+      nodes: 127.0.0.1:10001,127.0.0.1:10003

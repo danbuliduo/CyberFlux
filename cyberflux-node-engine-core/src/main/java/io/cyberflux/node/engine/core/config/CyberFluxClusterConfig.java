@@ -1,6 +1,7 @@
 package io.cyberflux.node.engine.core.config;
 
-public class CyberFluxClusterConfig {
-    private int port;
-    private String host;
+import io.cyberflux.meta.cluster.CyberClusterConfig;
+
+public class CyberFluxClusterConfig extends CyberClusterConfig {
+
 }

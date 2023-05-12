@@ -1,0 +1,6 @@
+cyberflux:
+    cluster:
+        enable: true
+        port: 10000
+        nodes: 127.0.0.1:10001,127.0.0.1:10002
+        namespace: default

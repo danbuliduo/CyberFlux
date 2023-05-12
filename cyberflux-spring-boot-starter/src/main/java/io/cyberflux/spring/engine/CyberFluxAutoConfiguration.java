@@ -13,6 +13,6 @@ import io.cyberflux.node.engine.core.CyberFluxNodeEngine;
 public class CyberFluxAutoConfiguration {
     @Bean
     CyberFluxNodeEngine cyberFluxSpringEngine(ApplicationContext context, CyberFluxSpringProperties properties) {
-        return CyberFluxSpringEngine.run(context);
+        return CyberFluxSpringEngine.run(context, properties);
     }
 }

@@ -24,8 +24,6 @@ public final class MqttReactor extends TemplateReactor {
 		this.transport = transport;
 	}
 
-
-
     public static MqttReactor.Builder builder() {
         return new MqttReactor.Builder();
     }

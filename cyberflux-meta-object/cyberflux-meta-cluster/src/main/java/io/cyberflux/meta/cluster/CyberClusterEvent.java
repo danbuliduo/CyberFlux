@@ -15,8 +15,6 @@ public enum CyberClusterEvent {
      * 离开
      */
     LEAVING,
-
-
     /**
      * 更新
      */

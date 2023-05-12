@@ -7,6 +7,7 @@ import io.cyberflux.common.utils.CyberBannerUtils;
 import io.cyberflux.common.utils.CyberPackageUtils;
 import io.cyberflux.meta.reactor.CyberReactor;
 import io.cyberflux.node.engine.core.CyberFluxTemplateEngine;
+import io.cyberflux.node.engine.core.config.CyberFluxNodeConfig;
 import io.cyberflux.node.engine.core.CyberFluxNodeEngine;
 import reactor.core.publisher.Flux;
 
@@ -32,13 +33,15 @@ public class CyberFluxHuaxuEngine extends CyberFluxTemplateEngine implements Cyb
     }
 
     public CyberFluxHuaxuEngine() {
-        super(CyberPackageUtils.getStartupClassSimpleName());
+		super(new CyberFluxNodeConfig());
+        //super(CyberPackageUtils.getStartupClassSimpleName());
         this.beanFactory = new CyberFluxBeanFactory(CyberPackageUtils.getStartupClassName());
         loadReactor().doOnNext(reactorGroup::appendReactor).subscribe(this::startReactor);
     }
 
     public CyberFluxHuaxuEngine(Class<?> clasz) {
-        super(clasz.getSimpleName());
+        //super(clasz.getSimpleName());
+		super(new CyberFluxNodeConfig());
         this.beanFactory = new CyberFluxBeanFactory(clasz);
         loadReactor().doOnNext(reactorGroup::appendReactor).subscribe(this::startReactor);
     }

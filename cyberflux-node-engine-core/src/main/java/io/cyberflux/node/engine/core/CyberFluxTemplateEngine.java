@@ -6,18 +6,26 @@ import org.slf4j.LoggerFactory;
 import io.cyberflux.meta.cluster.ScaleCubeClusterNode;
 import io.cyberflux.meta.data.CyberType;
 import io.cyberflux.meta.reactor.CyberReactor;
+//import io.cyberflux.node.engine.core.config.CyberFluxClusterConfig;
+import io.cyberflux.node.engine.core.config.CyberFluxNodeConfig;
+//import io.cyberflux.node.engine.core.config.CyberFluxReactorConfig;
 import io.cyberflux.node.engine.core.container.CyberFluxReactorGroup;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public class CyberFluxTemplateEngine extends ScaleCubeClusterNode implements CyberFluxMetaEngine {
+public abstract class CyberFluxTemplateEngine extends ScaleCubeClusterNode implements CyberFluxMetaEngine {
     private static final Logger log = LoggerFactory.getLogger(CyberFluxTemplateEngine.class);
     protected final CyberFluxReactorGroup reactorGroup = new CyberFluxReactorGroup();
+	protected final CyberFluxNodeConfig config;
 
-    public CyberFluxTemplateEngine(String nodeName) {
-        super(nodeName);
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> this.shutdownReactor()));
-    }
+	public CyberFluxTemplateEngine(CyberFluxNodeConfig config) {
+		super(config.getCluster());
+		this.config = config;
+		//CyberFluxClusterConfig clusterConfig = config.getCluster();
+		//CyberFluxReactorConfig reactorConfig = config.getReactor();
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> this.shutdownReactor()));
+	}
+
 
     @Override
     public Flux<CyberReactor> findReactor() {

@@ -16,6 +16,8 @@ public abstract class TemplateReactor extends CyberObject implements CyberReacto
     protected CyberStatus status;
 	protected CyberTransport transport;
 
+
+
 	protected int port() {
 		return transport.config().getPort();
 	}
@@ -29,6 +31,11 @@ public abstract class TemplateReactor extends CyberObject implements CyberReacto
         this.uuid = uuid;
 		this.status = CyberStatus.INVALID;
     }
+
+	@Override
+	public CyberTransport transport() {
+		return transport;
+	}
 
     @Override
     public String uuid() {

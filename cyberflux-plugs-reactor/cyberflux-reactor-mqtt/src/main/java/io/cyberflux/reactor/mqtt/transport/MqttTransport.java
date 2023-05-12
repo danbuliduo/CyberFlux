@@ -17,6 +17,10 @@ public abstract class MqttTransport<D extends Disposable, T extends MqttTranspor
 
 	public abstract Mono<D> overTransport(ContextView context);
 
+	public MqttTransport(T config) {
+		super(config);
+	}
+
 	private void bindTransport(D disposable) {
 		this.disposable = disposable;
 	}
@@ -26,12 +30,12 @@ public abstract class MqttTransport<D extends Disposable, T extends MqttTranspor
 		return ctx.put(MqttChannelContext.class, context);
 	}
 
-    public MqttTransport(T config) {
-		super(config);
-    }
-
 	public void setContext(MqttChannelContext context) {
 		this.context = context;
+	}
+
+	public MqttChannelContext getContext() {
+		return context;
 	}
 
     @Override

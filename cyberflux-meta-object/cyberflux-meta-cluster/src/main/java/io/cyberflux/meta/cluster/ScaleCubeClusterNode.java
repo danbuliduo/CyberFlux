@@ -4,11 +4,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Optional;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -23,61 +20,155 @@ import io.scalecube.cluster.ClusterMessageHandler;
 import io.scalecube.cluster.Member;
 import io.scalecube.cluster.membership.MembershipEvent;
 import io.scalecube.cluster.transport.api.Message;
+import io.scalecube.net.Address;
 import io.scalecube.reactor.RetryNonSerializedEmitFailureHandler;
+import io.scalecube.transport.netty.tcp.TcpTransportFactory;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
 
-public class ScaleCubeClusterNode extends CyberObject implements CyberClusterNode {
+public abstract class ScaleCubeClusterNode extends CyberObject implements CyberClusterNode {
 	private static final Logger log = LoggerFactory.getLogger(ScaleCubeClusterNode.class);
-    protected final EnumSet<CyberType> types;
-    protected final String nodeName;
-	protected Sinks.Many<CyberClusterMessage> messageSinks;
+	protected Cluster cluster;
+	protected EnumSet<CyberType> types;
 	protected Sinks.Many<CyberClusterEvent> eventSinks;
-	protected Cluster thatCluster;
+	protected Sinks.Many<CyberClusterMessage> messageSinks;
 
-    public ScaleCubeClusterNode(String nodeName) {
-        this(nodeName, EnumSet.allOf(CyberType.class));
+    public ScaleCubeClusterNode(CyberClusterConfig config) {
+        this(config, EnumSet.allOf(CyberType.class));
     }
 
-    public ScaleCubeClusterNode(String nodeName, CyberType... types) {
-        this(nodeName, Arrays.stream(types).toList());
+    public ScaleCubeClusterNode(CyberClusterConfig config, CyberType... types) {
+        this(config, Arrays.stream(types).toList());
     }
 
-    public ScaleCubeClusterNode(String nodeName, Collection<CyberType> types) {
-        this(nodeName, EnumSet.copyOf(types));
+    public ScaleCubeClusterNode(CyberClusterConfig config, Collection<CyberType> types) {
+        this(config, EnumSet.copyOf(types));
     }
 
-    public ScaleCubeClusterNode(String nodeName, EnumSet<CyberType> types) {
+    public ScaleCubeClusterNode(CyberClusterConfig config, EnumSet<CyberType> types) {
 		super(CyberType.GOSSIP);
         this.types = EnumSet.copyOf(types);
-        this.nodeName = nodeName;
+		this.eventSinks = Sinks.many().multicast().onBackpressureBuffer();
+		this.messageSinks = Sinks.many().multicast().onBackpressureBuffer();
+		registryClusterNode(config);
     }
 
-    @Override
-    public String name() {
-        return this.nodeName;
-    }
+	public ScaleCubeClusterNode registryClusterNode(CyberClusterConfig config) {
+		if(config != null && config.enable) {
+			this.cluster = new ClusterImpl()
+				.transportFactory(TcpTransportFactory::new)
+				.transport(transport -> transport.port(config.getPort()))
+				.membership(opts -> opts.seedMembers(
+					Arrays.stream(config.getNodes().split(","))
+						.map(Address::from)
+						.collect(Collectors.toList())
+				).namespace(config.getNamespace()))
+				.handler(cluster -> new ClusterHandler())
+				.startAwait();
+		}
+		return this;
+	}
+
+	@Override
+	public Flux<CyberClusterMessage> receiveMessage() {
+		return messageSinks.asFlux();
+	}
+	@Override
+	public Flux<CyberClusterEvent> receiveEvent() {
+		return eventSinks.asFlux();
+	}
 
     @Override
-    public CyberClusterMember member(String nodeName) {
-        return null;
+    public CyberClusterMember member(String name) {
+       	return Optional.ofNullable(cluster).map(cluster ->
+			cluster.member(name).map(member ->
+				CyberClusterMember.builder()
+					.id(member.id())
+					.alias(member.alias())
+					.host(member.address().host())
+					.port(member.address().port())
+					.namespace(member.namespace())
+					.build()
+			).get()
+		).get();
+
     }
 
     @Override
     public List<CyberClusterMember> members() {
-        return Optional.ofNullable(thatCluster).map(member ->
-			thatCluster.members().stream().map(cluster->
+        return Optional.ofNullable(cluster).map(cluster ->
+			cluster.members().stream().map(member->
 				CyberClusterMember.builder()
-					.id(cluster.id())
-					.alias(cluster.alias())
-					.host(cluster.address().host())
-					.port(cluster.address().port())
-					.namespace(cluster.namespace())
+					.id(member.id())
+					.alias(member.alias())
+					.host(member.address().host())
+					.port(member.address().port())
+					.namespace(member.namespace())
 					.build()
 			).collect(Collectors.toList())
 		).orElse(Collections.emptyList());
     }
+
+	@Override
+	public Mono<Void> spreadMessage(CyberClusterMessage message) {
+		log.info("Cluster send Message{}", message);
+		return Mono.when(
+			cluster.otherMembers().stream().map(member ->
+				Optional.ofNullable(cluster).map(cluster ->
+					cluster.send(member, Message.fromData(message)).then()
+				).orElse(Mono.empty())
+			).collect(Collectors.toList())
+		);
+	}
+
+	@Override
+	public Mono<Void> spreadMessage(CyberClusterMessage message, String name) {
+		log.info("Cluster send Message{}", message);
+		return Mono.when(
+			cluster.member(name).map(member ->
+				Optional.ofNullable(cluster).map(cluster ->
+				 	cluster.send(member, Message.fromData(message)).then()
+				).orElse(Mono.empty())
+			).get()
+		);
+	}
+
+	@Override
+	public Mono<Void> shutdown() {
+		return Mono.fromRunnable(() ->
+			Optional.ofNullable(cluster).ifPresent(Cluster::shutdown)
+		);
+	}
+
+	private class ClusterHandler implements ClusterMessageHandler {
+		@Override
+		public void onMessage(Message message) {
+			log.info("cluster accept message {} ", message);
+			messageSinks.emitNext(message.data(), new RetryNonSerializedEmitFailureHandler());
+		}
+
+		@Override
+		public void onGossip(Message message) {
+			log.info("cluster accept message {} ", message);
+			messageSinks.emitNext(message.data(), new RetryNonSerializedEmitFailureHandler());
+		}
+
+		@Override
+		public void onMembershipEvent(MembershipEvent event) {
+			Member member = event.member();
+			log.info("cluster onMembershipEvent {}  {}", member, event);
+			switch (event.type()) {
+				case ADDED   -> eventSinks.tryEmitNext(CyberClusterEvent.ADDED);
+				case LEAVING -> eventSinks.tryEmitNext(CyberClusterEvent.LEAVING);
+				case REMOVED -> eventSinks.tryEmitNext(CyberClusterEvent.REMOVED);
+				case UPDATED -> eventSinks.tryEmitNext(CyberClusterEvent.UPDATED);
+			}
+		}
+	}
+}
+
 /* 
     public boolean appendType(CyberType type) {
         return types.add(type);
@@ -115,53 +206,3 @@ public class ScaleCubeClusterNode extends CyberObject implements CyberClusterNod
         return types.containsAll(types);
     }
 */
-	@Override
-	public Mono<Void> spreadMessage(CyberClusterMessage message) {
-		log.info("Cluster send Message{}", message);
-		return Mono.when(
-			thatCluster.otherMembers().stream().map(member -> {
-				return Optional.ofNullable(thatCluster).map(cluster ->
-					cluster.send(member, Message.fromData(message)).then()
-				).orElse(Mono.empty());
-			}).collect(Collectors.toList())
-		);
-	}
-
-	@Override
-	public Mono<Void> spreadMessage(CyberClusterMessage message, String modeName) {
-		throw new UnsupportedOperationException("Unimplemented method 'spreadMessage'");
-	}
-
-	@Override
-	public Mono<Void> shutdown() {
-		return Mono.fromRunnable(() ->
-			Optional.ofNullable(thatCluster).ifPresent(Cluster::shutdown)
-		);
-	}
-
-	private class ClusterHandler implements ClusterMessageHandler {
-		@Override
-		public void onMessage(Message message) {
-			log.info("cluster accept message {} ", message);
-			messageSinks.emitNext(message.data(), new RetryNonSerializedEmitFailureHandler());
-		}
-
-		@Override
-		public void onGossip(Message message) {
-			log.info("cluster accept message {} ", message);
-			messageSinks.emitNext(message.data(), new RetryNonSerializedEmitFailureHandler());
-		}
-
-		@Override
-		public void onMembershipEvent(MembershipEvent event) {
-			Member member = event.member();
-			log.info("cluster onMembershipEvent {}  {}", member, event);
-			switch (event.type()) {
-				case ADDED   -> eventSinks.tryEmitNext(CyberClusterEvent.ADDED);
-				case LEAVING -> eventSinks.tryEmitNext(CyberClusterEvent.LEAVING);
-				case REMOVED -> eventSinks.tryEmitNext(CyberClusterEvent.REMOVED);
-				case UPDATED -> eventSinks.tryEmitNext(CyberClusterEvent.UPDATED);
-			}
-		}
-	}
-}
