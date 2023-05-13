@@ -1,5 +1,1 @@
-import naiveui from './naive-ui'
-
-export {
-  naiveui
-}
+export * from './src/discrete.plugin'

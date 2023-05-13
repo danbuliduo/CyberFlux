@@ -16,7 +16,7 @@ const defaultConfig: TreeHelperConfig = {
 }
 
 export interface AsyncRouteState {
-  menus: RouteRecordRaw[]
+  items: RouteRecordRaw[]
   routers: any[]
   addRouters: any[]
   keepAliveComponents: string[]
@@ -47,7 +47,7 @@ export const useAsyncRouteStore = defineStore({
   id: 'async-route',
 
   state: (): AsyncRouteState => ({
-    menus: [],
+    items: [],
     routers: constantRoutes,
     addRouters: [],
     keepAliveComponents: [],
@@ -55,8 +55,8 @@ export const useAsyncRouteStore = defineStore({
   }),
 
   getters: {
-    getMenus(): RouteRecordRaw[] {
-      return this.menus;
+    getItems(): RouteRecordRaw[] {
+      return this.items;
     },
     isDynamicRouteFlag(): boolean {
       return this.dynamicRouteFlag;
@@ -76,8 +76,8 @@ export const useAsyncRouteStore = defineStore({
       this.routers = constantRoutes.concat(routers);
     },
     // 设置动态路由
-    setMenus(menus: any[]) {
-      this.menus = menus;
+    setItems(items: any[]) {
+      this.items = items;
     },
     // 设置需要缓存的组件
     setKeepAliveComponents(components: string[]) {
@@ -86,14 +86,15 @@ export const useAsyncRouteStore = defineStore({
 
     async generateRoutes(data: any) {
       let accessedRouters: RouteRecordRaw[] = []
-      const permissionsList = data.permissions || []
+      //const permissionsList = data.permissions || []
 
       const routeFilter = (route: any) => {
         const { meta } = route;
         const { permissions } = meta || {}
-        return permissions ? permissionsList.some(
+        return true
+        /*return permissions ? permissionsList.some(
           (item: any) => permissions.includes(item.value)
-        ) : true
+        ) : true*/
       }
       //const { getPermissionMode } = useProjectSetting();
       //const permissionMode = unref(getPermissionMode);
@@ -115,7 +116,7 @@ export const useAsyncRouteStore = defineStore({
       }
       accessedRouters = accessedRouters.filter(routeFilter)
       this.setRouters(accessedRouters)
-      this.setMenus(accessedRouters)
+      this.setItems(accessedRouters)
       return toRaw(accessedRouters)
     }
   }

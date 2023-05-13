@@ -1,22 +1,24 @@
-import '~/tailwind.css'
-import { createApp } from 'vue'
-import vueapp from './Application.vue'
-import router from './router'
-import store from './store'
+import Appliaction from './Application.vue';
+import { setupDiscreteApi } from './plugins';
+import { setupI18n } from './langs';
+import { setupStore } from './store';
+import router, { setupRouter } from './router';
+import { useHighCharts } from './hooks';
+import '~/tailwind.css';
 
-/*import {
-  naiveui
-} from './plugins'*/
-
-async function run() : Promise<void> {
-  const app = createApp(vueapp)
-  //app.use(naiveui)
-  app.use(store)
-  app.use(router)
+async function run(): Promise<void> {
+  const app = createApp(Appliaction)
+  setupDiscreteApi()
+  setupI18n(app)
+  setupStore(app)
+  setupRouter(app)
   await router.isReady()
-  app.mount('#app')
+  app.mount('#app', true)
 }
 
 run().then(() => {
-
+  console.info("NODE-ENV:", process.env.NODE_ENV)
+  useHighCharts()
+}).catch(() => {
+  console.info("CATCH")
 })

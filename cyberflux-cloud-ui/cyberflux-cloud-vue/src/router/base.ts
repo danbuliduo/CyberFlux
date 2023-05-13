@@ -11,6 +11,37 @@ export const IndexRoute: RouteRecordRaw = {
   }
 }
 
+export const LoginRoute: RouteRecordRaw = {
+  path: '/login',
+  name: 'Login',
+  component: () => import('@/views/login.vue'),
+  meta: {
+    title: 'Login'
+  }
+}
+
+export const RedirectRoute: AppRouteRecordRaw = {
+  path: '/redirect',
+  name: 'Redirect',
+  component: ActiveLayout,
+  meta: {
+    title: 'Redirect',
+    hideBreadcrumb: true,
+  },
+  children: [
+    {
+      path: '/redirect/:path(.*)',
+      name: 'Redirect',
+      component: () => import('@/views/redirect.vue'),
+      meta: {
+        title: 'Redirect',
+        hideBreadcrumb: true,
+      },
+    },
+  ],
+};
+
+
 export const ErrorPageRoute: AppRouteRecordRaw = {
   path: '/:path(.*)*',
   name: 'ErrorPage',
@@ -22,7 +53,7 @@ export const ErrorPageRoute: AppRouteRecordRaw = {
   children: [
     {
       path: '/:path(.*)*',
-      name: 'SubErrorPage',
+      name: 'ErrorPage404',
       component: ErrorPage404,
       meta: {
         title: 'ErrorPage',

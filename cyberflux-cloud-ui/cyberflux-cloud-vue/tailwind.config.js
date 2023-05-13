@@ -1,35 +1,35 @@
+export const plugins = [createEnterPlugin()];
 
-module.exports = {
-  //darkMode: 'class',
-  plugins: [createEnterPlugin()],
-  content: {
-    enable: process.env.NODE_ENV === 'production',
-    content: ['./index.html', './src/**/*.{vue,ts,tsx}'],
-  },
-  corePlugins: {
-    preflight: false,
-  },
-  theme: {
-    extend: {
-      zIndex: {
-        '-1': '-1',
+export const content = {
+  enable: process.env.NODE_ENV === 'production',
+  content: ['./index.html', './src/**/*.{vue,ts,tsx}'],
+};
+
+export const corePlugins = {
+  preflight: false,
+};
+
+export const theme = {
+  extend: {
+    zIndex: {
+      '-1': '-1',
+    },
+    colors: {
+      primary: {
+        DEFAULT: '#0960bd',
+        //dark: primaryColorDark,
       },
-      colors: {
-        primary: {
-          DEFAULT: '#0960bd',
-          //dark: primaryColorDark,
-        },
-      },
-      screens: {
-        sm: '576px',
-        md: '768px',
-        lg: '992px',
-        xl: '1200px',
-        '2xl': '1600px',
-      },
+    },
+    screens: {
+      'sm': '576px',
+      'md': '768px',
+      'lg': '992px',
+      'xl': '1200px',
+      '2xl': '1600px',
     },
   },
 };
+
 /**
  * Used for animation when the element is displayed
  * @param maxOutput The larger the maxOutput output, the larger the generated css volume

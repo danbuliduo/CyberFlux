@@ -1,55 +1,65 @@
 <template>
-  <n-layout class="layout" has-sider>
-    <n-layout-sider class="layout-sider"
-      show-trigger = "bar"
-      @collapse = "collapsed = true"
-      @expand = "collapsed = false"
-      collapse-mode = "width"
-      :collapsed-width = "64"
+  <n-layout has-sider class="layout" position="absolute">
+    <n-layout-sider bordered class="layout-sider"
+      collapse-mode="width"
+      position="absolute"
+      :collapsed="collapsed"
+      :collapsed-width="64"
+      :inverted="true"
       :native-scrollbar="false"
+      :width="256"
+      @collapse="collapsed = true"
+      @expand="collapsed = false"
     >
-      <banner :collapsed="collapsed"/>
-
-      <sider-bar v-model:collapsed="collapsed"/>
+      <app-sider v-model:collapsed="collapsed"/>
     </n-layout-sider>
 
-    <n-layout>
-      <n-layout-header>
-
+    <n-layout :inverted="true">
+      <n-layout-header position="absolute">
+        <app-header v-model:collapsed="collapsed"/>
       </n-layout-header>
-      <n-layout-content class="layout-content">
-        <div class="main-view">
-          <content/>
+
+      <n-layout-content class="layout-content"
+
+      >
+
+        <div class="layout-content-main">
+          <div class="main-view"
+            :class="{
+              'noMultiTabs': true,
+              'mt-3': true,
+            }"
+          >
+            <app-content/>
+          </div>
         </div>
       </n-layout-content>
-
     </n-layout>
+
   </n-layout>
 </template>
 
 <script lang="ts" setup>
 
-import { Banner } from './banner'
-import { Content } from './content'
-import { SiderBar } from './siderbar'
+import { AppContent }  from './content'
+import { AppHeader } from './header'
+import { AppSider } from './sider'
 
 import {
-  NLayout,
-  NLayoutSider,
-  NLayoutHeader,
-  NLayoutContent
-} from 'naive-ui'
+  NLayout, NLayoutSider, NLayoutHeader, NLayoutContent
+} from 'naive-ui';
 
 const collapsed = ref<boolean>(false)
 
 </script>
+
 <style lang="scss">
 .layout-side-drawer {
-  background-color: rgb(0, 20, 40);
+  //background-color: #001428;
 
   .layout-sider {
     min-height: 100vh;
-    box-shadow: 2px 0 8px 0 rgb(29 35 41 / 5%);
+    //box-shadow: 2px 0 8px 0 rgb(29 35 41 / 5%);
     position: relative;
     z-index: 13;
     transition: all 0.2s ease-in-out;
@@ -107,9 +117,9 @@ const collapsed = ref<boolean>(false)
 }
 
 .layout-content-main {
-  margin: 0 10px 10px;
+  margin: 0 16px 16px;
   position: relative;
-  padding-top: 64px;
+  padding-top: 96px;
 }
 
 .layout-content-main-fix {

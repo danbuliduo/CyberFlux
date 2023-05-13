@@ -1,16 +1,22 @@
-import { RouteModuleType } from './types';
-import { IndexRoute} from './base';
+import type { App } from 'vue'
+import { RouteModuleType } from './types'
+import { createRouterGuard } from './guard'
 import {
   createRouter,
   createWebHashHistory,
   RouteRecordRaw
-} from 'vue-router';
+} from 'vue-router'
+import {
+  IndexRoute,
+  LoginRoute,
+  RedirectRoute,
+} from './base'
 
 const moudels = import.meta.glob<RouteModuleType>(
   './modules/**/*.ts', { eager: true }
 )
 
-const routeRecordList: RouteRecordRaw[] = []
+const routeRecordList: any[] = []
 
 Object.keys(moudels).forEach( key => {
   const moudel = moudels[key].default || {}
@@ -24,8 +30,8 @@ routeRecordList.sort((a : any, b: any): number => {
 
 export const asyncRoutes = [...routeRecordList]
 
-export const constantRoutes = [
-  IndexRoute, ...routeRecordList
+export const constantRoutes: any[] = [
+  LoginRoute, IndexRoute, RedirectRoute
 ]
 
 const router = createRouter({
@@ -33,5 +39,10 @@ const router = createRouter({
   routes: constantRoutes,
   strict: true
 })
+
+export function setupRouter(app: App) {
+  app.use(router)
+  createRouterGuard(router)
+}
 
 export default router

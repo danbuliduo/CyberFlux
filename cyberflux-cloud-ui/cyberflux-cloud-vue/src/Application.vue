@@ -4,9 +4,8 @@
   </naive-container>
 </template>
 
-
 <script lang="ts" setup>
-import NaiveContainer from '@/components/container/NaiveContainer.vue';
+import { NaiveContainer } from '@/components/container';
 </script>
 
 <style lang="scss">

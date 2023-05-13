@@ -25,36 +25,33 @@ export default defineConfig({
     'plugin:prettier/recommended',
   ],
   rules: {
+    'space-before-function-paren': 'off',
+    'no-use-before-define': 'off',
     'vue/script-setup-uses-vars': 'error',
     'vue/multi-word-component-names': 'off',
+    'vue/custom-event-name-casing': 'off',
+    '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-empty-function': 'off',
-    'vue/custom-event-name-casing': 'off',
-    'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
-    '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/ban-types': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-unused-vars': [
-      'error',
-      {
+      'error', {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
       },
     ],
     'no-unused-vars': [
-      'error',
-      {
+      'error', {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
       },
     ],
-    'space-before-function-paren': 'off',
-
     'vue/attributes-order': 'off',
     'vue/one-component-per-file': 'off',
     'vue/html-closing-bracket-newline': 'off',
@@ -64,8 +61,7 @@ export default defineConfig({
     'vue/attribute-hyphenation': 'off',
     'vue/require-default-prop': 'off',
     'vue/html-self-closing': [
-      'error',
-      {
+      'error', {
         html: {
           void: 'always',
           normal: 'never',

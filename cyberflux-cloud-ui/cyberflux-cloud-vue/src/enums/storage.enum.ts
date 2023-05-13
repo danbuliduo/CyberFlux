@@ -1,1 +1,0 @@
-export const I18N_LANG_KEY = 'locale'

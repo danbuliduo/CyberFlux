@@ -1,9 +1,8 @@
 import { RouteRecordRaw } from 'vue-router';
 import { ActiveLayout  } from '@/router/constant';
 import { RouterPath, RouterName } from '@/enums'
-
-
-const routeName = 'dashboard';
+import { renderIcon } from '@/utils'
+import { Dashboard } from '@/components/icons'
 
 /**
  * @param name 路由名称, 必须设置,且不能重名
@@ -23,23 +22,34 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/dashboard/overview',
     component: ActiveLayout,
     meta: {
-      title: 'Dashboard',
-      permissions: ['dashboard-overview'],
+      title: '仪表盘',
+      icon: renderIcon(Dashboard),
+      permissions: ['dashboard-overview', 'dashboard-monitor'],
       sort: 0,
     },
     children: [
       {
         path: 'overview',
-        name: '${routeName}-overview',
+        name: 'dashboard-overview',
         meta: {
-          title: '主控台',
+          title: '概览',
           permissions: ['dashboard-overview'],
           affix: true,
         },
         component: () => import('@/views/dashboard/overview.vue'),
       },
-    ],
-  },
-];
+      {
+        path: 'monitor',
+        name: 'dashboard-monitor',
+        meta: {
+          title: '监控',
+          permissions: ['dashboard-monitor'],
+          affix: true,
+        },
+        component: () => import('@/views/dashboard/monitor.vue'),
+      }
+    ]
+  }
+]
 
 export default routes;

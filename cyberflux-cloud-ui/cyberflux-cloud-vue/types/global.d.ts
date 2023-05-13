@@ -1,3 +1,11 @@
+interface Window {
+  $dialog: any
+  $loading: any
+  $message: any
+  $notification: any
+  $t: any
+  $vue: any
+}
 
 declare type Nullable<T> = T | null
 

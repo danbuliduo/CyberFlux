@@ -1,5 +1,5 @@
-import Content from './index.vue'
+import AppContent from './index.vue'
 
 export {
-  Content
+  AppContent
 }
