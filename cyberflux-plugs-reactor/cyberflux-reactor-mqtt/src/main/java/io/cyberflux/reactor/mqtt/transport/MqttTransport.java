@@ -5,16 +5,15 @@ import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 import reactor.util.context.Context;
 import reactor.util.context.ContextView;
-
-import io.cyberflux.meta.reactor.TemplateTransport;
+import io.cyberflux.meta.reactor.transport.CyberTransport;
+import io.cyberflux.meta.reactor.transport.AbstractTransport;
 
 import java.util.Optional;
 
-import io.cyberflux.meta.reactor.CyberTransport;
 import io.cyberflux.reactor.mqtt.channel.MqttChannelContext;
 
 public abstract class MqttTransport<D extends Disposable, T extends MqttTransportConfig>
-		extends TemplateTransport<D, T> {
+		extends AbstractTransport<D, T> {
 
 	protected MqttChannelContext context;
 

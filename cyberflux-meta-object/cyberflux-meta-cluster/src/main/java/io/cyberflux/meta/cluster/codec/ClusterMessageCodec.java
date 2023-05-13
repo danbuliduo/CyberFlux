@@ -1,4 +1,4 @@
-package io.cyberflux.meta.cluster;
+package io.cyberflux.meta.cluster.codec;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -8,14 +8,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.scalecube.cluster.transport.api.Message;
 import io.scalecube.cluster.transport.api.MessageCodec;
 
-public class DefaultMessageCodec implements MessageCodec {
+public class ClusterMessageCodec implements MessageCodec {
 	private final ObjectMapper mapper;
 
-	public DefaultMessageCodec() {
-		this(DefaultMessageMapper.INSTANCE);
+	public ClusterMessageCodec() {
+		this(ClusterMessageMapper.INSTANCE);
 	}
 
-	public DefaultMessageCodec(ObjectMapper mapper) {
+	public ClusterMessageCodec(ObjectMapper mapper) {
 		this.mapper = mapper;
 	}
 

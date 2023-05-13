@@ -1,1 +1,1 @@
-io.cyberflux.meta.cluster.DefaultMessageCodec
+io.cyberflux.meta.cluster.codec.ClusterMessageCodec

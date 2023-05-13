@@ -1,11 +1,10 @@
-package io.cyberflux.meta.data;
+package io.cyberflux.meta.data.cluster;
 
 public enum CyberClusterEvent {
 	/**
      * 添加
      */
     ADDED,
-
     /**
      * 移除
      */

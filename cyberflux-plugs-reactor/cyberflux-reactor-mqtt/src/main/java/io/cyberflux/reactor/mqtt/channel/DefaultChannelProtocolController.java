@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.cyberflux.meta.data.CyberClusterMessage;
 import io.cyberflux.reactor.mqtt.ack.MqttAcknowledgement;
+import io.cyberflux.reactor.mqtt.cluster.MqttClusterCloseMessage;
 import io.cyberflux.reactor.mqtt.cluster.MqttClusterPublishMessage;
 import io.cyberflux.reactor.mqtt.codec.MqttRetainMessage;
 import io.cyberflux.reactor.mqtt.codec.MqttSessionMessage;
@@ -71,11 +71,14 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 			if (context.authenticator.auth(connPayload.userName(), connPayload.passwordInBytes(), clientIdentifier)) {
 				channel.bindIdentifier(clientIdentifier);
 				context.inboundHandler.channelRegister(context, channel);
+
 				channel.setCleanSession(connVariableHeader.isCleanSession());
+
 				if (connVariableHeader.isWillFlag()) {
 					channel.saveWillMessage(MqttWillMessage.fromConnectMessage(connMessage));
 				}
 
+				context.clusterReceiver.emitMessage(new MqttClusterCloseMessage(clientIdentifier));
 				channel.registryDisposeEvent(that -> context.inboundHandler.channelInactive(context, channel));
 				// Client 认证通过
 				return channel.write(MqttMessageBuilder.buildConnAckMessage(
@@ -94,6 +97,7 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 					});
 				}));
 			}
+
 			return channel.write(MqttMessageBuilder.buildConnAckMessage(
 				MqttConnectReturnCode.CONNECTION_REFUSED_BAD_USER_NAME_OR_PASSWORD
 			)).then(channel.close());
@@ -113,6 +117,7 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
 				}
 
 				channel.registryDisposeEvent(that -> context.inboundHandler.channelInactive(context, channel));
+				context.clusterReceiver.emitMessage(new MqttClusterCloseMessage(clientIdentifier));
 
 				return channel.write(MqttMessageBuilder.buildConnAckMessage(
 					MqttConnectReturnCode.CONNECTION_ACCEPTED, properties

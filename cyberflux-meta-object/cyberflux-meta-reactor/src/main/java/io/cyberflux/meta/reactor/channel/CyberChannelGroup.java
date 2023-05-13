@@ -1,4 +1,4 @@
-package io.cyberflux.meta.reactor;
+package io.cyberflux.meta.reactor.channel;
 
 public interface CyberChannelGroup<CHANNEL extends CyberChannel> {
 	CHANNEL find(String channelId);

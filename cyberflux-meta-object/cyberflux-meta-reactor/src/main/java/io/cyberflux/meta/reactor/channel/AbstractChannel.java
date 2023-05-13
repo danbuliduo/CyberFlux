@@ -1,18 +1,18 @@
-package io.cyberflux.meta.reactor;
+package io.cyberflux.meta.reactor.channel;
 
 import io.cyberflux.meta.data.CyberObject;
 import io.cyberflux.meta.data.CyberType;
 
-public abstract class TemplateChannel extends CyberObject implements CyberChannel {
+public abstract class AbstractChannel extends CyberObject implements CyberChannel {
 
 	protected String channelId;
 	protected boolean online;
 
-	public TemplateChannel(String channelId) {
+	public AbstractChannel(String channelId) {
         this(CyberType.EMPTY, channelId);
     }
 
-	public TemplateChannel(CyberType type, String channelId) {
+	public AbstractChannel(CyberType type, String channelId) {
 		super(type);
 		this.channelId = channelId;
 	}

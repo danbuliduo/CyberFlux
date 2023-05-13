@@ -5,17 +5,16 @@ import java.util.Optional;
 import io.cyberflux.common.utils.CyberConfigLoaderUtils;
 import io.cyberflux.common.utils.CyberNanoIdUtils;
 import io.cyberflux.meta.data.CyberType;
-import io.cyberflux.meta.reactor.CyberClusterHandler;
-import io.cyberflux.meta.reactor.CyberClusterMessagePublisher;
-import io.cyberflux.meta.reactor.CyberClusterMessageReceiver;
-import io.cyberflux.meta.reactor.TemplateReactor;
+import io.cyberflux.meta.reactor.AbstractReactor;
+import io.cyberflux.meta.reactor.cluster.CyberClusterMessagePublisher;
+import io.cyberflux.meta.reactor.cluster.CyberClusterMessageReceiver;
 import io.cyberflux.reactor.mqtt.channel.MqttChannelContext;
 import io.cyberflux.reactor.mqtt.transport.MqttTransport;
 import io.cyberflux.reactor.mqtt.transport.MqttTransportConfig;
 import io.cyberflux.reactor.mqtt.transport.MqttTransportFactory;
 import reactor.core.Disposable;
 
-public final class MqttReactor extends TemplateReactor {
+public final class MqttReactor extends AbstractReactor {
 
 	private MqttChannelContext context;
 

@@ -3,7 +3,7 @@ package io.cyberflux.node.engine.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.cyberflux.meta.cluster.DefaultClusterNode;
+import io.cyberflux.meta.cluster.AbstractClusterNode;
 import io.cyberflux.meta.data.CyberType;
 import io.cyberflux.meta.reactor.CyberReactor;
 import io.cyberflux.node.engine.core.config.CyberFluxNodeConfig;
@@ -11,7 +11,7 @@ import io.cyberflux.node.engine.core.container.CyberFluxReactorGroup;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public abstract class CyberFluxTemplateEngine extends DefaultClusterNode implements CyberFluxMetaEngine {
+public abstract class CyberFluxTemplateEngine extends AbstractClusterNode implements CyberFluxMetaEngine {
     private static final Logger log = LoggerFactory.getLogger(CyberFluxTemplateEngine.class);
     protected final CyberFluxReactorGroup reactorGroup;
 	protected final CyberFluxNodeConfig config;

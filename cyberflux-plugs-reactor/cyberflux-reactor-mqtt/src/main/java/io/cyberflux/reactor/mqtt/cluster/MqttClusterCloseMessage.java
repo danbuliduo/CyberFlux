@@ -1,7 +1,7 @@
 package io.cyberflux.reactor.mqtt.cluster;
 
-import io.cyberflux.meta.data.CyberClusterAction;
-import io.cyberflux.meta.data.CyberClusterMessage;
+import io.cyberflux.meta.data.cluster.CyberClusterAction;
+import io.cyberflux.meta.data.cluster.CyberClusterMessage;
 
 public class MqttClusterCloseMessage extends CyberClusterMessage {
 	private String channelId;

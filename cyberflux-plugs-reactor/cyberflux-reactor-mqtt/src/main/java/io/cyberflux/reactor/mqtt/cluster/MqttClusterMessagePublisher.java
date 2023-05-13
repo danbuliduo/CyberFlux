@@ -1,8 +1,10 @@
 package io.cyberflux.reactor.mqtt.cluster;
 
 
-import io.cyberflux.meta.data.CyberClusterMessage;
-import io.cyberflux.meta.reactor.CyberClusterMessagePublisher;
+import java.util.Optional;
+
+import io.cyberflux.meta.data.cluster.CyberClusterMessage;
+import io.cyberflux.meta.reactor.cluster.CyberClusterMessagePublisher;
 import io.cyberflux.reactor.mqtt.channel.MqttChannelContext;
 import io.cyberflux.reactor.mqtt.codec.MqttSessionMessage;
 import io.cyberflux.reactor.mqtt.registry.MqttSubTopicRegistry;
@@ -13,6 +15,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public class MqttClusterMessagePublisher implements CyberClusterMessagePublisher {
+
 	private final MqttChannelContext context;
 
 	public MqttClusterMessagePublisher(MqttChannelContext context) {
@@ -27,9 +30,7 @@ public class MqttClusterMessagePublisher implements CyberClusterMessagePublisher
 			return Flux.fromIterable(topicRegistry.findByTopic(
 				message.variableHeader().topicName()
 			)).filter(store -> {
-				if(store.channel().isOnline()) {
-					return true;
-				}
+				if(store.channel().isOnline()) { return true; }
 				context.getSessionRegistry().append(
 					MqttSessionMessage.fromPublishMessage(store.channel().channelId(), message)
 				);
@@ -39,10 +40,13 @@ public class MqttClusterMessagePublisher implements CyberClusterMessagePublisher
 				final MqttPublishMessage pubMessage = MqttMessageBuilder.wrappedPublishMessage(
 					message, MqttQoS.valueOf(level), store.channel().generateMessageId()
 				);
-				return level == 0 ? store.channel().write(pubMessage): store.channel()
-						.writeAndReply(pubMessage);
+				return level == 0 ? store.channel().write(pubMessage): store.channel().writeAndReply(pubMessage);
 
 			}).then();
+		} else if(clusterMessage instanceof MqttClusterCloseMessage clusterCloseMessage) {
+			Optional.ofNullable(
+				context.getChannelGroup().find(clusterCloseMessage.getChannelId())
+			).ifPresent(channel -> channel.close().subscribe());
 		}
 		return Mono.empty();
 	}

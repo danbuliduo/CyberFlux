@@ -8,9 +8,10 @@ import org.slf4j.LoggerFactory;
 import io.cyberflux.meta.data.CyberObject;
 import io.cyberflux.meta.data.CyberStatus;
 import io.cyberflux.meta.data.CyberType;
+import io.cyberflux.meta.reactor.transport.CyberTransport;
 
-public abstract class TemplateReactor extends CyberObject implements CyberReactor {
-	private static final Logger log = LoggerFactory.getLogger(TemplateReactor.class);
+public abstract class AbstractReactor extends CyberObject implements CyberReactor {
+	private static final Logger log = LoggerFactory.getLogger(AbstractReactor.class);
 
     protected String uuid;
     protected CyberStatus status;
@@ -20,11 +21,11 @@ public abstract class TemplateReactor extends CyberObject implements CyberReacto
 		return transport.config().getPort();
 	}
 
-    public TemplateReactor(String uuid) {
+    public AbstractReactor(String uuid) {
         this(CyberType.EMPTY, uuid);
     }
 
-    public TemplateReactor(CyberType type, String uuid) {
+    public AbstractReactor(CyberType type, String uuid) {
 		super(type);
         this.uuid = uuid;
 		this.status = CyberStatus.INVALID;

@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import io.cyberflux.common.utils.CyberConfigLoaderUtils;
 import io.cyberflux.common.utils.CyberPackageUtils;
-import io.cyberflux.meta.data.CyberObject;
-import io.cyberflux.meta.data.CyberType;
 import io.cyberflux.node.engine.huaxu.CyberFluxHuaxuEngine;
 import io.cyberflux.node.engine.huaxu.annotation.CyberInject;
 import io.cyberflux.node.engine.huaxu.annotation.CyberMetaObject;
@@ -34,14 +32,5 @@ public class JuintTest {
 	public void t() {
 		TcpTransportConfig c = CyberConfigLoaderUtils.autoLoad("/test.yaml", TcpTransportConfig.class);
 		System.out.println(c.getPort());
-	}
-	
-	@Test
-	public void r() {
-		CyberObject object = new CyberObject();
-		 CyberType t =object.type();
-		 t = CyberType.CUSTOM;
-		 System.out.println(t);
-		 System.out.println(object.type());
 	}
 }

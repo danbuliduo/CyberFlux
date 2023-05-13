@@ -2,8 +2,8 @@ package io.cyberflux.meta.cluster;
 
 import java.util.List;
 
-import io.cyberflux.meta.data.CyberClusterPublisher;
-import io.cyberflux.meta.data.CyberClusterReceiver;
+import io.cyberflux.meta.data.cluster.CyberClusterPublisher;
+import io.cyberflux.meta.data.cluster.CyberClusterReceiver;
 import reactor.core.publisher.Mono;
 
 public interface CyberClusterNode extends CyberClusterPublisher, CyberClusterReceiver {

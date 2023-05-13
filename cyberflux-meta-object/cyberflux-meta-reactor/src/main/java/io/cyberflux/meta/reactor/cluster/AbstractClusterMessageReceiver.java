@@ -1,14 +1,14 @@
-package io.cyberflux.meta.reactor;
+package io.cyberflux.meta.reactor.cluster;
 
-import io.cyberflux.meta.data.CyberClusterMessage;
+import io.cyberflux.meta.data.cluster.CyberClusterMessage;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
-public abstract class DefaultClusterMessageReceiver implements CyberClusterMessageReceiver {
+public abstract class AbstractClusterMessageReceiver implements CyberClusterMessageReceiver {
 
-	protected Sinks.Many<CyberClusterMessage> messageMany;
+	private final Sinks.Many<CyberClusterMessage> messageMany;
 
-	public DefaultClusterMessageReceiver() {
+	public AbstractClusterMessageReceiver() {
 		this.messageMany = Sinks.many().multicast().onBackpressureBuffer();
 	}
 

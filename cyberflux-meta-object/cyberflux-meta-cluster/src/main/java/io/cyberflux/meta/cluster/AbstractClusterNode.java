@@ -11,15 +11,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.cyberflux.meta.data.CyberClusterEvent;
-import io.cyberflux.meta.data.CyberClusterMessage;
 import io.cyberflux.meta.data.CyberObject;
 import io.cyberflux.meta.data.CyberType;
-
+import io.cyberflux.meta.data.cluster.CyberClusterEvent;
+import io.cyberflux.meta.data.cluster.CyberClusterMessage;
 import io.scalecube.cluster.Cluster;
 import io.scalecube.cluster.ClusterImpl;
 import io.scalecube.cluster.ClusterMessageHandler;
-import io.scalecube.cluster.Member;
 import io.scalecube.cluster.membership.MembershipEvent;
 import io.scalecube.cluster.transport.api.Message;
 import io.scalecube.net.Address;
@@ -30,26 +28,26 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
 
-public abstract class DefaultClusterNode extends CyberObject implements CyberClusterNode {
-	private static final Logger log = LoggerFactory.getLogger(DefaultClusterNode.class);
+public abstract class AbstractClusterNode extends CyberObject implements CyberClusterNode {
+	private static final Logger log = LoggerFactory.getLogger(AbstractClusterNode.class);
 	protected Cluster cluster;
 	protected EnumSet<CyberType> types;
 	protected Sinks.Many<CyberClusterEvent> eventSinks;
 	protected Sinks.Many<CyberClusterMessage> messageSinks;
 
-    public DefaultClusterNode(CyberClusterConfig config) {
+    public AbstractClusterNode(CyberClusterConfig config) {
         this(config, EnumSet.allOf(CyberType.class));
     }
 
-    public DefaultClusterNode(CyberClusterConfig config, CyberType... types) {
+    public AbstractClusterNode(CyberClusterConfig config, CyberType... types) {
         this(config, Arrays.stream(types).toList());
     }
 
-    public DefaultClusterNode(CyberClusterConfig config, Collection<CyberType> types) {
+    public AbstractClusterNode(CyberClusterConfig config, Collection<CyberType> types) {
         this(config, EnumSet.copyOf(types));
     }
 
-    public DefaultClusterNode(CyberClusterConfig config, EnumSet<CyberType> types) {
+    public AbstractClusterNode(CyberClusterConfig config, EnumSet<CyberType> types) {
 		super(CyberType.GOSSIP);
         this.types = EnumSet.copyOf(types);
 		this.eventSinks = Sinks.many().multicast().onBackpressureBuffer();
@@ -57,7 +55,7 @@ public abstract class DefaultClusterNode extends CyberObject implements CyberClu
 		this.registryClusterNode(config);
     }
 
-	public DefaultClusterNode registryClusterNode(CyberClusterConfig config) {
+	public AbstractClusterNode registryClusterNode(CyberClusterConfig config) {
 		if(config != null && config.enable) {
 			this.cluster = new ClusterImpl()
 				.transportFactory(TcpTransportFactory::new)

@@ -3,7 +3,7 @@ package io.cyberflux.reactor.mqtt.transport;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.cyberflux.meta.data.CyberType;
-import io.cyberflux.meta.reactor.TransportConfig;
+import io.cyberflux.meta.reactor.transport.TransportConfig;
 
 @JsonIgnoreProperties({"type"})
 public abstract class MqttTransportConfig extends TransportConfig {

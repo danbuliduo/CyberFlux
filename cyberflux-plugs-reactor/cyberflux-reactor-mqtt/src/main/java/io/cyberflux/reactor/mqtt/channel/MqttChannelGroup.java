@@ -3,7 +3,7 @@ package io.cyberflux.reactor.mqtt.channel;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 
-import io.cyberflux.meta.reactor.CyberChannelGroup;
+import io.cyberflux.meta.reactor.channel.CyberChannelGroup;
 
 public final class MqttChannelGroup implements CyberChannelGroup<MqttChannel> {
     public static final MqttChannelGroup INTTCASE = new MqttChannelGroup();

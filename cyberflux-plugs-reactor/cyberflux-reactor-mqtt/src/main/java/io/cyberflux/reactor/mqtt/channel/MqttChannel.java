@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.cyberflux.meta.data.CyberType;
-import io.cyberflux.meta.reactor.TemplateChannel;
+import io.cyberflux.meta.reactor.channel.AbstractChannel;
 import io.cyberflux.reactor.mqtt.ack.DefaultMqttAcknowledgement;
 import io.cyberflux.reactor.mqtt.ack.MqttAcknowledgement;
 import io.cyberflux.reactor.mqtt.ack.MqttAcknowledgementManager;
@@ -30,7 +30,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 
-public final class MqttChannel extends TemplateChannel {
+public final class MqttChannel extends AbstractChannel {
 
 	@JsonIgnore
 	private final AtomicInteger atomicCounter;

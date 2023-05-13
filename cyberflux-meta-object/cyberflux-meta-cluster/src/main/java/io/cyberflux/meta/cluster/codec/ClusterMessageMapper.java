@@ -1,4 +1,4 @@
-package io.cyberflux.meta.cluster;
+package io.cyberflux.meta.cluster.codec;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 
-public class DefaultMessageMapper {
+public class ClusterMessageMapper {
 	public final static ObjectMapper INSTANCE = new ObjectMapper();
 
 	static {
@@ -28,7 +28,7 @@ public class DefaultMessageMapper {
 		INSTANCE.findAndRegisterModules();
 	}
 
-	private DefaultMessageMapper() {
+	private ClusterMessageMapper() {
         // Do not instantiate
     }
 }

@@ -1,6 +1,6 @@
 package io.cyberflux.meta.data;
 
-public class CyberObject implements CyberInterface {
+public abstract class CyberObject {
 	protected CyberType type;
 
 	public CyberObject() {
