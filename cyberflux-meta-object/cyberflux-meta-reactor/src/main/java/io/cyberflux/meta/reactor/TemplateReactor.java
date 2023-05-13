@@ -16,8 +16,6 @@ public abstract class TemplateReactor extends CyberObject implements CyberReacto
     protected CyberStatus status;
 	protected CyberTransport transport;
 
-
-
 	protected int port() {
 		return transport.config().getPort();
 	}

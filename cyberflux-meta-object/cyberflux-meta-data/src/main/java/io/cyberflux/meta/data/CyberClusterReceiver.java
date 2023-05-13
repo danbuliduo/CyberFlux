@@ -7,7 +7,6 @@ public interface CyberClusterReceiver {
 	 * @return 获取集群中的某个成员
 	 */
 	Flux<CyberClusterMessage> receiveMessage();
-
 	/**
 	 * @return 获取集群中的某个成员
 	 */

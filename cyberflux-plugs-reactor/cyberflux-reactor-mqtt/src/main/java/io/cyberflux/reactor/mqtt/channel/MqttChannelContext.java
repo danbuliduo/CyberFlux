@@ -4,7 +4,8 @@ import java.util.concurrent.TimeUnit;
 
 import io.cyberflux.reactor.mqtt.ack.DefaultMqttAcknowledgementManager;
 import io.cyberflux.reactor.mqtt.ack.MqttAcknowledgementManager;
-import io.cyberflux.reactor.mqtt.cluster.MqttClusterHandler;
+import io.cyberflux.reactor.mqtt.cluster.MqttClusterMessagePublisher;
+import io.cyberflux.reactor.mqtt.cluster.MqttClusterMessageReceiver;
 import io.cyberflux.reactor.mqtt.registry.DefaultRetainMessageRegistry;
 import io.cyberflux.reactor.mqtt.registry.DefaultSessionMessageRegistry;
 import io.cyberflux.reactor.mqtt.registry.DefaultTopicRegistry;
@@ -24,7 +25,8 @@ public class MqttChannelContext {
 	protected MqttRetainMessageRegistry retainRegistry;
 	protected MqttSessionMessageRegistry sessionRegistry;
 	protected MqttSubTopicRegistry topicRegistry;
-	protected MqttClusterHandler clusterHandler;
+	protected MqttClusterMessagePublisher clusterPublisher;
+	protected MqttClusterMessageReceiver clusterReceiver;
 
 	public MqttChannelContext() {
 		acknowledgementManager = new DefaultMqttAcknowledgementManager(20, TimeUnit.MILLISECONDS, 50);
@@ -34,7 +36,8 @@ public class MqttChannelContext {
 		retainRegistry = new DefaultRetainMessageRegistry();
 		sessionRegistry = new DefaultSessionMessageRegistry();
 		topicRegistry = new DefaultTopicRegistry();
-		clusterHandler = new MqttClusterHandler(this);
+		clusterPublisher = new MqttClusterMessagePublisher(this);
+		clusterReceiver = new MqttClusterMessageReceiver();
 	}
 
 	public void applyChannel(MqttChannel channel) {
@@ -45,8 +48,13 @@ public class MqttChannelContext {
 	public MqttAcknowledgementManager getAcknowledgementManager() {
 		return acknowledgementManager;
 	}
-	public MqttClusterHandler getClusterHandler() {
-		return clusterHandler;
+
+	public MqttClusterMessagePublisher getClusterPublisher() {
+		return clusterPublisher;
+	}
+
+	public MqttClusterMessageReceiver getClusterReceiver() {
+		return clusterReceiver;
 	}
 
 	public MqttAuthenticator getAuthenticator() {

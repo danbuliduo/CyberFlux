@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import io.cyberflux.meta.data.CyberClusterMessage;
 import io.cyberflux.reactor.mqtt.ack.MqttAcknowledgement;
+import io.cyberflux.reactor.mqtt.cluster.MqttClusterPublishMessage;
 import io.cyberflux.reactor.mqtt.codec.MqttRetainMessage;
 import io.cyberflux.reactor.mqtt.codec.MqttSessionMessage;
 import io.cyberflux.reactor.mqtt.codec.MqttSubTopicStore;
@@ -151,7 +152,9 @@ public class DefaultChannelProtocolController implements MqttChannelProtocolCont
         final MqttPublishMessage publishMessage = (MqttPublishMessage) message;
 		final MqttPublishVariableHeader variableHeader = publishMessage.variableHeader();
 		try {
-			context.clusterHandler.spreadMessage(new CyberClusterMessage(channel.channelId()));
+			context.clusterReceiver.emitMessage(
+				MqttClusterPublishMessage.fromPublishMessage(publishMessage, channel.channelId())
+			);
 			return switch (publishMessage.fixedHeader().qosLevel()) {
 				case AT_MOST_ONCE ->
 					Mono.when(InternalHandler.sendMessage(context.topicRegistry, context.sessionRegistry, publishMessage))

@@ -10,7 +10,11 @@ public class WebSocketTransportConfig extends MqttTransportConfig {
 	protected String path = "/mqtt";
 
 	public WebSocketTransportConfig() {
-		super(CyberType.WEBSOCKET, 8883);
+		this(8083);
+	}
+
+	public WebSocketTransportConfig(int port) {
+		super(CyberType.WEBSOCKET, port);
 	}
 
 	public String getPath() {

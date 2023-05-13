@@ -30,26 +30,26 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
 
-public abstract class ScaleCubeClusterNode extends CyberObject implements CyberClusterNode {
-	private static final Logger log = LoggerFactory.getLogger(ScaleCubeClusterNode.class);
+public abstract class DefaultClusterNode extends CyberObject implements CyberClusterNode {
+	private static final Logger log = LoggerFactory.getLogger(DefaultClusterNode.class);
 	protected Cluster cluster;
 	protected EnumSet<CyberType> types;
 	protected Sinks.Many<CyberClusterEvent> eventSinks;
 	protected Sinks.Many<CyberClusterMessage> messageSinks;
 
-    public ScaleCubeClusterNode(CyberClusterConfig config) {
+    public DefaultClusterNode(CyberClusterConfig config) {
         this(config, EnumSet.allOf(CyberType.class));
     }
 
-    public ScaleCubeClusterNode(CyberClusterConfig config, CyberType... types) {
+    public DefaultClusterNode(CyberClusterConfig config, CyberType... types) {
         this(config, Arrays.stream(types).toList());
     }
 
-    public ScaleCubeClusterNode(CyberClusterConfig config, Collection<CyberType> types) {
+    public DefaultClusterNode(CyberClusterConfig config, Collection<CyberType> types) {
         this(config, EnumSet.copyOf(types));
     }
 
-    public ScaleCubeClusterNode(CyberClusterConfig config, EnumSet<CyberType> types) {
+    public DefaultClusterNode(CyberClusterConfig config, EnumSet<CyberType> types) {
 		super(CyberType.GOSSIP);
         this.types = EnumSet.copyOf(types);
 		this.eventSinks = Sinks.many().multicast().onBackpressureBuffer();
@@ -57,7 +57,7 @@ public abstract class ScaleCubeClusterNode extends CyberObject implements CyberC
 		this.registryClusterNode(config);
     }
 
-	public ScaleCubeClusterNode registryClusterNode(CyberClusterConfig config) {
+	public DefaultClusterNode registryClusterNode(CyberClusterConfig config) {
 		if(config != null && config.enable) {
 			this.cluster = new ClusterImpl()
 				.transportFactory(TcpTransportFactory::new)
@@ -126,7 +126,6 @@ public abstract class ScaleCubeClusterNode extends CyberObject implements CyberC
 
 	@Override
 	public Mono<Void> spreadMessage(CyberClusterMessage message) {
-		log.info("Cluster send Message{}", message);
 		return Mono.when(
 			cluster.otherMembers().stream().map(member ->
 				Optional.ofNullable(cluster).map(cluster ->
@@ -138,7 +137,6 @@ public abstract class ScaleCubeClusterNode extends CyberObject implements CyberC
 
 	@Override
 	public Mono<Void> spreadMessage(CyberClusterMessage message, String name) {
-		log.info("Cluster send Message{}", message);
 		return Mono.when(
 			cluster.member(name).map(member ->
 				Optional.ofNullable(cluster).map(cluster ->
@@ -155,7 +153,7 @@ public abstract class ScaleCubeClusterNode extends CyberObject implements CyberC
 		);
 	}
 
-	private class ClusterHandler implements ClusterMessageHandler {
+	class ClusterHandler implements ClusterMessageHandler {
 		@Override
 		public void onMessage(Message message) {
 			log.info("cluster accept message {} ", message);
@@ -170,7 +168,6 @@ public abstract class ScaleCubeClusterNode extends CyberObject implements CyberC
 
 		@Override
 		public void onMembershipEvent(MembershipEvent event) {
-			//Member member = event.member();
 			log.info("cluster onMembershipEvent {} ", event);
 			switch (event.type()) {
 				case ADDED   -> eventSinks.tryEmitNext(CyberClusterEvent.ADDED);

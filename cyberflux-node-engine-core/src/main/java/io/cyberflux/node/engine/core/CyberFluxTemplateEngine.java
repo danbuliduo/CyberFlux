@@ -3,7 +3,7 @@ package io.cyberflux.node.engine.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.cyberflux.meta.cluster.ScaleCubeClusterNode;
+import io.cyberflux.meta.cluster.DefaultClusterNode;
 import io.cyberflux.meta.data.CyberType;
 import io.cyberflux.meta.reactor.CyberReactor;
 import io.cyberflux.node.engine.core.config.CyberFluxNodeConfig;
@@ -11,7 +11,7 @@ import io.cyberflux.node.engine.core.container.CyberFluxReactorGroup;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public abstract class CyberFluxTemplateEngine extends ScaleCubeClusterNode implements CyberFluxMetaEngine {
+public abstract class CyberFluxTemplateEngine extends DefaultClusterNode implements CyberFluxMetaEngine {
     private static final Logger log = LoggerFactory.getLogger(CyberFluxTemplateEngine.class);
     protected final CyberFluxReactorGroup reactorGroup;
 	protected final CyberFluxNodeConfig config;
@@ -25,16 +25,14 @@ public abstract class CyberFluxTemplateEngine extends ScaleCubeClusterNode imple
 		);
 	}
 
-
 	@Override
 	public void registryMessageHandler() {
 		this.receiveMessage()
 			.doOnError(throwable -> log.error("{}", throwable))
 			.onErrorResume(throwable -> Mono.empty())
 			.subscribe(message -> {
-				log.info("{}", message.payload());
 				this.findReactor().subscribe(reactor -> {
-					reactor.clusterHandler().messageConsumer(message);
+					reactor.publisher().publish(message).subscribe();
 				});
 			});
 	}
@@ -46,7 +44,7 @@ public abstract class CyberFluxTemplateEngine extends ScaleCubeClusterNode imple
 			.doOnError(throwable -> log.error("{}", throwable))
 			.onErrorResume(throwable -> Mono.empty())
 			.subscribe(event -> {
-				log.info("{}", event);
+
 			});
 	}
 
@@ -124,7 +122,7 @@ public abstract class CyberFluxTemplateEngine extends ScaleCubeClusterNode imple
     @Override
     public void startReactor(CyberReactor reactor) {
         reactor.startAwait();
-		reactor.clusterHandler().messageProducer()
+		reactor.receiver().receive()
 			.doOnError(throwable -> log.error("{}", throwable))
 			.onErrorResume(throwable -> Mono.empty())
 			.subscribe(message -> {

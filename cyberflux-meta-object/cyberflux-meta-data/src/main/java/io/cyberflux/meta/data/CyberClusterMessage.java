@@ -1,15 +1,24 @@
 package io.cyberflux.meta.data;
 
-public class CyberClusterMessage  {
+import java.io.Serializable;
 
-	private final long timeStamp;
-	private final Object payload;
-	private final CyberClusterAction action;
+public abstract class CyberClusterMessage implements Serializable  {
+
+	protected long timeStamp;
+	protected Object payload;
+	protected CyberClusterAction action;
+
+	public CyberClusterMessage() {
+
+	}
 
 	public CyberClusterMessage(Object payload) {
 		this(payload, CyberClusterAction.PUSH);
 	}
 
+	public CyberClusterMessage(CyberClusterAction action) {
+		this(null, action);
+	}
 
 	public CyberClusterMessage(Object payload, CyberClusterAction action) {
 		this.payload = payload;
@@ -17,16 +26,33 @@ public class CyberClusterMessage  {
 		this.timeStamp = System.currentTimeMillis();
 	}
 
-	public long timeStamp() {
+	public long getTimeStamp() {
 		return timeStamp;
 	}
 
-	public Object payload() {
+
+	public Object getPayload() {
 		return payload;
 	}
 
-	public CyberClusterAction action() {
+
+	public CyberClusterAction getAction() {
 		return action;
+	}
+
+
+	public void setTimeStamp(long timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+
+
+	public void setPayload(Object payload) {
+		this.payload = payload;
+	}
+
+
+	public void setAction(CyberClusterAction action) {
+		this.action = action;
 	}
 
 }

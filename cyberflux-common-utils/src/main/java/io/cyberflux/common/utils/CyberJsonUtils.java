@@ -84,6 +84,4 @@ public final class CyberJsonUtils {
     public static Object[] toArray(String content) {
         return CyberJsonUtils.toList(content, Object.class).toArray();
     }
-
-	
 }

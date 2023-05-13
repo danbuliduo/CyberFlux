@@ -8,7 +8,8 @@ import org.slf4j.LoggerFactory;
 import io.cyberflux.node.engine.huaxu.annotation.CyberMetaObject;
 import io.cyberflux.meta.data.CyberStatus;
 import io.cyberflux.meta.data.CyberType;
-import io.cyberflux.meta.reactor.CyberClusterHandler;
+import io.cyberflux.meta.reactor.CyberClusterMessagePublisher;
+import io.cyberflux.meta.reactor.CyberClusterMessageReceiver;
 import io.cyberflux.meta.reactor.CyberReactor;
 import io.cyberflux.meta.reactor.CyberTransport;
 import reactor.core.publisher.Mono;
@@ -66,7 +67,14 @@ public class CustomReactor implements CyberReactor {
 	}
 
 	@Override
-	public CyberClusterHandler clusterHandler() {
-		return null;
+	public CyberClusterMessagePublisher publisher() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'publisher'");
+	}
+
+	@Override
+	public CyberClusterMessageReceiver receiver() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'receiver'");
 	}
 }

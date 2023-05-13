@@ -18,8 +18,8 @@ public class TestConfig {
 			.build();
     }
 
-    //@CyberBean
-    public CyberReactor coapServer(CustomReactor reactor) {
+    @CyberBean
+    public CoapReactor coapServer(CustomReactor reactor) {
         return CoapReactor.builder().build();
     }
 }

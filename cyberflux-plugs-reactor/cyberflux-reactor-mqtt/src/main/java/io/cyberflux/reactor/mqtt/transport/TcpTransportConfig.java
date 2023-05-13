@@ -5,6 +5,10 @@ import io.cyberflux.meta.data.CyberType;
 public class TcpTransportConfig extends MqttTransportConfig {
 
 	public TcpTransportConfig() {
-		super(CyberType.TCP, 1883);
+		this(1883);
+	}
+
+	public TcpTransportConfig(int port) {
+		super(CyberType.TCP, port);
 	}
 }
