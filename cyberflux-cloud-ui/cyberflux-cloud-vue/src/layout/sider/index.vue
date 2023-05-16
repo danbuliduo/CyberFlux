@@ -28,7 +28,7 @@ import { NIcon, NMenu } from 'naive-ui'
 import { useRoute, useRouter  } from 'vue-router'
 import { createMenu, createMixMenu } from '@/utils'
 import { useAsyncRouteStore } from '@/store/modules/async-route'
-import { useLayoutStateStore } from '@/store/modules/layout'
+import { useLayoutStateStore } from '~/src/store/modules/layout-state'
 import { Banner }  from '@/components/common'
 import {
   MenuFoldOutlined,

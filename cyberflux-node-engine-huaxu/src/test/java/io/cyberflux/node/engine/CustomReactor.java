@@ -68,13 +68,11 @@ public class CustomReactor implements CyberReactor {
 
 	@Override
 	public CyberClusterMessagePublisher publisher() {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'publisher'");
 	}
 
 	@Override
 	public CyberClusterMessageReceiver receiver() {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'receiver'");
 	}
 }

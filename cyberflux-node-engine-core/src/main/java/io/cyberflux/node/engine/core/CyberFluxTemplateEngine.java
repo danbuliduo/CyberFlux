@@ -8,17 +8,20 @@ import io.cyberflux.meta.data.CyberType;
 import io.cyberflux.meta.reactor.CyberReactor;
 import io.cyberflux.node.engine.core.config.CyberFluxNodeConfig;
 import io.cyberflux.node.engine.core.container.CyberFluxReactorGroup;
+import io.cyberflux.node.engine.core.http.CyberFluxNodeHttpClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public abstract class CyberFluxTemplateEngine extends AbstractClusterNode implements CyberFluxMetaEngine {
     private static final Logger log = LoggerFactory.getLogger(CyberFluxTemplateEngine.class);
+	protected final CyberFluxNodeHttpClient httpClient;
     protected final CyberFluxReactorGroup reactorGroup;
 	protected final CyberFluxNodeConfig config;
 
 	public CyberFluxTemplateEngine(CyberFluxNodeConfig config) {
 		super(config.getCluster());
 		this.config = config;
+		this.httpClient = new CyberFluxNodeHttpClient();
 		this.reactorGroup = new CyberFluxReactorGroup();
 		Runtime.getRuntime().addShutdownHook(
 			new Thread(() -> this.shutdownReactor())

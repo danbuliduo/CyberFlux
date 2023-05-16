@@ -14,6 +14,7 @@ declare module '@vue/runtime-core' {
     DataIntegration: typeof import('./../../src/components/icons/src/DataIntegration.vue')['default']
     Device: typeof import('./../../src/components/icons/src/Device.vue')['default']
     DissolvedOxygen: typeof import('./../../src/components/icons/src/DissolvedOxygen.vue')['default']
+    HexMesh: typeof import('./../../src/components/common/src/HexMesh.vue')['default']
     NaiveContainer: typeof import('./../../src/components/container/src/NaiveContainer.vue')['default']
     NAvatar: typeof import('naive-ui')['NAvatar']
     NButton: typeof import('naive-ui')['NButton']
@@ -21,9 +22,12 @@ declare module '@vue/runtime-core' {
     NCheckbox: typeof import('naive-ui')['NCheckbox']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
     NDialogProvider: typeof import('naive-ui')['NDialogProvider']
+    NDivider: typeof import('naive-ui')['NDivider']
     NDropdown: typeof import('naive-ui')['NDropdown']
     NEmpty: typeof import('naive-ui')['NEmpty']
     NFormItem: typeof import('naive-ui')['NFormItem']
+    NGi: typeof import('naive-ui')['NGi']
+    NGiidItem: typeof import('naive-ui')['NGiidItem']
     NGlobalStyle: typeof import('naive-ui')['NGlobalStyle']
     NGradientText: typeof import('naive-ui')['NGradientText']
     NGrid: typeof import('naive-ui')['NGrid']
@@ -45,6 +49,7 @@ declare module '@vue/runtime-core' {
     SecurityAccess: typeof import('./../../src/components/icons/src/SecurityAccess.vue')['default']
     SystemSetting: typeof import('./../../src/components/icons/src/SystemSetting.vue')['default']
     Thermometer: typeof import('./../../src/components/icons/src/Thermometer.vue')['default']
+    TimeAgo: typeof import('./../../src/components/common/src/TimeAgo.vue')['default']
     Turbidity: typeof import('./../../src/components/icons/src/Turbidity.vue')['default']
   }
 }

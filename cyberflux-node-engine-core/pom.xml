@@ -16,6 +16,10 @@
 	<dependencies>
         <dependency>
             <groupId>io.cyberflux</groupId>
+            <artifactId>cyberflux-meta-models</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.cyberflux</groupId>
             <artifactId>cyberflux-meta-cluster</artifactId>
         </dependency>
 		<dependency>
@@ -25,7 +29,6 @@
 		<dependency>
 			<groupId>io.cyberflux</groupId>
 			<artifactId>cyberflux-common-utils</artifactId>
-			<optional>true</optional>
         </dependency>
 	</dependencies>
 </project>
