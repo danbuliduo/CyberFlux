@@ -82,6 +82,11 @@ public abstract class AbstractClusterNode extends CyberObject implements CyberCl
 	}
 
 	@Override
+	public String id() {
+		return cluster.member().id();
+	}
+
+	@Override
 	public Flux<CyberClusterMessage> receiveMessage() {
 		return messageSinks.asFlux();
 	}

@@ -33,6 +33,7 @@ declare module '@vue/runtime-core' {
     NGrid: typeof import('naive-ui')['NGrid']
     NGridItem: typeof import('naive-ui')['NGridItem']
     NIcon: typeof import('naive-ui')['NIcon']
+    NImage: typeof import('naive-ui')['NImage']
     NLoadingBarProvider: typeof import('naive-ui')['NLoadingBarProvider']
     NMenu: typeof import('naive-ui')['NMenu']
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']

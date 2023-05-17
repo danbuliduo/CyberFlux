@@ -1,11 +1,16 @@
 package io.cyberflux.node.engine.core.config;
 
+import java.time.Duration;
+
 public class CyberFluxCloudConfig {
 	protected boolean enable;
-	protected String url;
+	protected int maxRetries;
+	protected String uri;
+	protected Duration retryInterval;
 
 	public CyberFluxCloudConfig() {
-
+		this.maxRetries = 3;
+		this.retryInterval = Duration.ofSeconds(10);
 	}
 
 	public boolean isEnable() {
@@ -14,10 +19,11 @@ public class CyberFluxCloudConfig {
 	public void setEnable(boolean enable) {
 		this.enable = enable;
 	}
-	public String getUrl() {
-		return url;
+	public String getUri() {
+		return uri;
 	}
-	public void setUrl(String url) {
-		this.url = url;
+
+	public void setUri(String url) {
+		this.uri = url;
 	}
 }

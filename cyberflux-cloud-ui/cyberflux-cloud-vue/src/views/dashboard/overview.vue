@@ -1,26 +1,29 @@
 <template>
   <section>
-    <n-space vertical>
-      <n-grid layout-shift-disabled :x-gap="48" :cols="2" style="height: 200px;">
+    <n-space vertical :size="32">
+      <n-grid layout-shift-disabled :x-gap="24" :cols="2">
         <n-grid-item>
-          <n-card >
-            sc
+          <n-card style="height: 208px;">
+
           </n-card>
         </n-grid-item>
         <n-grid-item>
           <n-card >
             <n-space justify="space-around" size="large">
-              <div>
-                  <h1>连接量</h1>
-                  <h1>1</h1>
-                </div>
-              <div>
-                <h1>主题量</h1>
-                <h1>1</h1>
+              <div class="col-items">
+                <img style="width: 48px;" src="@/assets/image/icon/connections.png"/>
+                <h2>连接量</h2>
+                <h2>1000000</h2>
               </div>
-              <div>
-                <h1>订阅量</h1>
-                <h1>1</h1>
+              <div class="col-items">
+                <img style="width: 48px;"  src="@/assets/image/icon/topics.png"/>
+                <h2>主题量</h2>
+                <h2>1000000</h2>
+              </div>
+              <div class="col-items">
+                <img style="width: 48px;"  src="@/assets/image/icon/subscriptions.png"/>
+                <h2>订阅量</h2>
+                <h2>1000000</h2>
               </div>
             </n-space>
           </n-card>
@@ -74,10 +77,12 @@
     </n-space>
   </section>
 </template>
+
 <script lang="ts">
 import { HexMesh } from '@/components/common';
 import { NodeStatus } from '@/enums'
 import {
+  NImage,
   NButton,
   NCard,
   NSpace,
@@ -89,6 +94,7 @@ import {
 export default {
   components: {
     HexMesh,
+    NImage,
     NButton,
     NCard,
     NSpace,
@@ -111,6 +117,7 @@ export default {
       },
 
     ]
+
     //const { applications, applicationsInitialized, error } = useApplicationStore();
     return { applications, applicationsInitialized };
   },
@@ -168,7 +175,15 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+
+.col-items {
+  text-align: center;
+  div, img {
+    margin: auto;
+  }
+}
+
 
 .info-pane p {
   font-size: 16px;
@@ -209,8 +224,8 @@ export default {
   width: 90%;
   margin-top: 0.5em;
 }
-
-
+</style>
+<style lang="scss">
 .up > polygon {
   stroke: #4ade80;
   fill: #4ade80;
@@ -262,5 +277,4 @@ export default {
   content: '?';
   color: #808080;
 }
-
 </style>

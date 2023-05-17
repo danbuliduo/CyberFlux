@@ -1,31 +1,75 @@
 package io.cyberflux.node.engine.core;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.cyberflux.common.utils.CyberJsonUtils;
 import io.cyberflux.meta.cluster.AbstractClusterNode;
+import io.cyberflux.meta.cluster.CyberClusterConfig;
 import io.cyberflux.meta.data.CyberType;
+import io.cyberflux.meta.models.node.NodeEngineModel;
 import io.cyberflux.meta.reactor.CyberReactor;
+import io.cyberflux.node.engine.core.config.CyberFluxCloudConfig;
 import io.cyberflux.node.engine.core.config.CyberFluxNodeConfig;
 import io.cyberflux.node.engine.core.container.CyberFluxReactorGroup;
-import io.cyberflux.node.engine.core.http.CyberFluxNodeHttpClient;
+import io.cyberflux.node.engine.core.http.HttpHraderValues;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.netty.ByteBufFlux;
+import reactor.netty.http.client.HttpClient;
 
 public abstract class CyberFluxTemplateEngine extends AbstractClusterNode implements CyberFluxMetaEngine {
     private static final Logger log = LoggerFactory.getLogger(CyberFluxTemplateEngine.class);
-	protected final CyberFluxNodeHttpClient httpClient;
+	private static final String VERSION = "META";
     protected final CyberFluxReactorGroup reactorGroup;
 	protected final CyberFluxNodeConfig config;
+
+	public final String version() {
+		return VERSION;
+	}
+
+	public final String role() {
+		return "node";
+	}
 
 	public CyberFluxTemplateEngine(CyberFluxNodeConfig config) {
 		super(config.getCluster());
 		this.config = config;
-		this.httpClient = new CyberFluxNodeHttpClient();
+		this.doRegistryCloud();
 		this.reactorGroup = new CyberFluxReactorGroup();
 		Runtime.getRuntime().addShutdownHook(
 			new Thread(() -> this.shutdownReactor())
 		);
+	}
+
+	protected void doRegistryCloud() {
+		CyberFluxCloudConfig cloudConfig = config.getCloud();
+		CyberClusterConfig clusterConfig = config.getCluster();
+		if (cloudConfig.isEnable()) {
+			NodeEngineModel model = new NodeEngineModel(
+				this.id(), this.role(),
+				clusterConfig.getName(),
+				clusterConfig.getNamespace(),
+				CyberFluxTemplateEngine.VERSION
+			);
+			HttpClient.create()
+				.headers(h -> h.add(HttpHeaderNames.CONTENT_TYPE, HttpHraderValues.APPLICATION_JSON))
+				.post().uri(cloudConfig.getUri())
+				.send(ByteBufFlux.fromString(
+					Mono.just(CyberJsonUtils.toJsonString(model))
+				)).responseSingle((response, bytes) -> {
+					if (response.status() == HttpResponseStatus.OK) {
+						return bytes.asString();
+					}
+					throw new RuntimeException("HTTP POST Failed!");
+				}).subscribe(body -> {
+					System.out.println(body);
+				});
+		}
 	}
 
 	@Override
@@ -39,7 +83,6 @@ public abstract class CyberFluxTemplateEngine extends AbstractClusterNode implem
 				});
 			});
 	}
-
 
 	@Override
 	public void registryEventHandler() {
@@ -62,7 +105,7 @@ public abstract class CyberFluxTemplateEngine extends AbstractClusterNode implem
     }
 
     @Override
-    public Flux<CyberReactor> findReactor(Iterable<String> uuids) {
+    public Flux<CyberReactor> findReactor(Collection<String> uuids) {
         return reactorGroup.findReactor(uuids);
     }
 
@@ -77,7 +120,7 @@ public abstract class CyberFluxTemplateEngine extends AbstractClusterNode implem
     }
 
     @Override
-    public void appendReactor(Iterable<CyberReactor> reactors) {
+    public void appendReactor(Collection<CyberReactor> reactors) {
         reactorGroup.appendReactor(reactors);
     }
 
@@ -92,7 +135,7 @@ public abstract class CyberFluxTemplateEngine extends AbstractClusterNode implem
     }
 
     @Override
-    public void removeReactor(Iterable<String> uuids) {
+    public void removeReactor(Collection<String> uuids) {
         reactorGroup.removeReactor(uuids);
     }
 
@@ -113,7 +156,7 @@ public abstract class CyberFluxTemplateEngine extends AbstractClusterNode implem
     }
 
     @Override
-    public void startReactor(Iterable<String> uuids) {
+    public void startReactor(Collection<String> uuids) {
         findReactor(uuids).subscribe(this::startReactor);
     }
 
@@ -145,7 +188,7 @@ public abstract class CyberFluxTemplateEngine extends AbstractClusterNode implem
     }
 
     @Override
-    public void shutdownReactor(Iterable<String> uuids) {
+    public void shutdownReactor(Collection<String> uuids) {
         findReactor(uuids).subscribe(this::shutdownReactor);
     }
 

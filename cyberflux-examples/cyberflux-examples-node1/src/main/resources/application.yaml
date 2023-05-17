@@ -3,7 +3,10 @@ server:
 cyberflux:
   node-engine:
     cloud:
-        enable: true
+      enable: true
+      uri: http://127.0.0.1:18087/node/register
+      retry-interval: 10s
+      max-retries: 3
     cluster:
       enable: true
       port: 10001

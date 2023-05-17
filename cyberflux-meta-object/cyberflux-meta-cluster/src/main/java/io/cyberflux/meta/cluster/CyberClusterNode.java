@@ -7,6 +7,7 @@ import io.cyberflux.meta.data.cluster.CyberClusterReceiver;
 import reactor.core.publisher.Mono;
 
 public interface CyberClusterNode extends CyberClusterPublisher, CyberClusterReceiver {
+	String id();
     /**
      * @return 获取集群中的某个成员
      */

@@ -7,25 +7,25 @@ import java.util.concurrent.TimeUnit;
 import io.netty.util.HashedWheelTimer;
 
 public class DefaultMqttAcknowledgementManager extends HashedWheelTimer implements MqttAcknowledgementManager {
-	private final Map<Long, MqttAcknowledgement> ackMap;
+	private final Map<Long, MqttAcknowledgement> acks;
 
 	public DefaultMqttAcknowledgementManager(long tickDuration, TimeUnit unit, int ticksPerWheel) {
 		super(tickDuration, unit, ticksPerWheel);
-		ackMap = new ConcurrentHashMap<>();
+		acks = new ConcurrentHashMap<>();
 	}
 
 	@Override
 	public MqttAcknowledgement getAck(long id) {
-		return ackMap.get(id);
+		return acks.get(id);
 	}
 
 	@Override
 	public void putAck(MqttAcknowledgement acknowledgement) {
-		ackMap.put(acknowledgement.id(), acknowledgement);
+		acks.put(acknowledgement.id(), acknowledgement);
 	}
 
 	@Override
 	public void delAck(long id) {
-		ackMap.remove(id);
+		acks.remove(id);
 	}
 }

@@ -1,5 +1,7 @@
 package io.cyberflux.node.engine.core;
 
+import java.util.Collection;
+
 import io.cyberflux.meta.data.CyberType;
 import io.cyberflux.meta.reactor.CyberReactor;
 import reactor.core.publisher.Flux;
@@ -11,7 +13,7 @@ public interface CyberFluxMetaEngine {
      */
     void startReactor();
     void startReactor(CyberType type);
-    void startReactor(Iterable<String> uuids);
+    void startReactor(Collection<String> uuids);
     void startReactor(String uuid);
     void startReactor(CyberReactor reactor);
 
@@ -20,7 +22,7 @@ public interface CyberFluxMetaEngine {
      */
     void shutdownReactor();
     void shutdownReactor(CyberType type);
-    void shutdownReactor(Iterable<String> uuids);
+    void shutdownReactor(Collection<String> uuids);
     void shutdownReactor(String uuid);
     void shutdownReactor(CyberReactor reactor);
 
@@ -28,14 +30,14 @@ public interface CyberFluxMetaEngine {
      * @brief 添加Reactor
      */
     void appendReactor(CyberReactor reactor);
-    void appendReactor(Iterable<CyberReactor> reactors);
+    void appendReactor(Collection<CyberReactor> reactors);
 
     /**
      * @brief 移除Reactor
      */
     void removeReactor();
     void removeReactor(CyberType type);
-    void removeReactor(Iterable<String> uuids);
+    void removeReactor(Collection<String> uuids);
     void removeReactor(String uuid);
 
     /**
@@ -43,6 +45,6 @@ public interface CyberFluxMetaEngine {
      */
     Flux<CyberReactor> findReactor();
     Flux<CyberReactor> findReactor(CyberType type);
-    Flux<CyberReactor> findReactor(Iterable<String> uuids);
+    Flux<CyberReactor> findReactor(Collection<String> uuids);
     Mono<CyberReactor> findReactor(String uuid);
 }

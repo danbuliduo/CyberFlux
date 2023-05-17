@@ -31,7 +31,7 @@
 
     <div class="view-login">
       <div class="view-login-banner">
-        <!--div class="view-login-banner-title">CYBERFLUX</!--div-->
+        <div class="view-login-banner-title">CYBERFLUX</div>
         <div class="view-login-banner-slogan">{{ $t('slogan') }}.</div>
       </div>
 
@@ -267,7 +267,7 @@ onBeforeUnmount(() => {
   overflow: auto;
   &-banner {
     position: fixed;
-    top: 25%;
+    top: 32%;
     left: 10%;
     &-title {
       font-size: 64px;

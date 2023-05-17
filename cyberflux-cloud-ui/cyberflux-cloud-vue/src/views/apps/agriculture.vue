@@ -42,7 +42,17 @@
       </n-grid-item>
     </n-grid>
     <div style="height:32px; width: 100%;"></div>
-    <n-switch v-model:value="active" @update-value="publish"/>
+    <n-space>
+      <n-button type="success">温度控制器</n-button>
+      <n-button @click="publish(true)">
+        升温[+]
+      </n-button>
+      <n-button @click="publish(false)">
+        降温[-]
+      </n-button>
+    </n-space>
+
+    <!--n-switch v-model:value="active" @update-value="publish"/-->
   </div>
 </template>
 

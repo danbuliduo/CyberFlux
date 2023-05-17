@@ -2,6 +2,9 @@ server:
   port: 20002
 cyberflux:
   node-engine:
+    cloud:
+      enable: true
+      uri: http://127.0.0.1:18087/node/register
     cluster:
       enable: true
       port: 10002
