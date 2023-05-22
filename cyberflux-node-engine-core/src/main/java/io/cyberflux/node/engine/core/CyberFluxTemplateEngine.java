@@ -1,6 +1,8 @@
 package io.cyberflux.node.engine.core;
 
 import java.util.Collection;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +15,10 @@ import io.cyberflux.meta.models.node.NodeEngineModel;
 import io.cyberflux.meta.reactor.CyberReactor;
 import io.cyberflux.node.engine.core.config.CyberFluxCloudConfig;
 import io.cyberflux.node.engine.core.config.CyberFluxNodeConfig;
-import io.cyberflux.node.engine.core.container.CyberFluxReactorGroup;
-import io.cyberflux.node.engine.core.http.HttpHraderValues;
-import io.netty.handler.codec.http.HttpHeaderNames;
+import io.cyberflux.node.engine.core.container.NodeEngineReactorGroup;
+import io.cyberflux.node.engine.core.context.NodeEngineApplicationContext;
+import io.cyberflux.node.engine.core.handler.http.HttpHraderValues;
+import io.cyberflux.node.engine.core.handler.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -25,8 +28,9 @@ import reactor.netty.http.client.HttpClient;
 public abstract class CyberFluxTemplateEngine extends AbstractClusterNode implements CyberFluxMetaEngine {
     private static final Logger log = LoggerFactory.getLogger(CyberFluxTemplateEngine.class);
 	private static final String VERSION = "META";
-    protected final CyberFluxReactorGroup reactorGroup;
 	protected final CyberFluxNodeConfig config;
+    protected final NodeEngineReactorGroup reactorGroup;
+	protected final NodeEngineApplicationContext applicationContext;
 
 	public final String version() {
 		return VERSION;
@@ -40,7 +44,8 @@ public abstract class CyberFluxTemplateEngine extends AbstractClusterNode implem
 		super(config.getCluster());
 		this.config = config;
 		this.doRegistryCloud();
-		this.reactorGroup = new CyberFluxReactorGroup();
+		this.reactorGroup = new NodeEngineReactorGroup();
+		this.applicationContext = new NodeEngineApplicationContext(config);
 		Runtime.getRuntime().addShutdownHook(
 			new Thread(() -> this.shutdownReactor())
 		);
@@ -56,19 +61,31 @@ public abstract class CyberFluxTemplateEngine extends AbstractClusterNode implem
 				clusterConfig.getNamespace(),
 				CyberFluxTemplateEngine.VERSION
 			);
-			HttpClient.create()
-				.headers(h -> h.add(HttpHeaderNames.CONTENT_TYPE, HttpHraderValues.APPLICATION_JSON))
-				.post().uri(cloudConfig.getUri())
-				.send(ByteBufFlux.fromString(
-					Mono.just(CyberJsonUtils.toJsonString(model))
-				)).responseSingle((response, bytes) -> {
-					if (response.status() == HttpResponseStatus.OK) {
-						return bytes.asString();
+			new Timer().scheduleAtFixedRate(new TimerTask() {
+				int count = 0;
+				int retries = cloudConfig.getMaxRetries();
+				@Override
+				public void run() {
+					if(count++ < retries) {
+						HttpClient.create()
+							.headers(h -> h.add(HttpHeaderNames.CONTENT_TYPE, HttpHraderValues.APPLICATION_JSON))
+							.post().uri(cloudConfig.getUri())
+							.send(ByteBufFlux.fromString(
+								Mono.just(CyberJsonUtils.toJsonString(model))
+							)).responseSingle((response, bytes) -> {
+								if (response.status() == HttpResponseStatus.OK) {
+									return bytes.asString();
+								}
+								throw new RuntimeException("HTTP POST Failed!");
+							}).subscribe(body -> {
+								System.out.println(body);
+								this.cancel();
+							});
+					} else {
+						this.cancel();
 					}
-					throw new RuntimeException("HTTP POST Failed!");
-				}).subscribe(body -> {
-					System.out.println(body);
-				});
+				}
+			}, 0, 1000);
 		}
 	}
 

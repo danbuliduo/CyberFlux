@@ -9,10 +9,10 @@ import io.cyberflux.meta.reactor.CyberReactor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public final class CyberFluxReactorGroup {
+public final class NodeEngineReactorGroup {
     private final Map<String, CyberReactor> reactors;
 
-	public CyberFluxReactorGroup() {
+	public NodeEngineReactorGroup() {
 		reactors = new ConcurrentHashMap<>();
 	}
 

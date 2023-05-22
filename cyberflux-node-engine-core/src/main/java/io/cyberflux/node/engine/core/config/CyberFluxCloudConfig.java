@@ -3,6 +3,7 @@ package io.cyberflux.node.engine.core.config;
 import java.time.Duration;
 
 public class CyberFluxCloudConfig {
+
 	protected boolean enable;
 	protected int maxRetries;
 	protected String uri;
@@ -25,5 +26,21 @@ public class CyberFluxCloudConfig {
 
 	public void setUri(String url) {
 		this.uri = url;
+	}
+
+	public int getMaxRetries() {
+		return maxRetries;
+	}
+
+	public void setMaxRetries(int maxRetries) {
+		this.maxRetries = maxRetries;
+	}
+
+	public Duration getRetryInterval() {
+		return retryInterval;
+	}
+
+	public void setRetryInterval(Duration retryInterval) {
+		this.retryInterval = retryInterval;
 	}
 }

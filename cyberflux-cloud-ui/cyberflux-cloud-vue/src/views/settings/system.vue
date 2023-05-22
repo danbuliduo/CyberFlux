@@ -50,10 +50,9 @@
       <n-button @click="publish(false)">
         降温[-]
       </n-button>
-      <n-button>{{ sw0Value }}</n-button>
+      <n-button>电机状态 {{ sw0Value }}</n-button>
     </n-space>
 
-    <!--n-switch v-model:value="active" @update-value="publish"/-->
   </div>
 </template>
 
@@ -102,7 +101,7 @@ export default defineComponent({
     let temValue: any = '---'
     let humValue: any = '---'
     let hptValue: any = '---'
-    let sw0Value: any = '---'
+    //let sw0Value: any = '---'
     return {
       active: ref(false),
       timestamp,
@@ -111,7 +110,7 @@ export default defineComponent({
       temValue,
       humValue,
       hptValue,
-      sw0Value,
+      sw0Value: 0,
       co2Data,
       luxData,
       temData,
@@ -209,7 +208,7 @@ export default defineComponent({
   methods: {
 
     publish(value: boolean) {
-      value ? client.publish("/test", "a") : client.publish("/test", "b")
+      value ? client.publish("/wyy/test", "a") : client.publish("/wyy/test", "b")
     },
 
     createConnection() {
@@ -225,7 +224,7 @@ export default defineComponent({
 
       client.on('connect', () => {
         console.info('Connection succeeded!')
-        client.subscribe('/test/esp8266/dh1')
+        client.subscribe('/wyy/new')
       })
       client.on('error', (error: any) => {
         console.log('Connection failed', error)
@@ -247,7 +246,7 @@ export default defineComponent({
         this.hptValue = data.hpt  // Htp
         this.humValue = data.hum  // Hum
         this.temValue = data.tem  // Tem
-        this.sw0Value = data.sw0
+        this.sw0Value = data.sw0  // SW0
 
         this.co2Data.push([time, data.co2])
         this.luxData.push([time, data.lux])
@@ -318,6 +317,7 @@ export default defineComponent({
       },
       deep: true
     }
+
   },
 })
 </script>
