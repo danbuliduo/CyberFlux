@@ -1,4 +1,4 @@
-package io.cyberflux.node.engine.core.container;
+package io.cyberflux.node.engine.core.utils;
 
 import java.util.Collection;
 import java.util.Map;
@@ -9,10 +9,11 @@ import io.cyberflux.meta.reactor.CyberReactor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public final class NodeEngineReactorGroup {
+public final class DefaultReactorGroup implements NodeEngineReactorGroup {
+
     private final Map<String, CyberReactor> reactors;
 
-	public NodeEngineReactorGroup() {
+	public DefaultReactorGroup() {
 		reactors = new ConcurrentHashMap<>();
 	}
 

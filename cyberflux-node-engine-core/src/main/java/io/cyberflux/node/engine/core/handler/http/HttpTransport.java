@@ -3,7 +3,6 @@ package io.cyberflux.node.engine.core.handler.http;
 import io.cyberflux.meta.data.CyberType;
 import io.cyberflux.meta.reactor.transport.AbstractTransport;
 import io.cyberflux.meta.reactor.transport.CyberTransport;
-import io.cyberflux.meta.reactor.transport.TransportConfig;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.codec.json.JsonObjectDecoder;
@@ -13,8 +12,6 @@ import reactor.netty.http.server.HttpServer;
 import reactor.util.context.ContextView;
 
 public class HttpTransport extends AbstractTransport<DisposableServer, HttpTransportConfig>   {
-
-
 
 	public HttpTransport(HttpTransportConfig config) {
 		super(CyberType.HTTP, config);
@@ -44,5 +41,4 @@ public class HttpTransport extends AbstractTransport<DisposableServer, HttpTrans
 				.doOnNext(this::bindTransport)
 				.thenReturn(this);
 	}
-
 }

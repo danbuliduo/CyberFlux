@@ -13,7 +13,7 @@ import reactor.netty.http.server.HttpServerRequest;
 import reactor.netty.http.server.HttpServerResponse;
 import reactor.netty.http.server.HttpServerRoutes;
 
-public class HttpRouterAcceptor implements Consumer<HttpServerRoutes>{
+public class HttpRouterAcceptor implements Consumer<HttpServerRoutes> {
 
 	@Override
 	public void accept(HttpServerRoutes httpServerRoutes) {
@@ -36,4 +36,5 @@ public class HttpRouterAcceptor implements Consumer<HttpServerRoutes>{
 			}
 		});
 	}
+
 }

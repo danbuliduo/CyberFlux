@@ -10,7 +10,8 @@ import io.cyberflux.node.engine.core.CyberFluxNodeEngine;
 import io.cyberflux.node.engine.core.CyberFluxTemplateEngine;
 import reactor.core.publisher.Flux;
 
-public class CyberFluxSpringEngine extends CyberFluxTemplateEngine implements CyberFluxNodeEngine {
+public final class CyberFluxSpringEngine extends CyberFluxTemplateEngine implements CyberFluxNodeEngine {
+
     private static final Logger log = LoggerFactory.getLogger(CyberFluxSpringEngine.class);
 
     static {

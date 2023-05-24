@@ -15,9 +15,11 @@ import io.cyberflux.meta.models.node.NodeEngineModel;
 import io.cyberflux.meta.reactor.CyberReactor;
 import io.cyberflux.node.engine.core.config.CyberFluxCloudConfig;
 import io.cyberflux.node.engine.core.config.CyberFluxNodeConfig;
-import io.cyberflux.node.engine.core.container.NodeEngineReactorGroup;
 import io.cyberflux.node.engine.core.context.NodeEngineApplicationContext;
+import io.cyberflux.node.engine.core.context.NodeEngineSpiLoaderContext;
 import io.cyberflux.node.engine.core.handler.http.HttpHraderValues;
+import io.cyberflux.node.engine.core.utils.DefaultReactorGroup;
+import io.cyberflux.node.engine.core.utils.NodeEngineReactorGroup;
 import io.cyberflux.node.engine.core.handler.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import reactor.core.publisher.Flux;
@@ -44,7 +46,7 @@ public abstract class CyberFluxTemplateEngine extends AbstractClusterNode implem
 		super(config.getCluster());
 		this.config = config;
 		this.doRegistryCloud();
-		this.reactorGroup = new NodeEngineReactorGroup();
+		this.reactorGroup = NodeEngineSpiLoaderContext.findFirst(NodeEngineReactorGroup.class).get();
 		this.applicationContext = new NodeEngineApplicationContext(config);
 		Runtime.getRuntime().addShutdownHook(
 			new Thread(() -> this.shutdownReactor())

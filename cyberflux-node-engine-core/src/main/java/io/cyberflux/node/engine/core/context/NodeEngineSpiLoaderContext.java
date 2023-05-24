@@ -8,9 +8,7 @@ import java.util.stream.StreamSupport;
 
 public final class NodeEngineSpiLoaderContext {
 
-	private NodeEngineSpiLoaderContext() {
-
-	}
+	private NodeEngineSpiLoaderContext() {}
 
 	public static <T> Optional<T> findFirst(Class<T> clazz) {
 		ServiceLoader<T> load = ServiceLoader.load(clazz);
