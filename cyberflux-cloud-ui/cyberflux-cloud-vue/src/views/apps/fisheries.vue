@@ -102,7 +102,7 @@
           </n-icon>
           <div class="title">溶氧探针</div>
           <div class="name">溶氧探针2号</div>
-          <div class="value">7.42 mg/L</div>
+          <div class="value">5.42 mg/L</div>
         </div>
       </n-grid-item>
       <n-grid-item class="item-container">
@@ -153,6 +153,12 @@
         <n-grid-item class="item-container">
           <high-charts style="min-width: 50%;  margin: auto; height:320px;" :options="options_2" :updateArgs="updateArgs" />
         </n-grid-item>
+        <n-grid-item class="item-container">
+          <high-charts style="min-width: 50%;  margin: auto; height:320px;" :options="options_3" :updateArgs="updateArgs" />
+        </n-grid-item>
+        <n-grid-item class="item-container">
+          <high-charts style="min-width: 50%;  margin: auto; height:320px;" :options="options_4" :updateArgs="updateArgs" />
+        </n-grid-item>
       </n-grid>
     </n-tab-pane>
   </n-tabs>
@@ -200,17 +206,13 @@ export default defineComponent({
     let timer: any;
     let dataArray: any[] = []
     let timestamp: number = 0
-    let co2Data: number[][] = []
-    let luxData: number[][] = []
-    let temData: number[][] = []
-    let humData: number[][] = []
-    let hptData: number[][] = []
+    let o2Data: number[][] = []
+    let nhData: number[][] = []
+    let turData: number[][] = []
+    let tdsData: number[][] = []
+    let watData: number[][] = []
+    let phData: number[][] = []
     let updateArgs: any[] = [true, true, { duration: 500 }]
-    let co2Value: any = '---'
-    let luxValue: any = '---'
-    let temValue: any = '---'
-    let humValue: any = '---'
-    let hptValue: any = '---'
     let tableItems = [
       ['xyzq-mqtt-001', 'PH探针1号', '已连接', '10.218.17.167:18000', '160s', '东南一区',],
       ['xyzq-mqtt-002', '温度探针1号', '已连接', '10.218.17.167:18001', '160s', '东南二区',],
@@ -231,16 +233,13 @@ export default defineComponent({
     return {
       timer,
       timestamp,
-      co2Value,
-      luxValue,
-      temValue,
-      humValue,
-      hptValue,
-      co2Data,
-      luxData,
-      temData,
-      humData,
-      hptData,
+
+      o2Data,
+      nhData,
+      turData,
+      tdsData,
+      phData,
+      watData,
       updateArgs,
       date: new Date().toLocaleString(),
       tableItems,
@@ -286,17 +285,17 @@ export default defineComponent({
           type: 'spline'
         },
         title: {
-          text: 'PH值采集'
+          text: '浊度与固体溶解量采集'
         },
         yAxis: [
           {
             title: {
-              text: ''
+              text: 'NTU'
             }
           },
           {
             title: {
-              text: '摄氏度'
+              text: 'ppm'
             },
             opposite: true
           },
@@ -307,26 +306,80 @@ export default defineComponent({
         },
         series: [
           {
-            name: "PH探针1号",
+            name: "TUR探针",
             tooltip: {
               valueSuffix: ''
             },
             data: []
           },
           {
-            name: "PH探针2号",
+            name: "TDS探针",
             tooltip: {
               valueSuffix: ''
             },
             data: []
           },
+        ]
+      },
+
+      options_3: {
+        chart: {
+          type: 'spline'
+        },
+        title: {
+          text: 'PH值采集'
+        },
+        yAxis: [
           {
-            name: "温度探针",
+            title: {
+              text: '(h+)'
+            },
+            max: 9.00,
+            min: 4.00
+          }
+        ],
+        tooltip: {
+          headerFormat: '<b>{series.name}</b><br>',
+          pointFormat: '{point.x:%e. %b}: {point.y:.2f}'
+        },
+        series: [
+          {
+            name: "PH探针(E-210)",
             tooltip: {
               valueSuffix: ''
             },
             data: []
-          },
+          }
+        ]
+      },
+      options_4: {
+        chart: {
+          type: 'spline'
+        },
+        title: {
+          text: '水温采集'
+        },
+        yAxis: [
+          {
+            title: {
+              text: '°C'
+            },
+            max: 40.00,
+            min: 0.00
+          }
+        ],
+        tooltip: {
+          headerFormat: '<b>{series.name}</b><br>',
+          pointFormat: '{point.x:%e. %b}: {point.y:.2f}'
+        },
+        series: [
+          {
+            name: "DS18B20",
+            tooltip: {
+              valueSuffix: ''
+            },
+            data: []
+          }
         ]
       }
     }
@@ -346,14 +399,24 @@ export default defineComponent({
 
       client.on('connect', () => {
         console.info('Connection succeeded!')
-        client.subscribe('/xyzq/esp8266')
+        client.subscribe('/xyzq/collect')
       })
       client.on('error', (error: any) => {
         console.log('Connection failed', error)
       })
       client.on('message', (topic: string, message: string) => {
         let data = JSON.parse(message)
-        let time = data.ts * 1000
+        let timestamp = new Date().getTime()
+        if (this.turData.length >= 10) {
+          this.turData.shift()
+          this.tdsData.shift()
+          this.phData.shift()
+          this.watData.shift()
+        }
+        this.turData.push([timestamp, data.TUR])
+        this.tdsData.push([timestamp, data.TDS])
+        this.phData.push([timestamp, data.PH])
+        this.watData.push([timestamp, data.WAT])
         console.log(`Received message ${message} from topic ${topic}`)
       })
     }
@@ -365,54 +428,49 @@ export default defineComponent({
     this.timer = setInterval(function () {
       that.date = new Date().toLocaleString()
       that.timestamp = new Date().getTime()
-      if (that.co2Data.length >= 10) {
-        that.co2Data.shift()
-        that.luxData.shift()
-        that.hptData.shift()
-        that.humData.shift()
-        that.temData.shift()
+      if (that.o2Data.length >= 10) {
+        that.o2Data.shift()
+        that.nhData.shift()
       }
-      that.co2Value = Math.random() * 2 + 3.2
-      that.luxValue = Math.random() * 2 + 1.8
-      that.hptValue = (Math.random()) + 6.8
-      that.humValue = (Math.random()) * 2 + 16.8
-      that.temValue = (Math.random()) + 6.8
-      that.co2Data.push([that.timestamp, that.co2Value])
-      that.luxData.push([that.timestamp, that.luxValue])
-      that.hptData.push([that.timestamp, that.hptValue])
-      that.humData.push([that.timestamp, that.humValue])
-      that.temData.push([that.timestamp, that.temValue])
+      that.o2Data.push([that.timestamp, Math.random() * 0.2 + 4.8])
+      that.nhData.push([that.timestamp, Math.random() * 0.1 + 0.1])
     }, 1000)
   },
 
   watch: {
-    co2Data: {
+    o2Data: {
       handler(value) {
         this.options_1.series[0].data = value
       },
       deep: true
     },
-    luxData: {
+    nhData: {
       handler(value) {
         this.options_1.series[1].data = value
       },
       deep: true
     },
-    temData: {
+    turData: {
+      handler(value) {
+        this.options_2.series[0].data = value
+      },
+      deep: true
+    },
+    tdsData: {
       handler(value) {
         this.options_2.series[1].data = value
       },
       deep: true
     },
-    humData: {
+    phData: {
       handler(value) {
-        this.options_2.series[2].data = value
+        this.options_3.series[0].data = value
       },
       deep: true
     },
-    hptData: {
+    watData: {
       handler(value) {
-        this.options_2.series[0].data = value
+        this.options_4.series[0].data = value
       },
       deep: true
     }
@@ -426,6 +484,9 @@ export default defineComponent({
 
 })
 </script>
+
+
+
 
 <style lang="scss" scoped>
 .title {

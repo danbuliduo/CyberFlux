@@ -23,7 +23,7 @@ public class HttpTransport extends AbstractTransport<DisposableServer, HttpTrans
 
 	public Mono<DisposableServer> overTransport(ContextView contextView) {
 		return HttpServer.create().port(17777)
-				.doOnConnection(conn -> conn.addHandler(new JsonObjectDecoder()))
+				.doOnConnection(conn -> conn.addHandlerFirst(new JsonObjectDecoder()))
 				.route(new HttpRouterAcceptor())
 				.accessLog(true)
 				.childOption(ChannelOption.TCP_NODELAY, true)
