@@ -62,7 +62,7 @@
           </n-icon>
           <div class="title">浊度探针</div>
           <div class="name">浊度探针1号</div>
-          <div class="value">412度</div>
+          <div class="value">2.668 NTU</div>
         </div>
       </n-grid-item>
       <n-grid-item class="item-container">
@@ -112,7 +112,7 @@
           </n-icon>
           <div class="title">浊度探针</div>
           <div class="name">浊度探针2号</div>
-          <div class="value">398度</div>
+          <div class="value">2.568 NTU</div>
         </div>
       </n-grid-item>
     </n-grid>
@@ -178,8 +178,11 @@ import {
 } from '@/components/icons'
 import { Chart } from 'highcharts-vue'
 import mqtt from 'mqtt'
+import { colorOptions } from '@/hooks'
+import Highcharts from 'highcharts'
 
 let client: mqtt.MqttClient
+
 const connection = {
   host: '43.136.133.43',
   port: 8083,
@@ -190,6 +193,7 @@ const connection = {
   clientId: 'mqttjs_3be2c321',
   username: 'emqx_test',
   password: 'emqx_test',
+
 }
 export default defineComponent({
   name: "System",
@@ -233,7 +237,6 @@ export default defineComponent({
     return {
       timer,
       timestamp,
-
       o2Data,
       nhData,
       turData,
@@ -250,32 +253,73 @@ export default defineComponent({
         title: {
           text: '溶氧量与氨氮值采集'
         },
-        yAxis: [
-          {
-            title: {
-              text: '(O)mg/L'
-            },
+        yAxis: [{
+          max: 8.00,
+          min: 0.00,
+          labels: {
+            format: '{value} mg/L',
           },
-          {
-            title: {
-              text: '(N)mg/L'
-            },
-            opposite: true
-          }
-        ],
+          title: {
+            text: '溶氧量'
+          },
+        },{
+          max: 0.80,
+          min: 0.00,
+          labels: {
+            format: '{value} mg/L'
+          },
+          title: {
+            text: '氨氮值'
+          },
+          opposite: true
+        }],
         tooltip: {
-          headerFormat: '<b>{series.name}</b><br>',
-          pointFormat: '{point.x:%e. %b}: {point.y:.2f}'
+          headerFormat: '<b>{series.name}: {point.y:.3f}</b><br>',
+          pointFormat: 'Time: {point.x:%H:%M:%S}'
+        },
+        plotOptions: {
+          area: {
+            marker: {
+              radius: 2
+            },
+          }
         },
         series: [
           {
+
             name: "溶氧量",
             data: [],
+            color: {
+              linearGradient: {
+                x1: 0, y1: 0,
+                x2: 0, y2: 1
+              },
+              stops: [
+                [0, new Highcharts.Color(colorOptions[0]).setOpacity(0.8).get('rgba')],
+                [1, new Highcharts.Color(colorOptions[0]).setOpacity(0.1).get('rgba')],
+              ]
+            },
+            tooltip: {
+              valueSuffix: 'mg/L'
+            }
           },
           {
             name: "氨氮值",
             data: [],
-
+            yAxis: 1,
+            color: {
+              linearGradient: {
+                x1: 0, y1: 0,
+                x2: 0, y2: 1
+              },
+              stops: [
+                [0, new Highcharts.Color(colorOptions[1]).setOpacity(0.8).get('rgba')],
+                [1, new Highcharts.Color(colorOptions[1]).setOpacity(0.1).get('rgba')],
+              ]
+            },
+            tooltip: {
+              valueSuffix: 'mg/L'
+            }
           }
         ]
       },
@@ -289,20 +333,32 @@ export default defineComponent({
         },
         yAxis: [
           {
+            max: 5.00,
+            min: 0.00,
+            labels: {
+              format: '{value} NTU',
+              style: {}
+            },
             title: {
-              text: 'NTU'
+              text: '浊度'
             }
           },
           {
+            max: 200.00,
+            min: 0.00,
+            labels: {
+              format: '{value} ppm',
+              style: {}
+            },
             title: {
-              text: 'ppm'
+              text: 'TDS'
             },
             opposite: true
           },
         ],
         tooltip: {
-          headerFormat: '<b>{series.name}</b><br>',
-          pointFormat: '{point.x:%e. %b}: {point.y:.2f}'
+          headerFormat: '<b>{series.name}: {point.y:.3f}</b><br>',
+          pointFormat: 'Time: {point.x:%H:%M:%S}'
         },
         series: [
           {
@@ -314,6 +370,7 @@ export default defineComponent({
           },
           {
             name: "TDS探针",
+            yAxis: 1,
             tooltip: {
               valueSuffix: ''
             },
@@ -332,15 +389,15 @@ export default defineComponent({
         yAxis: [
           {
             title: {
-              text: '(h+)'
+              text: 'PH值'
             },
-            max: 9.00,
+            max: 12.00,
             min: 4.00
           }
         ],
         tooltip: {
-          headerFormat: '<b>{series.name}</b><br>',
-          pointFormat: '{point.x:%e. %b}: {point.y:.2f}'
+          headerFormat: '<b>{series.name}: {point.y:.3f}</b><br>',
+          pointFormat: 'Time: {point.x:%H:%M:%S}'
         },
         series: [
           {
@@ -362,21 +419,24 @@ export default defineComponent({
         yAxis: [
           {
             title: {
-              text: '°C'
+              text: '温度'
+            },
+            labels: {
+              format: '{value} °C',
             },
             max: 40.00,
             min: 0.00
           }
         ],
         tooltip: {
-          headerFormat: '<b>{series.name}</b><br>',
-          pointFormat: '{point.x:%e. %b}: {point.y:.2f}'
+          headerFormat: '<b>{series.name}: {point.y:.3f}</b><br>',
+          pointFormat: 'Time: {point.x:%H:%M:%S}'
         },
         series: [
           {
             name: "DS18B20",
             tooltip: {
-              valueSuffix: ''
+              valueSuffix: '°C'
             },
             data: []
           }

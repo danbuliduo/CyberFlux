@@ -8,7 +8,6 @@ import * as NaiveUI from 'naive-ui'
 
 export function setupDiscreteApi() {
  // const designStore = useDesignSettingWithOut();
-
   const configProviderPropsRef = computed(() => ({
     theme: NaiveUI.darkTheme,
     themeOverrides: {

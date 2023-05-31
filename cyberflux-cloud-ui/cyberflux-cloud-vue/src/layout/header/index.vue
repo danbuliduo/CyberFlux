@@ -1,7 +1,7 @@
 <template>
   <div class="layout-header">
-    <div class="ml-1">
-
+    <div class="ml-1" style="width:256px;">
+      <banner class="ground-glass-background"/>
     </div>
 
     <div class="layout-header-right">
@@ -63,7 +63,7 @@ import {
 import {
   ContractOutline, ExpandOutline,
 } from '@vicons/ionicons5';
-
+import { Banner } from '@/components/common'
 export default defineComponent({
   name: "AppHeader",
   components: {

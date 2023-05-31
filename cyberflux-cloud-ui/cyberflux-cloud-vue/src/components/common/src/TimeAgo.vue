@@ -1,17 +1,21 @@
 <template>
-  <timeago :datetime="date" />
+  <timeago
+    :datetime="date"
+    :auto-update="1"
+    :converter-options="{
+      includeSeconds: true,
+      addSuffix: false,
+      useStrict: true,
+      uint: 'second'
+    }"
+  />
 </template>
 
-<script lang="ts">
-import timeago from 'vue-timeago3'
-export default {
-  components: {
-    timeago
-  },
-  data() {
-    return {
-      date: new Date()
-    }
+<script lang="ts" setup>
+defineProps({
+  date: {
+    type: [String, Number, Date],
+    default: new Date()
   }
-}
+})
 </script>

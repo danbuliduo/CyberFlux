@@ -1,5 +1,4 @@
 <template>
-  <banner class="ground-glass-background" :collapsed="collapsed"/>
   <n-menu
     mode="vertical"
     :options="options"
@@ -11,7 +10,7 @@
     @update-value="clickMenuItem"
     @update-expanded-keys="expandMenuItem"
   />
-  <div class="menu-fold ground-glass-background"
+  <!--div class="menu-fold ground-glass-background"
     @click="() => $emit('update:collapsed', !collapsed)">
     <n-icon size="20" v-if="collapsed">
       <menu-unfold-outlined />
@@ -19,7 +18,7 @@
     <n-icon size="20" v-else>
       <menu-fold-outlined />
     </n-icon>
-  </div>
+  </!--div-->
 </template>
 
 <script lang="ts">

@@ -7,11 +7,12 @@ import {
 export default ({ command, mode }: ConfigEnv): UserConfig => {
   const isBuild = (command === 'build')
   return {
+    base: './',
     build: createViteBuild(isBuild),
     plugins: createVitePlugins(isBuild),
     resolve: createViteResolve(),
     server: {
-      host: true,
+      host: '0.0.0.0',
       port: 18080,
     },
     css: {

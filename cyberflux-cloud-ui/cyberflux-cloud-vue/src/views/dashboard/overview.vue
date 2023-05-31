@@ -3,12 +3,12 @@
     <n-space vertical :size="32">
       <n-grid layout-shift-disabled :x-gap="24" :cols="2">
         <n-grid-item>
-          <n-card style="height: 208px;">
-
+          <n-card style="height: 200px;">
+            None
           </n-card>
         </n-grid-item>
         <n-grid-item>
-          <n-card >
+          <n-card style="height: 200px;">
             <n-space justify="space-around" size="large">
               <div class="col-items">
                 <img style="width: 48px;" src="@/assets/image/icon/connections.png"/>
@@ -42,8 +42,7 @@
                 <div :key="application.name" class="hex__body node">
                   <div class="node-status-indicator" ></div>
                   <div class="node-header node-time-ago is-muted">
-                    <!--sba-time-ago :date="application.statusTimestamp" /-->
-                    gd
+                    <time-ago/>
                   </div>
                   <div class="node-body">
                     <h1 class="node-name">
@@ -81,6 +80,7 @@
 <script lang="ts">
 import { HexMesh } from '@/components/common';
 import { NodeStatus } from '@/enums'
+import TimeAgo from '@/components/common/src/TimeAgo.vue'
 import {
   NImage,
   NButton,
@@ -91,6 +91,7 @@ import {
   NGrid,
   NGridItem,
 } from 'naive-ui'
+
 export default {
   components: {
     HexMesh,
@@ -102,6 +103,7 @@ export default {
     NTabPane,
     NGrid,
     NGridItem,
+    TimeAgo
   },
   setup() {
     const applicationsInitialized = true;

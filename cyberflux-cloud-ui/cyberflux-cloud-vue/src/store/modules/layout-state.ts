@@ -12,7 +12,6 @@ export interface LayoutState {
   silder: SilderSetting;
 }
 
-
 export const useLayoutStateStore = defineStore({
   id: 'layout',
   state: (): LayoutState => ({

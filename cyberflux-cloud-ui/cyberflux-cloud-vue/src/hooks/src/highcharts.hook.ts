@@ -9,13 +9,26 @@ setDarkTheme(HighCharts)
 setExporting(HighCharts)
 setSolidGauge(HighCharts)
 
+export const colorOptions = [
+  '#2b908f', '#90ee7e', '#f45b5b',
+  '#7798BF', '#aaeeee', '#ff0066',
+  '#eeaaee', '#55BF3B', '#DF5353',
+  '#7798BF', '#aaeeee'
+]
+
 HighCharts.setOptions({
- // lang: undefined,
+  colors: colorOptions,
+  chart: {
+    backgroundColor: 'Transparent',
+    style: {
+      fontFamily: 'Helvetica'
+    }
+  },
   credits: {
     enabled: false
   },
   exporting: {
-    enabled: true
+    enabled: false
   },
   accessibility: {
     enabled: false
@@ -28,8 +41,8 @@ HighCharts.setOptions({
   xAxis: {
     type: 'datetime',
     dateTimeLabelFormats: {
-      day: '%H%M'
-    }
+      second: '%H:%M:%S'
+    },
   },
   plotOptions: {
     line: {
