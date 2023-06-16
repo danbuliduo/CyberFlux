@@ -115,38 +115,32 @@
       <option value="BMAP_SATELLITE_MAP">卫星图</option>
     </select>
     <br />
-    <BMap ak="4pajVFTMP9iQYgHdyF2Wj5YPZ7CZO43o"
+    <b-map ak="4pajVFTMP9iQYgHdyF2Wj5YPZ7CZO43o"
       :plugins="['TrackAnimation']"
       :heading="64.5"
       :tilt="73"
       :center="{ lng: 109.509443, lat: 30.301281 }"
       :zoom="16"
       :minZoom="4"
-      :mapType="type" :enableDragging="mapSetting.enableDragging"
+      :mapType="type"
+      :enableDragging="mapSetting.enableDragging"
       :enableInertialDragging="mapSetting.enableInertialDragging"
-      :enableScrollWheelZoom="mapSetting.enableScrollWheelZoom" :enableContinuousZoom="mapSetting.enableContinuousZoom"
-      :enableDoubleClickZoom="mapSetting.enableDoubleClickZoom" :enableKeyboard="mapSetting.enableKeyboard"
-      :enablePinchToZoom="mapSetting.enablePinchToZoom" :enableTraffic="mapSetting.enableTraffic">
-      <BScale />
-      <BCityList />
-      <BNavigation3d />
-      <BCircle stroke-style="dashed" :center="{ lat: 30.301281, lng: 109.509443 }" :radius="800" />
-      <BMarker :position="{ lat: 30.301281, lng: 109.509443 }" icon="red1" />
-      <!--BLabel style="color: #333;font-size: 8px;" content="设备ID:STM32-A001<br/>雷击次数统计: 1<br/>雷击时间: 2023-05-02"
-      :position="{ lat: 30.301281, lng: 109.509493 }"></!--BLabel-->
-      <BInfoWindow v-model="show" :position="{ lat: 30.301281, lng: 109.509443 }" title="设备ID:STM32-A001">
+      :enableScrollWheelZoom="mapSetting.enableScrollWheelZoom"
+      :enableContinuousZoom="mapSetting.enableContinuousZoom"
+      :enableDoubleClickZoom="mapSetting.enableDoubleClickZoom"
+      :enableKeyboard="mapSetting.enableKeyboard"
+      :enablePinchToZoom="mapSetting.enablePinchToZoom"
+      :enableTraffic="mapSetting.enableTraffic">
+      <b-circle stroke-style="dashed" :center="{ lng: 109.509443, lat: 30.301281 }" :radius="800"/>
+      <!--BMarker icon="red1" :position="{ lat: 30.301281, lng: 109.509443 }" />
+      <BInfoWindow-- v-model="show" :position="{ lat: 30.301281, lng: 109.509443 }" title="设备ID:STM32-A001">
         雷击次数统计: 1 <br />
         雷击时间: 2023-05-02
-      </BInfoWindow>
-      <BMarker :position="{ lat: 30.301981, lng: 109.509443 }" icon="red2" />
-      <!--BLabel style="color: #333;font-size: 8px;" content="设备ID:STM32-C003<br/>雷击次数统计: 2<br/>雷击时间: 2023-04-16<br/>雷击时间: 2023-05-02"
-        :position="{ lat: 30.301981, lng: 109.509443 }"></!--BLabel-->
-      <BInfoWindow v-model="show" :position="{ lat: 30.301981, lng: 109.509443 }" title="设备ID:STM32-B002">
-        雷击次数统计: 2 <br />
-        雷击时间: 2023-04-16<br />
-        雷击时间: 2023-05-02
-      </BInfoWindow>
-    </BMap>
+      </BInfoWindow-->
+      <b-scale />
+      <b-city-list />
+      <b-navigation3d />
+    </b-map>
     </n-tab-pane>
 
 
@@ -155,6 +149,7 @@
 </template>
 
 <script setup lang="ts">
+
 import {
   MapType,
   MapProps,
@@ -162,7 +157,6 @@ import {
   BCityList,
   BNavigation3d,
   BMap,
-  BLabel,
   BScale,
   BMarker,
   BInfoWindow

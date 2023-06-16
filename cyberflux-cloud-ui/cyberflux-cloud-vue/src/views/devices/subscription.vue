@@ -1,135 +1,57 @@
 <template>
   <div>
-    <n-space justify="center">
-      <high-charts style="width: 200%; height: 320px;" :options="chartopt"/>
-    </n-space>
+    <n-table :single-line="true">
+      <thead class="title">
+        <tr>
+          <th>设备ID</th>
+          <th>Topic</th>
+          <th>QoS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(rows, index) in tableItems">
+          <td v-for="item in rows">
+            {{ item }}
+          </td>
+        </tr>
+      </tbody>
+    </n-table>
   </div>
 </template>
 
-<script lang="ts">
-import { NSpace } from "naive-ui";
-import { Chart } from 'highcharts-vue'
-export default defineComponent({
-  name: "Subscription",
-  components: {
-    HighCharts: Chart,
-    NSpace,
-  },
-  data() {
-    let chartopt = {
-      chart: {
-        type: 'column'
-      },
-      title: {
-        text: '雷击次数统计'
-      },
-      xAxis: {
-        categories: ['博学片区', '博爱片区', '立人片区', '达人片区']
-      },
-      yAxis: {
-        min: 0,
-        title: {
-          text: '雷击次数'
-        },
-        stackLabels: {  // 堆叠数据标签
-          enabled: true,
-          style: {
-            fontWeight: 'bold'
-          }
-        }
-      },
-      tooltip: {
 
-      },
-      plotOptions: {
-        column: {
-          stacking: 'normal',
-          dataLabels: {
-            enabled: true,
-           // color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-            style: {
-              // 如果不需要数据标签阴影，可以将 textOutline 设置为 'none'
-              textOutline: '1px 1px black'
-            }
-          }
-        }
-      },
-      series: [{
-        name: '雷击次数',
-        data: [1, 0, 3, 2]
-      }]
-    }
+<script lang="ts" setup>
 
-    return {
-      chartopt,
-    }
-  },
-  methods: {
+let tableItems = [
+  ['xyzq-mqtt-001', '/xyzq-mqtt-001/controller', '0'],
+  ['xyzq-mqtt-002', '/xyzq-mqtt-002/controller', '0'],
+  ['xyzq-mqtt-003', '/xyzq-mqtt-003/controller', '0'],
+  ['xyzq-mqtt-004', '/xyzq-mqtt-004/controller', '0'],
+  ['xyzq-mqtt-005', '/xyzq-mqtt-005/controller', '0'],
+  ['xyzq-mqtt-006', '/xyzq-mqtt-006/controller', '0'],
+  ['xyzq-mqtt-007', '/xyzq-mqtt-007/controller', '0'],
+  ['xyzq-mqtt-008', '/xyzq-mqtt-008/controller', '0'],
+  ['xyzq-mqtt-009', '/xyzq-mqtt-009/controller', '0'],
+  ['xyzq-mqtt-010', '/xyzq-mqtt-0010/controller', '0'],
+  ['xyzq-mqtt-011', '/xyzq-mqtt-0011/publish', '2'],
+  ['xyzq-mqtt-012', '/xyzq-mqtt-0012/publish', '2'],
+  ['xyzq-mqtt-013', '/xyzq-mqtt-0013/publish', '2'],
+  ['xyzq-mqtt-014', '/xyzq-mqtt-0015/publish', '2'],
+  ['xyzq-mqtt-011', '/xyzq-mqtt-0011/controller', '2'],
+  ['xyzq-mqtt-012', '/xyzq-mqtt-0012/controller', '2'],
+  ['xyzq-mqtt-013', '/xyzq-mqtt-0013/controller', '2'],
+  ['xyzq-mqtt-014', '/xyzq-mqtt-0015/controller', '2'],
+]
 
-  },
-  mounted() {
+const showModalRef = ref(false)
 
-  },
-  // 销毁时清除计时器
-  beforeDestroy: function () {
+function onNegativeClick() {
 
-  }
-})
+  showModalRef.value = false
+}
+
+function onPositiveClick() {
+
+  showModalRef.value = false
+}
 </script>
-
-<style lang="scss" scoped>
-.title {
-  th {
-    font-weight: 800;
-  }
-}
-
-.n-card {
-  max-width: 94%;
-  margin: auto;
-
-  .title {
-    position: absolute;
-    margin-left: 520px;
-    font-size: 200%;
-  }
-
-  .time {
-    position: absolute;
-    margin-left: 480px;
-    margin-top: 72px;
-    font-size: 200%;
-  }
-
-  .status {
-    float: right;
-  }
-}
-
-.card {
-  position: relative;
-  width: 240px;
-  height: 160px;
-  border-radius: 8px;
-  background: linear-gradient(45deg, #ec008c, #fc6767);
-
-  .titles {
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    font-weight: 800;
-    font-size: 150%;
-  }
-
-  .value {
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    font-weight: 800;
-    font-size: 180%;
-  }
-}
-
-</style>
