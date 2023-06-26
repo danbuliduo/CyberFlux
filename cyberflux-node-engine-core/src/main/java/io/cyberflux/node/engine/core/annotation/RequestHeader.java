@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 public @interface RequestHeader {
-	String name();
-	String value();
+	String name() default "";
+	String value() default "";
 }
