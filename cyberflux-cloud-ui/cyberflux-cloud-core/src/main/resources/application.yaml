@@ -11,3 +11,7 @@ server:
 spring:
     application:
         name: cyberflux-cloud
+    r2dbc:
+        url: r2dbcs:mysql://43.136.133.43:3306/cyberlite?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+        username: ming
+        password: PLHsabR8N73CBE85
