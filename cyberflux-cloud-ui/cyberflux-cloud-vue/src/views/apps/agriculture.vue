@@ -15,20 +15,20 @@
         </n-grid-item>
         <n-grid-item class="item-container">
           <div class="card">
-            <div class="title">加热片温度</div>
-            <div class="value">{{ hptValue }}°C</div>
+            <div class="title">土壤酸碱度</div>
+            <div class="value">{{ hptValue }}H+</div>
           </div>
         </n-grid-item>
         <n-grid-item class="item-container">
           <div class="card">
-            <div class="title">空气温度</div>
-            <div class="value">{{ temValue }}°C</div>
+            <div class="title">有机物含量</div>
+            <div class="value">{{ temValue }} %</div>
           </div>
         </n-grid-item>
         <n-grid-item class="item-container">
           <div class="card">
-            <div class="title">空气湿度</div>
-            <div class="value">{{ humValue }}%</div>
+            <div class="title">土壤湿度</div>
+            <div class="value">{{ humValue }} %</div>
           </div>
         </n-grid-item>
     </n-grid>
@@ -177,21 +177,21 @@ export default defineComponent({
         },
         series: [
           {
-            name: "加热片温度",
+            name: "土壤酸碱度",
             tooltip: {
-              valueSuffix: '°C'
+              valueSuffix: 'H+'
             },
             data: []
           },
           {
-            name: "空气温度",
+            name: "有机物含量",
             tooltip: {
-              valueSuffix: '°C'
+              valueSuffix: '%'
             },
             data: []
           },
           {
-            name: "空气湿度",
+            name: "土壤湿度",
             tooltip: {
               valueSuffix: 'RH'
             },
@@ -261,11 +261,11 @@ export default defineComponent({
           this.humData.shift()
           this.temData.shift()
         }
-        this.co2Value = Math.floor(Math.random() * 10)
-        this.luxValue = Math.floor(Math.random() * 10)
-        this.hptValue = Math.floor(Math.random() * 10)
-        this.humValue = Math.floor(Math.random() * 10)
-        this.temValue = Math.floor(Math.random() * 10)
+        this.co2Value = 1430 +  Math.floor(Math.random() * 1)
+        this.luxValue = 64 + Math.floor(Math.random() * 10)
+        this.hptValue = 32 + Math.floor(Math.random() * 10)
+        this.humValue = 48 + Math.floor(Math.random() * 10)
+        this.temValue = 52 + Math.floor(Math.random() * 10)
         this.co2Data.push([this.timestamp, this.co2Value])
         this.luxData.push([this.timestamp, this.luxValue])
         this.hptData.push([this.timestamp, this.hptValue])
@@ -276,7 +276,7 @@ export default defineComponent({
   },
 
   mounted() {
-    //this.setTimer()
+    this.setTimer()
     this.createConnection()
   },
 
