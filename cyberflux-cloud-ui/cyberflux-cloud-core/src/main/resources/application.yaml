@@ -1,17 +1,25 @@
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:${server.port}/eureka/
-    #是否将自己注册到Eureka服务中，默认为true（由于当前就是eureka服务，固设置为false）
-    registerWithEureka: false
-    #设置是否从eureka服务上获取注册信息，默认为true（由于当前就是eureka服务，固设置为false）
-    fetchRegistry: false
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:${server.port}/eureka/
+#    #是否将自己注册到Eureka服务中，默认为true（由于当前就是eureka服务，固设置为false）
+#    registerWithEureka: false
+#    #设置是否从eureka服务上获取注册信息，默认为true（由于当前就是eureka服务，固设置为false）
+#    fetchRegistry: false
 server:
     port: 18087
 spring:
     application:
         name: cyberflux-cloud
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
     r2dbc:
-        url: r2dbcs:mysql://43.136.133.43:3306/cyberlite?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+        url: r2dbcs:mysql://43.136.133.43:3306/cyberlite?characterEncoding=UTF-8&serverTimezone=UTC
         username: ming
         password: PLHsabR8N73CBE85
+        name: r2dbc
+        pool:
+            enabled: true
+            validation-query: SELECT 1
