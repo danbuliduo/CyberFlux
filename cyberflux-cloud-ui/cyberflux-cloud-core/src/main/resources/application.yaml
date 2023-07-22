@@ -1,11 +1,3 @@
-#eureka:
-#  client:
-#    service-url:
-#      defaultZone: http://localhost:${server.port}/eureka/
-#    #是否将自己注册到Eureka服务中，默认为true（由于当前就是eureka服务，固设置为false）
-#    registerWithEureka: false
-#    #设置是否从eureka服务上获取注册信息，默认为true（由于当前就是eureka服务，固设置为false）
-#    fetchRegistry: false
 server:
     port: 18087
 spring:

@@ -3,6 +3,7 @@ package io.cyberflux.meta.models.device;
 import java.io.Serializable;
 
 public class ActiveDeviceModel implements Serializable {
+
 	private int port;
 	private String id;
 	private String name;

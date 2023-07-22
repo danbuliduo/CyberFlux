@@ -2,9 +2,8 @@ package io.cyberflux.cloud.core.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
-import io.cyberflux.cloud.core.model.UserAccount;
+import io.cyberflux.cloud.core.model.UserAccountModel;
 
-
-public interface UserAccountRepository extends ReactiveCrudRepository<UserAccount, String>{
+public interface UserAccountRepository extends ReactiveCrudRepository<UserAccountModel, String> {
 
 }

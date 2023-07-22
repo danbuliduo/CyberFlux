@@ -33,8 +33,10 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <io.scalecube.version>0.0.3</io.scalecube.version>
-        <io.projectreactor.version>2022.0.7</io.projectreactor.version>
-        <org.springframework.boot.version>3.1.0</org.springframework.boot.version>
+        <io.projectreactor.version>2022.0.9</io.projectreactor.version>
+
+        <org.springframework.boot.version>3.1.2</org.springframework.boot.version>
+
         <org.springframework.cloud.version>2022.0.3</org.springframework.cloud.version>
 
         <flatten.maven.plugin.version>1.4.1</flatten.maven.plugin.version>
@@ -183,6 +185,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -190,6 +193,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>

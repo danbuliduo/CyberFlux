@@ -1,30 +1,27 @@
 package io.cyberflux.cloud.core.model;
 
 
+
 import java.io.Serializable;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-
-@Entity
 @Table(name = "admin_account")
-public class UserAccount implements Serializable {
+public class AdminAccountModel implements Serializable {
 
     @Id
-	@Column(name = "secret_id")
+	@Column("secret_id")
     private String secretId;
 
-    @Column(name = "secret_key")
+    @Column("secret_key")
     private String secretKey;
 
-    @Column(name = "permission")
+    @Column("permission")
     private String permission;
 
-
-    public UserAccount(String secretId, String secretKey, String permission) {
+    public AdminAccountModel(String secretId, String secretKey, String permission) {
 		this.secretId = secretId;
 		this.secretKey = secretKey;
 		this.permission = permission;

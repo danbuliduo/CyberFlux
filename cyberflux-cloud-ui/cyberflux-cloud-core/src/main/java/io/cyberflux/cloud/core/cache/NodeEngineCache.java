@@ -12,6 +12,7 @@ import io.cyberflux.meta.models.node.NodeEngineModel;
 
 @Component
 public final class NodeEngineCache {
+
 	private final Map<String, Set<NodeEngineModel>> models;
 
 	public NodeEngineCache() {

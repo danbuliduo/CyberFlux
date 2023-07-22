@@ -63,5 +63,6 @@ pnpm-debug.log*
 .DS_Store
 .VSCodeCounter
 ### Design ###
+prototype/
 Design/
 *.drawio

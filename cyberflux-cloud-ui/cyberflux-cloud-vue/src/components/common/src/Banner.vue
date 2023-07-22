@@ -5,13 +5,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { bool } from 'vue-types'
-export default {
-  props: {
-    collapsed: bool().def(false)
+<script setup lang="ts">
+// props
+defineProps({
+  collapsed: {
+    type: Boolean,
+    default: false
   }
-}
+})
+
 </script>
 
 <style lang="scss" scoped>
