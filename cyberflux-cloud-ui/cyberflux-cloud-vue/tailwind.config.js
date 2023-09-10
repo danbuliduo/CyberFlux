@@ -16,7 +16,7 @@ export const theme = {
     },
     colors: {
       primary: {
-        DEFAULT: '#0960bd',
+        // DEFAULT: '#0960bd',
         //dark: primaryColorDark,
       },
     },

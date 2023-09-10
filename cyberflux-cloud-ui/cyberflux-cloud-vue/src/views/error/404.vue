@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 10% 0; text-align: center;">
+  <div style="padding: 10% 0; justify-content: center;">
     <n-result status="404" title="Oops! 404 Not Found." description="生活总归带点荒谬" size="huge">
       <template #footer>
         <n-button @click="() => { router.push('/') }">找点乐子吧</n-button>

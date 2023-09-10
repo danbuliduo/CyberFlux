@@ -1,4 +1,4 @@
-import NaiveContainer from './src/NaiveContainer.vue';
+import NaiveContainer from './src/NaiveContainer.vue'
 
 export {
   NaiveContainer,

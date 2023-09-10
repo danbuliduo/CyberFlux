@@ -1,17 +1,24 @@
 server:
-    port: 18087
+  port: 18087
 spring:
-    application:
-        name: cyberflux-cloud
-    jpa:
-        hibernate:
-            ddl-auto: update
-        show-sql: true
-    r2dbc:
-        url: r2dbcs:mysql://43.136.133.43:3306/cyberlite?characterEncoding=UTF-8&serverTimezone=UTC
-        username: ming
-        password: PLHsabR8N73CBE85
-        name: r2dbc
-        pool:
-            enabled: true
-            validation-query: SELECT 1
+  application:
+    name: cyberflux-cloud
+  jwt:
+    secret-key: LJYMxT9oEF22
+    expires: 7200
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:file:~/test
+    username: ming
+    password: root
+  sql.init:
+    mode: always
+    data-locations: classpath:sql/data.sql
+    schema-locations: classpath:sql/schema.sql
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  h2.console:
+    enabled: true
+    path: /h2-console

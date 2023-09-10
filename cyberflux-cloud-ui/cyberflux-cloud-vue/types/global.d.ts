@@ -5,7 +5,7 @@ interface Window {
   $notification: any
   $t: any
   $vue: any
-}
+};
 
 declare type Nullable<T> = T | null
 

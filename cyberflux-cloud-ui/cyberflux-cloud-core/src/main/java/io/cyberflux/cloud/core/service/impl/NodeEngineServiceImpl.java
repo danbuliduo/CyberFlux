@@ -1,6 +1,5 @@
 package io.cyberflux.cloud.core.service.impl;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class NodeEngineServiceImpl implements NodeEngineService {
 	}
 
 	@Override
-	public Map<String, Set<NodeEngineModel>> findAll() {
+	public Set<NodeEngineModel> findAll() {
 		return cache.findAll();
 	}
 }

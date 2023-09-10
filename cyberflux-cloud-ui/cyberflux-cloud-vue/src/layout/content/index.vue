@@ -10,8 +10,6 @@
   </router-view>
 </template>
 
-<script lang="ts">
-export default defineComponent({
-  name: "AppContent"
-})
+<script setup lang="ts">
+
 </script>

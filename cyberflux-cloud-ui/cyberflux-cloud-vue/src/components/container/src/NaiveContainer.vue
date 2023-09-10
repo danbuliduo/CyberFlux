@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="darkTheme">
+  <n-config-provider :theme="theme">
     <n-global-style />
     <n-loading-bar-provider>
       <n-message-provider>
@@ -13,8 +13,10 @@
   </n-config-provider>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import type { BuiltInGlobalTheme } from 'naive-ui/es/themes/interface'
 import { darkTheme, lightTheme } from 'naive-ui';
+
 import {
   NGlobalStyle,
   NConfigProvider,
@@ -22,25 +24,10 @@ import {
   NNotificationProvider,
   NLoadingBarProvider,
   NMessageProvider
-} from 'naive-ui';
+} from 'naive-ui'
 
-export default defineComponent({
-  name: 'NaiveContainer',
-  components: {
-    NConfigProvider,
-    NDialogProvider,
-    NGlobalStyle,
-    NLoadingBarProvider,
-    NMessageProvider,
-    NNotificationProvider,
-  },
-  setup() {
-    return {
-      darkTheme,
-      lightTheme,
-    }
-  }
-});
+
+const theme: BuiltInGlobalTheme = darkTheme
 </script>
 
 

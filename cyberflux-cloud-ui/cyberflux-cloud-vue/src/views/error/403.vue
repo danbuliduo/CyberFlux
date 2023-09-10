@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 10% 0; text-align: center;">
+  <div style="padding: 10% 0; justify-content: center;">
     <n-result status="403" title="403 Forbidden Access." description="总有些门是对你关闭的" size="huge">
       <template #footer>
         <n-button @click="() => { router.push('/') }">放轻松</n-button>

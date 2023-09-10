@@ -16,6 +16,10 @@ export const colorOptions = [
   '#7798BF', '#aaeeee'
 ]
 
+export const updateArgs = [
+  true, true, { duration: 500 }
+]
+
 HighCharts.setOptions({
   colors: colorOptions,
   chart: {
@@ -34,7 +38,7 @@ HighCharts.setOptions({
     enabled: false
   },
   legend: {
-    layout: 'horizontal',
+    layout: 'horizontal', //vertical horizontal
     align: 'center',
     verticalAlign: 'top'
   },

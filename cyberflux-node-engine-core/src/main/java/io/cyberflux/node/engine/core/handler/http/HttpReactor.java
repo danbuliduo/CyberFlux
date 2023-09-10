@@ -15,13 +15,11 @@ public class HttpReactor extends AbstractReactor {
 
 	@Override
 	public CyberClusterMessagePublisher publisher() {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'publisher'");
 	}
 
 	@Override
 	public CyberClusterMessageReceiver receiver() {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'receiver'");
 	}
 }

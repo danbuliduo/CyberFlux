@@ -1,5 +1,5 @@
 import store from '@/store'
-import { defineStore } from 'pinia';
+import { defineStore } from 'pinia'
 import setting from '@/store/setting/layout.setting'
 
 export interface SilderSetting {
@@ -12,7 +12,7 @@ export interface LayoutState {
   silder: SilderSetting;
 }
 
-export const useLayoutStateStore = defineStore({
+export const useLayoutStore = defineStore({
   id: 'layout',
   state: (): LayoutState => ({
     silder: setting.sider
@@ -27,6 +27,6 @@ export const useLayoutStateStore = defineStore({
 /**
  * @tips 需要在setup()之外使用
  */
-export function useLayoutStateStoreWidthOut() {
-  return useLayoutStateStore(store);
+export function useLayoutStoreWidthOut() {
+  return useLayoutStore(store);
 }

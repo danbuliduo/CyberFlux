@@ -5,6 +5,7 @@ import { setupI18n } from './langs';
 import { setupStore } from './store';
 import router, { setupRouter } from './router';
 import { useHighCharts } from './hooks';
+import 'vfonts/Lato.css'
 import '~/tailwind.css';
 
 async function run(): Promise<void> {
@@ -22,5 +23,5 @@ run().then(() => {
   console.info("NODE-ENV:", process.env.NODE_ENV)
   useHighCharts()
 }).catch(() => {
-  console.info("CATCH")
+  console.info("Run Error.")
 })

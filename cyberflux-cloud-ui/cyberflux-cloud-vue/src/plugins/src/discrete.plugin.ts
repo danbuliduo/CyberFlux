@@ -26,9 +26,8 @@ export function setupDiscreteApi() {
       configProviderProps: configProviderPropsRef,
     }
   )
-
-  window.$message = message;
-  window.$dialog = dialog;
-  window.$notification = notification;
-  window.$loading = loadingBar;
+  window.$message = message
+  window.$dialog = dialog
+  window.$notification = notification
+  window.$loading = loadingBar
 }

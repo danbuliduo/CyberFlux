@@ -15,7 +15,7 @@ const defaultConfig: TreeHelperConfig = {
   children: 'children',
 }
 
-export interface AsyncRouteState {
+export interface RouteState {
   items: RouteRecordRaw[]
   routers: any[]
   addRouters: any[]
@@ -43,10 +43,9 @@ function filter<T = any>(
   return listFilter(tree)
 }
 
-export const useAsyncRouteStore = defineStore({
-  id: 'async-route',
-
-  state: (): AsyncRouteState => ({
+export const useRouteStore = defineStore({
+  id: 'route',
+  state: (): RouteState => ({
     items: [],
     routers: constantRoutes,
     addRouters: [],
@@ -56,32 +55,32 @@ export const useAsyncRouteStore = defineStore({
 
   getters: {
     getItems(): RouteRecordRaw[] {
-      return this.items;
+      return this.items
     },
     isDynamicRouteFlag(): boolean {
-      return this.dynamicRouteFlag;
+      return this.dynamicRouteFlag
     },
   },
 
   actions: {
     getRouters() {
-      return toRaw(this.addRouters);
+      return toRaw(this.addRouters)
     },
     setDynamicRouteFlag(flag: boolean) {
-      this.dynamicRouteFlag = flag;
+      this.dynamicRouteFlag = flag
     },
     // 设置动态路由
     setRouters(routers: any[]) {
-      this.addRouters = routers;
-      this.routers = constantRoutes.concat(routers);
+      this.addRouters = routers
+      this.routers = constantRoutes.concat(routers)
     },
     // 设置动态路由
     setItems(items: any[]) {
-      this.items = items;
+      this.items = items
     },
     // 设置需要缓存的组件
     setKeepAliveComponents(components: string[]) {
-      this.keepAliveComponents = components;
+      this.keepAliveComponents = components
     },
 
     async generateRoutes(data: any) {
@@ -89,8 +88,8 @@ export const useAsyncRouteStore = defineStore({
       //const permissionsList = data.permissions || []
 
       const routeFilter = (route: any) => {
-        const { meta } = route;
-        const { permissions } = meta || {}
+        //const { meta } = route
+        //const { permissions } = meta || {}
         return true
         /*return permissions ? permissionsList.some(
           (item: any) => permissions.includes(item.value)
@@ -126,6 +125,6 @@ export const useAsyncRouteStore = defineStore({
 /**
  * @tips 需要在setup()之外使用
  */
-export function useAsyncRouteStoreWidthOut() {
-  return useAsyncRouteStore(store);
+export function useRouteStoreWidthOut() {
+  return useRouteStore(store);
 }

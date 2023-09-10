@@ -1,5 +1,4 @@
-import type { RouteRecordRaw, RouteMeta } from 'vue-router';
-import { defineComponent } from 'vue';
+import type { RouteRecordRaw, RouteMeta } from 'vue-router'
 
 export type Component<T extends any = any> =
   | ReturnType<typeof defineComponent>

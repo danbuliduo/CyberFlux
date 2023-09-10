@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import { NaiveContainer } from '@/components/container';
+import { NaiveContainer } from '@/components/container'
 </script>
 
 <style lang="scss">

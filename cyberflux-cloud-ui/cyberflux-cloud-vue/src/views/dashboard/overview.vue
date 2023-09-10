@@ -1,179 +1,182 @@
 <template>
-  <section>
+  <div>
     <n-space vertical :size="32">
-      <n-grid layout-shift-disabled :x-gap="24" :cols="2">
+      <n-grid responsive="self" cols="1 800:2" :x-gap="24" :y-gap="12">
         <n-grid-item>
-          <n-card style="height: 200px;">
-            None
+          <n-card size="small" title="Cluster Node" style="height: 540px;" :segmented="{ content: true }">
+            <hex-mesh v-if="true"
+                :class-for-item="classForApplication"
+                :items="applications"
+                @click="select"
+              >
+                <template #item="{ item: application }">
+                  <div :key="application.name" class="hex__body node">
+                    <div class="node-status-indicator" ></div>
+                    <div class="node-header node-time-ago is-muted">
+                      <time-ago/>
+                    </div>
+                    <div class="node-body">
+                      <h1 class="node-name">
+                        {{ application.name }}
+                      </h1>
+                    </div>
+                    <h2 class="node-footer node-version">
+                      META
+                    </h2>
+                  </div>
+                </template>
+              </hex-mesh>
           </n-card>
         </n-grid-item>
         <n-grid-item>
-          <n-card style="height: 200px;">
+          <n-card size="small" ref="cardRef" title="Cluster Info" style="height: 540px" :segmented="{ content: true }">
             <n-space justify="space-around" size="large">
               <div class="col-items">
                 <img style="width: 48px;" src="@/assets/image/icon/connections.png"/>
-                <h2>连接量</h2>
-                <h2>1000000</h2>
+                <h3>连接量</h3>
+                <h3>1000000</h3>
               </div>
               <div class="col-items">
                 <img style="width: 48px;"  src="@/assets/image/icon/topics.png"/>
-                <h2>主题量</h2>
-                <h2>1000000</h2>
+                <h3>主题量</h3>
+                <h3>1000000</h3>
               </div>
               <div class="col-items">
                 <img style="width: 48px;"  src="@/assets/image/icon/subscriptions.png"/>
-                <h2>订阅量</h2>
-                <h2>1000000</h2>
+                <h3>订阅量</h3>
+                <h3>1000000</h3>
               </div>
             </n-space>
+            <chart style="height: 320px;" :options="state.options" :updateArgs="updateArgs"/>
           </n-card>
         </n-grid-item>
       </n-grid>
-
-      <n-card title="节点信息" content-style="padding: 16px" :segmented="{content: true}">
-        <n-grid layout-shift-disabled :x-gap="48" :cols="3" style="height: 300px;">
-          <n-grid-item>
-            <hex-mesh v-if="applicationsInitialized"
-              :class-for-item="classForApplication"
-              :items="applications"
-              @click="select"
-            >
-              <template #item="{ item: application }">
-                <div :key="application.name" class="hex__body node">
-                  <div class="node-status-indicator" ></div>
-                  <div class="node-header node-time-ago is-muted">
-                    <time-ago/>
-                  </div>
-                  <div class="node-body">
-                    <h1 class="node-name">
-                      {{ application.name }}
-                    </h1>
-                  </div>
-                  <h2 class="node-footer node-version">
-                    META
-                  </h2>
-                </div>
-              </template>
-            </hex-mesh>
-          </n-grid-item>
-
-          <n-grid-item class="info-pane">
-            <p>集群空间:</p>
-            <p>节点角色:</p>
-            <p>节点标识:</p>
-            <p>节点名称:</p>
-            <p>运行时长:</p>
-          </n-grid-item>
-
-          <n-grid-item class="info-pane">
-            <p>版本信息:</p>
-            <p>连 接 量:</p>
-            <p>订 阅 量:</p>
-            <p>主 题 量:</p>
-          </n-grid-item>
-        </n-grid>
-      </n-card>
     </n-space>
-  </section>
+  </div>
 </template>
 
-<script lang="ts">
-import { HexMesh } from '@/components/common';
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { Chart } from 'highcharts-vue'
+import { NCard, NSpace, NGrid, NGridItem } from 'naive-ui'
 import { NodeStatus } from '@/enums'
-import TimeAgo from '@/components/common/src/TimeAgo.vue'
-import {
-  NImage,
-  NButton,
-  NCard,
-  NSpace,
-  NTabs,
-  NTabPane,
-  NGrid,
-  NGridItem,
-} from 'naive-ui'
+import { updateArgs}  from '@/hooks'
+import { HexMesh, TimeAgo } from '@/components/common'
 
-export default {
-  components: {
-    HexMesh,
-    NImage,
-    NButton,
-    NCard,
-    NSpace,
-    NTabs,
-    NTabPane,
-    NGrid,
-    NGridItem,
-    TimeAgo
+let applications = [
+  {
+    name: "Node-1",
   },
-  setup() {
-    const applicationsInitialized = true;
-    const applications = [
-      {
-        name: "Node-1",
-      },
-      {
-        name: "Node-2",
-      },
-      {
-        name: "Node-3",
-      },
+  {
+    name: "Node-2",
+  },
+  {
+    name: "Node-3",
+  },
+]
 
+const router = useRouter()
+
+function classForApplication(application: any): string | null {
+  return 'up';
+  if (!application) {
+    return null;
+  }
+  if (application.status === NodeStatus.UP) {
+    return 'up';
+  }
+  if (application.status === NodeStatus.RESTRICTED) {
+    return 'restricted';
+  }
+  if (application.status === NodeStatus.DOWN) {
+    return 'down';
+  }
+  if (application.status === NodeStatus.OUT_OF_SERVICE) {
+    return 'down';
+  }
+  if (application.status === NodeStatus.OFFLINE) {
+    return 'down';
+  }
+  if (application.status === NodeStatus.UNKNOWN) {
+    return 'unknown';
+  }
+  return '';
+}
+
+function select(application: any) {
+  if (application.instances.length === 1) {
+    router.push({
+      name: 'instances/details',
+      params: { instanceId: application.instances[0].id },
+    })
+  } else {
+    router.push({
+      name: 'applications',
+      params: { selected: application.name },
+    })
+  }
+}
+
+let timestamp: number = 0
+
+
+const state = reactive<any>({
+  chartWidth: 800,
+  options: {
+    chart: {
+      type: 'spline'
+    },
+    title: {
+      text: '节 点 负 载'
+    },
+    yAxis: {
+      max: 100,
+      min: 0,
+      tickInterval: 20,
+      title: {
+        text: undefined
+      },
+    },
+    tooltip: {
+      headerFormat: '<b>{series.name}</b><br>',
+      pointFormat: 'CPU负载: {point.y:.2f}'
+    },
+    series: [
+      {
+        name: "Node-1", data: [],
+      },
+      {
+        name: "Node-2", data: [],
+      },
+      {
+        name: "Node-3", data: [],
+      }
     ]
+  }
+})
 
-    //const { applications, applicationsInitialized, error } = useApplicationStore();
-    return { applications, applicationsInitialized };
-  },
-  methods: {
-    classForApplication(application: any) {
-      return 'up';
-      if (!application) {
-        return null;
-      }
 
-      if (application.status === NodeStatus.UP) {
-        return 'up';
-      }
-      if (application.status === NodeStatus.RESTRICTED) {
-        return 'restricted';
-      }
-      if (application.status === NodeStatus.DOWN) {
-        return 'down';
-      }
-      if (application.status === NodeStatus.OUT_OF_SERVICE) {
-        return 'down';
-      }
-      if (application.status === NodeStatus.OFFLINE) {
-        return 'down';
-      }
-      if (application.status === NodeStatus.UNKNOWN) {
-        return 'unknown';
-      }
-      return '';
-    },
-    select(application: any) {
-      if (application.instances.length === 1) {
-        this.$router.push({
-          name: 'instances/details',
-          params: { instanceId: application.instances[0].id },
-        });
-      } else {
-        this.$router.push({
-          name: 'applications',
-          params: { selected: application.name },
-        });
-      }
-    },
-  },
-  /*install({ viewRegistry }) {
-    viewRegistry.addView({
-      path: '/wallboard',
-      name: 'wallboard',
-      label: 'wallboard.label',
-      order: -100,
-      component: this,
-    });
-  },*/
-};
+function setTimer() {
+  setInterval(() => {
+    timestamp = new Date().getTime()
+    if (state.options.series[0].data.length >= 10) {
+      state.options.series[0].data.shift()
+      state.options.series[1].data.shift()
+      state.options.series[2].data.shift()
+    }
+    state.options.series[0].data.push([timestamp, 50 + Math.floor(Math.random() * 10)])
+    state.options.series[1].data.push([timestamp, 70 + Math.floor(Math.random() * 10)])
+    state.options.series[2].data.push([timestamp, 40 + Math.floor(Math.random() * 10)])
+  }, 1000)
+}
+
+
+onMounted(() => {
+  /*watch(() => state.x, (value: any) => {
+    state.options.series[0].data = value
+  }, { deep: true })*/
+  setTimer()
+})
 
 </script>
 
@@ -184,11 +187,6 @@ export default {
   div, img {
     margin: auto;
   }
-}
-
-
-.info-pane p {
-  font-size: 16px;
 }
 
 .node {
@@ -227,6 +225,7 @@ export default {
   margin-top: 0.5em;
 }
 </style>
+
 <style lang="scss">
 .up > polygon {
   stroke: #4ade80;

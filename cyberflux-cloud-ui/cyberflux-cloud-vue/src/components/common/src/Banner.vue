@@ -6,14 +6,12 @@
 </template>
 
 <script setup lang="ts">
-// props
 defineProps({
   collapsed: {
     type: Boolean,
     default: false
   }
 })
-
 </script>
 
 <style lang="scss" scoped>
@@ -25,12 +23,10 @@ defineProps({
   line-height: 64px;
   overflow: hidden;
   white-space: nowrap;
-
   img {
     width: auto;
     height: 36px;
   }
-
   .title {
     margin: 16px;
   }

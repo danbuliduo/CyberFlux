@@ -1,6 +1,6 @@
 import type { App } from 'vue'
 import { createI18n } from 'vue-i18n'
-import { Lang, I18N_LANG_KEY } from '@/enums'
+import { Lang, Lable, I18N_LANG_KEY } from '@/enums'
 
 import en_US from './en/en-US'
 import ja_JP from './ja/ja-JP'
@@ -22,6 +22,14 @@ const i18n = createI18n({
     [Lang.ZH_TC]: zh_TC,
   }
 })
+
+export const langOptions = [
+  { label: Lable.EN_US, key: Lang.EN_US },
+  //{ label: Lable.JA_JP, key: Lang.JA_JP },
+  { label: Lable.RU_RU, key: Lang.RU_RU },
+  { label: Lable.ZH_CN, key: Lang.ZH_CN },
+  { label: Lable.ZH_TC, key: Lang.ZH_TC },
+]
 
 
 export function setupI18n(app: App) {

@@ -4,13 +4,13 @@
       <app-header v-model:collapsed="collapsed"/>
     </n-layout-header>
 
-    <n-layout style="margin-top: 65px; margin-bottom: 25px;" has-sider position='absolute'>
-      <n-layout-sider bordered
+    <n-layout has-sider class="layout" position='absolute'>
+      <n-layout-sider bordered :builtin-theme-overrides="lightTheme"
         show-trigger="bar"
         collapse-mode="width"
         :collapsed="collapsed"
         :collapsed-width="64"
-        :inverted="true"
+        :inverted="false"
         :native-scrollbar="false"
         :width="256"
         @collapse="collapsed = true"
@@ -26,24 +26,27 @@
     </n-layout>
 
     <n-layout-footer bordered position='absolute'>
-      <div style="height: 24px;"></div>
+      <app-footer/>
     </n-layout-footer>
 
   </n-layout>
 
 </template>
-<script lang="ts" setup>
-
-import { AppContent }  from './content'
-import { AppHeader } from './header'
-import { AppSider } from './sider'
-
+<script setup lang="ts">
 import {
-  NLayout, NLayoutHeader, NLayoutSider, NLayoutContent, NLayoutFooter
-} from 'naive-ui';
-
+  NLayout, NLayoutHeader, NLayoutSider, NLayoutContent, NLayoutFooter, lightTheme
+} from 'naive-ui'
+import { AppContent }  from '@/layout/content'
+import { AppHeader } from '@/layout/header'
+import { AppSider } from '@/layout/sider'
+import { AppFooter } from '@/layout/footer'
 const collapsed = ref<boolean>(false)
-
 </script>
 
+<style lang="scss" scoped>
 
+.layout{
+  margin-top: $header-height + 1;
+  margin-bottom: $footer-height + 1;
+}
+</style>

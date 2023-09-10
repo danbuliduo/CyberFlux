@@ -6,8 +6,8 @@ import { RouterPath } from '@/enums'
  */
 export function createMenu(routerMap: Array<any>) {
   return filterRouter(routerMap).map((item) => {
-    const isRoot = isIndexRouter(item);
-    const info = isRoot ? item.children[0] : item;
+    const isRoot = isIndexRouter(item)
+    const info = isRoot ? item.children[0] : item
     const currentMenu = {
       ...info,
       ...info.meta,
@@ -18,10 +18,10 @@ export function createMenu(routerMap: Array<any>) {
     // 是否有子菜单，并递归处理
     if (info.children && info.children.length > 0) {
       // Recursion
-      currentMenu.children = createMenu(info.children);
+      currentMenu.children = createMenu(info.children)
     }
-    return currentMenu;
-  });
+    return currentMenu
+  })
 }
 
 /**
@@ -89,8 +89,9 @@ export function getChildrenRouter(routerMap: Array<any>) {
 export function filterRouter(routerMap: Array<any>) {
   return routerMap.filter((item) => {
     return (
-      (item.meta?.hidden || false) != true &&
-      !['/:path(.*)*', '/', RouterPath.REDIRECT, RouterPath.LOGIN].includes(item.path)
-    );
-  });
+      !(item.meta?.hidden || false) && ![
+        '/:path(.*)*', '/', RouterPath.REDIRECT, RouterPath.LOGIN
+      ].includes(item.path)
+    )
+  })
 }

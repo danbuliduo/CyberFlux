@@ -1,119 +1,93 @@
 <template>
   <div class="layout-header">
-    <div class="ml-1" style="width:256px;">
-      <banner class="ground-glass-background"/>
-    </div>
+    <banner class="ml-1" style="margin-left: 16px;"/>
+    <n-space :size="0" style="margin-right: 16px;">
+      <n-dropdown trigger="hover"
+        :show-arrow="true"
+        :options="langOptions"
+         @select="langSwitch"
+      >
+        <n-button quaternary>
+          <template #icon>
+            <n-icon>
+              <language/>
+            </n-icon>
+          </template>
+          {{ $t('label') }}
+        </n-button>
+      </n-dropdown>
 
-    <div class="layout-header-right">
-        <!--div
-          class="layout-header-trigger layout-header-trigger-min"
-          v-for="item in iconList"
-          :key="item.icon.name"
-        >
-          <n-tooltip placement="bottom">
-            <template #trigger>
-              <n-icon size="18">
-                <component :is="item.icon" v-on="item.eventObject || {}" />
-              </n-icon>
-            </template>
-
-            <span>{{ item.tips }}</span>
-          </n-tooltip>
-        </!--div-->
-
-        <!-- 个人中心 -->
-        <div class="layout-header-trigger layout-header-trigger-min"
-          @click="">
-          <n-dropdown trigger="hover" @select="">
-            <div class="avatar">
-              <n-avatar round size="large" src=''>
-                Admin
-              </n-avatar>
-            </div>
-          </n-dropdown>
-        </div>
-        <!--切换全屏-->
-        <div class="layout-header-trigger layout-header-trigger-min"
-          @click="toggleFullScreen">
-          <n-tooltip placement="bottom">
-            <template #trigger>
-              <n-icon size="24">
-                <component :is="fullscreenIcon"/>
-              </n-icon>
-            </template>
-            <span>全屏</span>
-          </n-tooltip>
-        </div>
-    </div>
+      <n-button quaternary @click="toggleFullScreen">
+        <template #icon>
+          <n-icon>
+            <component :is="reactor.fullscreenIcon"/>
+          </n-icon>
+        </template>
+        {{ reactor.fullscreenText }}
+      </n-button>
+    </n-space>
   </div>
 </template>
 
-<script lang="ts">
-import { bool } from 'vue-types';
-import {
-  NAvatar, NDropdown, NTooltip, NIcon,
-} from 'naive-ui';
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  SettingOutlined,
-  FullscreenOutlined,
-  UserOutlined,
-} from '@vicons/antd';
-import {
-  ContractOutline, ExpandOutline,
-} from '@vicons/ionicons5';
+<script setup lang="ts">
+import { bool } from 'vue-types'
+import { useI18n } from 'vue-i18n'
+import { NButton, NSpace, NDropdown, NIcon } from 'naive-ui'
+import { Language } from '@vicons/ionicons5'
+import { ContractOutline, ExpandOutline } from '@vicons/ionicons5'
+import { storage } from '@/utils'
+import { langOptions } from '@/langs'
+import { I18N_LANG_KEY, Lang, } from '@/enums'
 import { Banner } from '@/components/common'
-export default defineComponent({
-  name: "AppHeader",
-  components: {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    SettingOutlined,
-    FullscreenOutlined,
-    UserOutlined,
 
-    ContractOutline,
-    ExpandOutline,
+const { locale, t } = useI18n()
+// 属性控制
+const props = defineProps({
+  collapsed: bool().def(false)
+})
+// reactive
+const reactor = reactive({
+  fullscreenIcon: ExpandOutline,
+  fullscreenText: "全屏模式"
+})
 
-    NIcon,
-    NAvatar,
-    NDropdown,
-    NTooltip,
-  },
-  props: {
-    collapsed: bool().def(false)
-  },
-  setup(props) {
-    // 全屏切换
-    const state = reactive({
-      fullscreenIcon: 'ExpandOutline'
-    })
+function langSwitch(key: Lang): void {
+  locale.value = key
+  storage.set(I18N_LANG_KEY, key)
+  window.$message.success(t('action'))
+}
 
-    const toggleFullscreenIcon = () => (
-      state.fullscreenIcon = document.fullscreenElement === null ?
-          'ExpandOutline' : 'ContractOutline'
-    );
-
-    document.addEventListener('fullscreenchange', toggleFullscreenIcon)
-
-    const toggleFullScreen = () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-
-    return {
-      ...toRefs(state),
-      toggleFullScreen,
-    }
+// 切换全屏
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else if (document.exitFullscreen) {
+    document.exitFullscreen()
+  }
+}
+// 添加全屏事件监听器
+document.addEventListener('fullscreenchange', () => {
+  if(document.fullscreenElement === null) {
+    reactor.fullscreenIcon = ExpandOutline
+    reactor.fullscreenText = "全屏模式"
+  } else {
+    reactor.fullscreenIcon = ContractOutline
+    reactor.fullscreenText = "退出全屏"
   }
 })
+
 </script>
 
 
 <style lang="scss" scoped>
-@import '@/assets/style/layout/header.scss'
+.layout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  height: $header-height;
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+}
+
 </style>

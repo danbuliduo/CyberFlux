@@ -9,6 +9,11 @@ import SystemSetting from './src/SystemSetting.vue'
 import Thermometer from './src/Thermometer.vue'
 import Turbidity from './src/Turbidity.vue'
 
+
+import LogoVue from './src/LogoVue.vue'
+import LogoNodejs from './src/LogoNodejs.vue'
+import LogoNaiveUi from './src/LogoNaiveUi.vue'
+
 export {
   Dashboard,
   DissolvedOxygen,
@@ -19,4 +24,8 @@ export {
   SystemSetting,
   Thermometer,
   Turbidity,
+
+  LogoNaiveUi,
+  LogoNodejs,
+  LogoVue,
 }
