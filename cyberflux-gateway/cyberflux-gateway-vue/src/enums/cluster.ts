@@ -1,0 +1,8 @@
+export enum NodeStatus {
+  DOWN = 'DOWN',
+  UP = 'UP',
+  RESTRICTED = 'RESTRICTED',
+  UNKNOWN = 'UNKNOWN',
+  OUT_OF_SERVICE = 'OUT_OF_SERVICE',
+  OFFLINE = 'OFFLINE',
+}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" />
+  <title><%= title %></title>
+  <style>
+    /** page **/
+    .cssloader {
+      padding-top: calc(45vh - 25px);
+    }
+    /** loader **/
+    .sh1 {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 64px 64px 0 0;
+      border-color: #354952 transparent transparent transparent;
+      margin: 0 auto;
+      animation: shk1 1s ease-in-out infinite normal;
+    }
+    .sh2 {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 0 64px 64px;
+      border-color: transparent  transparent #df1a54 transparent ;
+      margin: -64px auto 0;
+      animation: shk2 1s ease-in-out infinite alternate;
+    }
+    /** animation starts here **/
+    @keyframes shk1 {
+      0% {
+        transform: rotate(-360deg);
+      }
+      100% {
+      }
+    }
+    @keyframes shk2 {
+      0% {
+        transform: rotate(360deg);
+      }
+      100% {
+      }
+    }
+    .lt {
+      color: #fff;
+      margin: 32px auto;
+      text-align: center;
+      font-weight: 200;
+      letter-spacing: 2px;
+    }
+  </style>
+  <script src="/libs/jquery/jquery-3.6.4.min.js"></script>
+</head>
+
+<body style="background-image: linear-gradient(to right , #00C9FF, #92fe9d);">
+  <div id="app">
+    <div class="cssloader">
+      <div class="sh1"></div>
+      <div class="sh2"></div>
+      <h4 class="lt">Loading...</h4>
+    </div>
+  </div>
+  <script>
+    $(window).on('load', function () {
+      $('.cssloader').fadeOut('slow', function() {
+          $(this).remove();
+        });
+      }
+    );
+  </script>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

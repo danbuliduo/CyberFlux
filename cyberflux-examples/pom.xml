@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.cyberflux</groupId>
+        <artifactId>cyberflux-framework</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <groupId>io.cyberflux.examples</groupId>
+    <artifactId>cyberflux-examples</artifactId>
+    <name>Cyberflux Examples</name>
+
+    <modules>
+        <module>cyberflux-examples-node1</module>
+        <module>cyberflux-examples-node2</module>
+        <module>cyberflux-examples-node3</module>
+    </modules>
+
+    <packaging>pom</packaging>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.cyberflux.examples</groupId>
+                <artifactId>cyberflux-examples-node1</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux.examples</groupId>
+                <artifactId>cyberflux-examples-node2</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux.examples</groupId>
+                <artifactId>cyberflux-examples-node3</artifactId>
+                <version>${revision}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

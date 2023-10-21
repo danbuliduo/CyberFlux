@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS account (
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    remarks VARCHAR(255),
+    permissions VARCHAR(255) ARRAY NOT NULL DEFAULT ARRAY['UNIVERSAL'],
+    PRIMARY KEY (username)
+);

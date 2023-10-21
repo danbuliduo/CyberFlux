@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.cyberflux</groupId>
+        <artifactId>cyberflux-framework</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>cyberflux-engine</artifactId>
+    <name>CyberFlux Engine</name>
+
+    <modules>
+        <module>cyberflux-engine-actuator</module>
+        <module>cyberflux-engine-core</module>
+        <module>cyberflux-engine-meta</module>
+        <module>cyberflux-engine-spring</module>
+    </modules>
+
+    <packaging>pom</packaging>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-engine-actuator</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-engine-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-engine-meta</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-engine-spring</artifactId>
+                <version>${revision}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

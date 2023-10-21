@@ -1,0 +1,39 @@
+cyberflux:
+  engine:
+    gateway:
+      enable: true
+      uri: http://127.0.0.1:18087/gateway/api/engine/register
+      retry-interval: 60s
+      max-retries: 3
+    cluster:
+      enable: true
+      port: 10002
+      mode: ENGINE
+      name: ${spring.application.name}
+      nodes: 127.0.0.1:10001,127.0.0.1:10003
+    reactor:
+      mqtt-options: [
+        {type: tcp, port: 1884}
+      ]
+
+#eureka:
+#  instance:
+#    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+#    prefer-ip-address: true
+#    ip-address: localhost
+    #服务续约(renew)的间隔，默认为30秒#
+#    lease-renewal-interval-in-seconds: 30
+    #服务失效时间
+#    lease-expiration-duration-in-seconds: 60
+
+#  client:
+#    register-with-eureka: true # 表示是否向Eureka注册中心注册自己
+#    fetch-registry: true # false表示自己端就是注册中心，我的职责就是维护服务实例，并不需要去检索服务
+#    service-url:
+#      defaultZone: http://127.0.0.1:18087/eureka
+
+server:
+  port: 20001
+spring:
+  application:
+    name: node-1

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>io.cyberflux</groupId>
+		<artifactId>cyberflux-reactor</artifactId>
+		<version>${revision}</version>
+	</parent>
+
+	<groupId>io.cyberflux</groupId>
+	<artifactId>cyberflux-reactor-mqtt</artifactId>
+	<name>Cyberflux Reactor MQTT</name>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>caffeine</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-codec-mqtt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor.netty</groupId>
+			<artifactId>reactor-netty</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.cyberflux</groupId>
+			<artifactId>cyberflux-utils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.cyberflux</groupId>
+			<artifactId>cyberflux-meta</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

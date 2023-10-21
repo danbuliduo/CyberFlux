@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2014-2020 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.cyberflux</groupId>
+    <artifactId>cyberflux-framework</artifactId>
+    <version>${revision}</version>
+
+    <name>CyberFlux Framework</name>
+
+    <packaging>pom</packaging>
+
+    <properties>
+        <revision>META</revision>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
+        <javax.xml.bind.version>2.3.1</javax.xml.bind.version>
+
+        <net.sf.trove4j.version>3.0.3</net.sf.trove4j.version>
+        <net.java.dev.jna.version>5.13.0</net.java.dev.jna.version>
+
+        <io.scalecube.version>0.0.3</io.scalecube.version>
+        <io.projectreactor.version>2022.0.9</io.projectreactor.version>
+        <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
+
+        <org.springframework.boot.version>3.1.2</org.springframework.boot.version>
+        <org.springframework.cloud.version>2022.0.3</org.springframework.cloud.version>
+
+        <flatten.maven.plugin.version>1.4.1</flatten.maven.plugin.version>
+    </properties>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>cyberflux-cluster</module>
+        <module>cyberflux-engine</module>
+        <module>cyberflux-gateway</module>
+        <module>cyberflux-meta</module>
+        <module>cyberflux-reactor</module>
+        <module>cyberflux-spring-boot-starter</module>
+        <module>cyberflux-utils</module>
+        <module>cyberflux-examples</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-cluster</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-engine</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-engine-actuator</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-engine-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-engine-meta</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-engine-spring</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-gateway</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-gateway-app</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-meta</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-reactor</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-reactor-mqtt</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-utils</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-spring-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux</groupId>
+                <artifactId>cyberflux-spring-boot-starter-engine</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.cyberflux.examples</groupId>
+                <artifactId>cyberflux-examples</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux.examples</groupId>
+                <artifactId>cyberflux-examples-node1</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux.examples</groupId>
+                <artifactId>cyberflux-examples-node2</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cyberflux.examples</groupId>
+                <artifactId>cyberflux-examples-node3</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>net.sf.trove4j</groupId>
+                <artifactId>trove4j</artifactId>
+                <version>${net.sf.trove4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>${net.java.dev.jna.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna-platform</artifactId>
+                <version>${net.java.dev.jna.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${io.jsonwebtoken.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${javax.xml.bind.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.scalecube</groupId>
+                <artifactId>scalecube-bom</artifactId>
+                <version>${io.scalecube.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-bom</artifactId>
+                <version>${io.projectreactor.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${org.springframework.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${org.springframework.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2022.0.0.0-RC2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,49 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  influx:
+    metrics:
+      export:
+        enabled: false
+server:
+  port: 18087
+spring:
+  application:
+    name: CyberFluxGateway
+  r2dbc:
+    url: r2dbc:h2:file:///./data/h2
+    username: root
+    password: 5PWgbmgMG92cZsukxSBHfa934jQhpnGONXJFIXwF7a6-bubmNdfjeqTlULIuEzaKtw38phjp_scW2ImA9SRQcg==
+cyberflux:
+  gateway:
+    security:
+      jwt:
+        secret-key: CYBER_FLUX_GATEWAY
+        prefix: ""
+        expires: 1d
+  engine:
+    actuator:
+      influxdb:
+        enable: false
+        uri: http://127.0.0.1:8086
+        org: CyberFlux
+        bucket: engine
+      prometheus:
+        enable: false
+    gateway:
+      enable: false
+      uri: http://127.0.0.1:18087/gateway/api/engine/register
+      retry-interval: 60s
+      max-retries: 3
+    cluster:
+      enable: true
+      port: 10001
+      mode: gateway
+      nodes: [127.0.0.1:10002, 127.0.0.1:10003]
+    reactor:
+      mqtt-options: [
+        { port: 1883, type: tcp },
+        { port: 8083, type: ws, path: /mqtt }
+      ]

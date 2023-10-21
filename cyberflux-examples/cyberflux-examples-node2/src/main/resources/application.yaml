@@ -1,0 +1,21 @@
+cyberflux:
+  gateway:
+    enable: true
+    uri: http://127.0.0.1:18087/api/gateway/register
+    retry-interval: 60s
+    max-retries: 3
+  cluster:
+    enable: true
+    port: 10003
+    mode: ENGINE
+    name: ${spring.application.name}
+    nodes: 127.0.0.1:10001,127.0.0.1:10002
+  reactor:
+    mqtt-options: [
+      {type: tcp, port: 1885}
+    ]
+server:
+  port: 20002
+spring:
+  application:
+    name: node-2
