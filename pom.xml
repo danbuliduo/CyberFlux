@@ -39,7 +39,7 @@
 
         <org.springframework.cloud.version>2022.0.3</org.springframework.cloud.version>
 
-        <flatten.maven.plugin.version>1.4.1</flatten.maven.plugin.version>
+        <flatten.maven.plugin.version>1.6.0</flatten.maven.plugin.version>
     </properties>
 
     <licenses>
