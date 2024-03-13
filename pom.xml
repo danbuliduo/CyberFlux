@@ -33,7 +33,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <io.scalecube.version>0.0.3</io.scalecube.version>
-        <io.projectreactor.version>2022.0.9</io.projectreactor.version>
+        <io.projectreactor.version>2022.0.17</io.projectreactor.version>
 
         <org.springframework.boot.version>3.1.2</org.springframework.boot.version>
 
