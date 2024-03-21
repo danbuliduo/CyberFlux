@@ -35,7 +35,7 @@
         <io.scalecube.version>0.0.3</io.scalecube.version>
         <io.projectreactor.version>2022.0.9</io.projectreactor.version>
 
-        <org.springframework.boot.version>3.1.2</org.springframework.boot.version>
+        <org.springframework.boot.version>3.2.4</org.springframework.boot.version>
 
         <org.springframework.cloud.version>2022.0.3</org.springframework.cloud.version>
 
