@@ -37,7 +37,7 @@
 
         <org.springframework.boot.version>3.1.2</org.springframework.boot.version>
 
-        <org.springframework.cloud.version>2022.0.3</org.springframework.cloud.version>
+        <org.springframework.cloud.version>2022.0.5</org.springframework.cloud.version>
 
         <flatten.maven.plugin.version>1.4.1</flatten.maven.plugin.version>
     </properties>
